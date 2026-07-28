@@ -39,6 +39,11 @@ const PERMISSIONS = [
   "teacher.create",
   "teacher.update",
   "teacher.delete",
+
+  "attendance.read",
+  "attendance.create",
+  "attendance.update",
+  "attendance.delete",
 ];
 
 // Permission subsets used by non-admin roles
@@ -257,6 +262,88 @@ async function seedStudentUserAndRecord(studentRoleId: string) {
 }
 
 // =========================
+// Attendance seeder
+// =========================
+
+async function seedAttendances() {
+  // Ambil data yang diperlukan
+  const classXIPA1 = await prisma.schoolClass.findUnique({ where: { name: "X IPA 1" } });
+  if (!classXIPA1) {
+    logger.error("⚠️  Class 'X IPA 1' not found, skipping attendance seed");
+    return;
+  }
+
+  const teacherUser = await prisma.user.findUnique({ where: { email: "teacher@example.com" } });
+  if (!teacherUser) {
+    logger.error("⚠️  Teacher user not found, skipping attendance seed");
+    return;
+  }
+
+  const teacher = await prisma.teacher.findUnique({ where: { userId: teacherUser.id } });
+  if (!teacher) {
+    logger.error("⚠️  Teacher record not found, skipping attendance seed");
+    return;
+  }
+
+  const student = await prisma.student.findFirst({
+    where: { user: { email: "student@example.com" } },
+  });
+  if (!student) {
+    logger.error("⚠️  Student record not found, skipping attendance seed");
+    return;
+  }
+
+  // Ambil waktu sekarang
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  // Buat sesi absensi
+  const session1 = await prisma.attendanceSession.create({
+    data: {
+      title: "Presensi Pagi - X IPA 1",
+      date: today,
+      startTime: new Date(new Date(today).setHours(7, 0, 0, 0)),
+      endTime: new Date(new Date(today).setHours(8, 0, 0, 0)),
+      schoolClassId: classXIPA1.id,
+      teacherId: teacher.id,
+    },
+  });
+
+  const session2 = await prisma.attendanceSession.create({
+    data: {
+      title: "Presensi Sore - X IPA 1",
+      date: yesterday,
+      startTime: new Date(new Date(yesterday).setHours(13, 0, 0, 0)),
+      endTime: new Date(new Date(yesterday).setHours(14, 0, 0, 0)),
+      schoolClassId: classXIPA1.id,
+      teacherId: teacher.id,
+    },
+  });
+
+  // Buat catatan kehadiran untuk student di dua sesi
+  await prisma.attendance.createMany({
+    data: [
+      {
+        attendanceSessionId: session1.id,
+        studentId: student.id,
+        status: "PRESENT",
+        recordedAt: new Date(),
+      },
+      {
+        attendanceSessionId: session2.id,
+        studentId: student.id,
+        status: "LATE",
+        notes: "Terlambat 10 menit",
+        recordedAt: new Date(),
+      },
+    ],
+  });
+
+  logger.info("✅ Attendance sessions and records seeded");
+}
+
+// =========================
 // Main
 // =========================
 async function main() {
@@ -275,6 +362,7 @@ async function main() {
   await seedTeacherUser(roles.teacherRole.id);
 
   await seedStudentUserAndRecord(roles.studentRole.id);
+  await seedAttendances(); // <-- tambahkan ini
 
   logger.info("🎉 Seed completed!");
 }

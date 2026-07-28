@@ -54,3 +54,12 @@ export const TEACHER_MESSAGE = {
   UPDATED: "Teacher updated successfully",
   DELETED: "Teacher deleted successfully",
 };
+
+export const ATTENDANCE_MESSAGES = {
+  FETCHED: "Data presensi berhasil diambil",
+  FETCHED_ONE: "Data presensi berhasil diambil",
+  CREATED: "Presensi berhasil dibuat",
+  UPDATED: "Presensi berhasil diperbarui",
+  DELETED: "Presensi berhasil dihapus",
+  NOT_FOUND: "Data presensi tidak ditemukan",
+};
