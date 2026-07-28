@@ -34,15 +34,15 @@ const PERMISSIONS = [
   "student.create",
   "student.update",
   "student.delete",
+
+  "teacher.read",
+  "teacher.create",
+  "teacher.update",
+  "teacher.delete",
 ];
 
 // Permission subsets used by non-admin roles
-const TEACHER_PERMISSIONS = [
-  "dashboard.read",
-  "class.read",
-  "student.read",
-  "student.update",
-];
+const TEACHER_PERMISSIONS = ["dashboard.read", "class.read", "student.read", "student.update"];
 
 const STUDENT_PERMISSIONS = ["dashboard.read", "student.read"];
 
@@ -151,7 +151,7 @@ async function seedAdminUser(superAdminRoleId: string) {
       name: "Administrator",
       email: "admin@example.com",
       password,
-        roles: { connect: [{ id: superAdminRoleId }] },
+      roles: { connect: [{ id: superAdminRoleId }] },
     },
   });
 
@@ -238,23 +238,21 @@ async function seedStudentUserAndRecord(studentRoleId: string) {
   });
 
   if (!classXIPA1) {
-    logger.error(
-      "⚠️  Class 'X IPA 1' not found, skipping student record seed"
-    );
+    logger.error("⚠️  Class 'X IPA 1' not found, skipping student record seed");
     return;
   }
 
-await prisma.student.upsert({
-  where: { userId: studentUser.id },
-  update: {},
-  create: {
-    name: "Rizky Maulana",
-    gender: "MALE",
-    birthDate: new Date("2007-08-31"),
-    user: { connect: { id: studentUser.id } },
-    schoolClass: { connect: { id: classXIPA1.id } },
-  },
-});
+  await prisma.student.upsert({
+    where: { userId: studentUser.id },
+    update: {},
+    create: {
+      name: "Rizky Maulana",
+      gender: "MALE",
+      birthDate: new Date("2007-08-31"),
+      user: { connect: { id: studentUser.id } },
+      schoolClass: { connect: { id: classXIPA1.id } },
+    },
+  });
   logger.info("✅ Student record seeded");
 }
 

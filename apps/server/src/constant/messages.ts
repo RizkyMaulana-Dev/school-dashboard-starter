@@ -44,3 +44,13 @@ export const STUDENT_MESSAGES = {
   UPDATED: "Student updated successfully",
   DELETED: "Student deleted successfully",
 };
+
+export const TEACHER_MESSAGE = {
+  NOT_FOUND: "Teacher not found",
+  FETCHED: "Teachers fetched successfully",
+  FETCHED_ONE: "Teacher fetched successfully",
+
+  CREATED: "Teacher created successfully",
+  UPDATED: "Teacher updated successfully",
+  DELETED: "Teacher deleted successfully",
+};

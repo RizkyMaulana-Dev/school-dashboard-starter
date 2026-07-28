@@ -3,6 +3,8 @@ import { CreateStudentDto, UpdateStudentDto } from "./student.types";
 import { PaginationQuery } from "../../utils/pagination";
 import { NotFoundError } from "../../errors";
 import { STUDENT_MESSAGES } from "../../constant/messages";
+
+
 export class StudentRepository {
   async findMany(query: PaginationQuery) {
     return prisma.student.findMany({

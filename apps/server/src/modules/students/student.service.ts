@@ -5,8 +5,6 @@ import { PaginationQuery } from "../../utils/pagination";
 import { createPaginationMeta } from "../../utils/pagination/PaginatedResponse";
 import { toStudentResponse, toStudentsResponse } from "./student.mapper";
 import { STUDENT_MESSAGES } from "../../constant/messages";
-import { toClassResponse } from "../schoolClass/class.mapper";
-import { measureMemory } from "node:vm";
 
 export class StudentService {
   private repository = new StudentRepository();

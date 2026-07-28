@@ -6,7 +6,7 @@ import { authorize } from "../middlewares/authorize";
 import userRoutes from "../modules/users/user.routes";
 import classRoutes from "../modules/schoolClass/class.routes"
 import studentRoutes from "../modules/students/student.routes"
-
+import teacherRuotes from "../modules/teacher/teacher.routes"
 const router = Router();
 
 router.get("/permission-test", authenticate, authorize("dashboard.read"), (_req, res) => {
@@ -61,5 +61,6 @@ router.get("/health", async (_req, res) => {
 router.use("/class", classRoutes);
 
 router.use("/student", studentRoutes)
+router.use("/teacher", teacherRuotes)
 
 export default router;

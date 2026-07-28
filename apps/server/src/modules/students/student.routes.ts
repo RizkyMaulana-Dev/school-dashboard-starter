@@ -15,9 +15,21 @@ router.get("/", authenticate, authorize("student.read"), controller.getAll);
 
 router.get("/:id", authenticate, authorize("class.read"), controller.getById);
 
-router.post("/", authenticate, authorize("student.create"), validate(createStudentSchema), controller.create);
+router.post(
+  "/",
+  authenticate,
+  authorize("student.create"),
+  validate(createStudentSchema),
+  controller.create,
+);
 
-router.patch("/:id", authenticate, authorize("class.update"), validate(updateStudentSchema), controller.update);
+router.patch(
+  "/:id",
+  authenticate,
+  authorize("class.update"),
+  validate(updateStudentSchema),
+  controller.update,
+);
 
 router.delete("/:id", authenticate, authorize("class.delete"), controller.delete);
 

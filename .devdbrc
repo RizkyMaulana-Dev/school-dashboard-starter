@@ -1,0 +1,6 @@
+[
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\NITRO\\Documents\\Coding\\SideProject\\school-dashboard-starter\\apps\\server\\prisma\\database.db"
+  }
+]

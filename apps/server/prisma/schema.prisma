@@ -79,7 +79,6 @@ model Teacher {
     userId    String   @unique
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    // Terhubung Many-to-Many dengan SchoolClass secara otomatis lewat Prisma
     classes SchoolClass[]
 
     attendanceSessions AttendanceSession[]
