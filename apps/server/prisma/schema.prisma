@@ -1,128 +1,248 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String   @id @default(cuid())
-    name      String
-    email     String   @unique
-    password  String
-    isActive  Boolean  @default(true)
-    roles     Role[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    student   Student?
-    teacher   Teacher?
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  password  String
+  isActive  Boolean    @default(true)
+  roles     Role[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  itemLoans ItemLoan[]
+  bookLoans BookLoan[]
+  student   Student?
+  teacher   Teacher?
 }
 
 model Role {
-    id          String       @id @default(cuid())
-    name        String       @unique
-    description String?
-    users       User[]
-    permissions Permission[]
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  users       User[]
+  permissions Permission[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Permission {
-    id          String   @id @default(cuid())
-    name        String   @unique
-    description String?
-    roles       Role[]
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  roles       Role[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model SchoolClass {
-    id           String    @id @default(cuid())
-    name         String    @unique
-    description  String?
-    grade        Int
-    academicYear String?
-    isActive     Boolean   @default(true)
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
-    student      Student[]
+  id           String    @id @default(cuid())
+  name         String    @unique
+  description  String?
+  grade        Int
+  academicYear String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  student      Student[]
 
-    // PERBAIKAN DI SINI: Diubah menjadi array agar bisa Many-to-Many implisit dengan Teacher
-    teachers Teacher[]
+  // PERBAIKAN DI SINI: Diubah menjadi array agar bisa Many-to-Many implisit dengan Teacher
+  teachers Teacher[]
 
-    attendanceSessions AttendanceSession[]
+  attendanceSessions AttendanceSession[]
 }
 
 model Student {
-    id            String       @id @default(cuid())
-    name          String
-    gender        Gender
-    birthDate     DateTime?
-    createdAt     DateTime     @default(now())
-    updatedAt     DateTime     @updatedAt
-    userId        String       @unique
-    user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    schoolClassId String
-    schoolClass   SchoolClass  @relation(fields: [schoolClassId], references: [id])
-    attendances   Attendance[]
+  id            String       @id @default(cuid())
+  name          String
+  gender        Gender
+  birthDate     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  userId        String       @unique
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolClassId String
+  schoolClass   SchoolClass  @relation(fields: [schoolClassId], references: [id])
+  attendances   Attendance[]
 }
 
 model Teacher {
-    id        String   @id @default(cuid())
-    name      String
-    gender    Gender
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId    String   @unique
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  name      String
+  gender    Gender
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    classes SchoolClass[]
+  classes SchoolClass[]
 
-    attendanceSessions AttendanceSession[]
+  attendanceSessions AttendanceSession[]
 }
 
 model AttendanceSession {
-    id            String       @id @default(cuid())
-    title         String
-    date          DateTime     @default(now())
-    startTime     DateTime?
-    endTime       DateTime?
-    schoolClassId String
-    schoolClass   SchoolClass  @relation(fields: [schoolClassId], references: [id], onDelete: Cascade)
-    teacherId     String
-    teacher       Teacher      @relation(fields: [teacherId], references: [id])
-    records       Attendance[]
-    createdAt     DateTime     @default(now())
-    updatedAt     DateTime     @updatedAt
+  id            String       @id @default(cuid())
+  title         String
+  date          DateTime     @default(now())
+  startTime     DateTime?
+  endTime       DateTime?
+  schoolClassId String
+  schoolClass   SchoolClass  @relation(fields: [schoolClassId], references: [id], onDelete: Cascade)
+  teacherId     String
+  teacher       Teacher      @relation(fields: [teacherId], references: [id])
+  records       Attendance[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Attendance {
-    id                  String            @id @default(cuid())
-    attendanceSessionId String
-    session             AttendanceSession @relation(fields: [attendanceSessionId], references: [id], onDelete: Cascade)
-    studentId           String
-    student             Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
-    status              AttendanceStatus  @default(PRESENT)
-    recordedAt          DateTime?
-    verificationData    Json?
-    notes               String?
-    createdAt           DateTime          @default(now())
-    updatedAt           DateTime          @updatedAt
+  id                  String            @id @default(cuid())
+  attendanceSessionId String
+  session             AttendanceSession @relation(fields: [attendanceSessionId], references: [id], onDelete: Cascade)
+  studentId           String
+  student             Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  status              AttendanceStatus  @default(PRESENT)
+  recordedAt          DateTime?
+  verificationData    Json?
+  notes               String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 
-    @@unique([attendanceSessionId, studentId])
+  @@unique([attendanceSessionId, studentId])
 }
 
 enum Gender {
-    MALE
-    FEMALE
+  MALE
+  FEMALE
 }
 
 enum AttendanceStatus {
-    PRESENT
-    LATE
-    EXCUSED
-    ABSENT
+  PRESENT
+  LATE
+  EXCUSED
+  ABSENT
+}
+
+// =========================
+// Enum untuk Inventaris
+// =========================
+enum ItemCondition {
+  BAIK
+  RUSAK_RINGAN
+  RUSAK_BERAT
+}
+
+enum ItemLoanStatus {
+  DIPINJAM
+  DIKEMBALIKAN
+  HILANG
+  RUSAK
+}
+
+// =========================
+// Enum untuk Perpustakaan
+// =========================
+enum BookLoanStatus {
+  DIPINJAM
+  DIKEMBALIKAN
+  TERLAMBAT
+  HILANG
+}
+
+// =========================
+// Modul Inventaris
+// =========================
+model ItemCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  items       Item[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Item {
+  id             String        @id @default(cuid())
+  categoryId     String
+  category       ItemCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  itemCode       String        @unique // SKU atau barcode
+  name           String
+  stockTotal     Int           @default(0)
+  stockAvailable Int           @default(0)
+  condition      ItemCondition @default(BAIK)
+  location       String?
+  purchaseDate   DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  loans ItemLoan[]
+}
+
+model ItemLoan {
+  id         String         @id @default(cuid())
+  itemId     String
+  item       Item           @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade) // Peminjam (guru/siswa/staf)
+  quantity   Int            @default(1)
+  borrowDate DateTime       @default(now())
+  dueDate    DateTime
+  returnDate DateTime?
+  status     ItemLoanStatus @default(DIPINJAM)
+  notes      String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+// =========================
+// Modul Perpustakaan
+// =========================
+model BookCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique // misal: Fiksi, Teknologi, Sejarah
+  description String?
+  books       Book[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Book {
+  id             String       @id @default(cuid())
+  bookCategoryId String
+  category       BookCategory @relation(fields: [bookCategoryId], references: [id], onDelete: Restrict)
+  isbn           String?      @unique
+  title          String
+  author         String?
+  publisher      String?
+  publishedYear  Int?
+  stockTotal     Int          @default(0)
+  stockAvailable Int          @default(0)
+  shelfLocation  String? // lokasi rak
+  coverImage     String? // path gambar
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  loans BookLoan[]
+}
+
+model BookLoan {
+  id         String         @id @default(cuid())
+  bookId     String
+  book       Book           @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade) // peminjam (biasanya siswa)
+  borrowDate DateTime       @default(now())
+  dueDate    DateTime
+  returnDate DateTime?
+  fineAmount Float? // nominal denda
+  status     BookLoanStatus @default(DIPINJAM)
+  notes      String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 }

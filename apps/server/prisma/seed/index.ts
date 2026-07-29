@@ -44,6 +44,21 @@ const PERMISSIONS = [
   "attendance.create",
   "attendance.update",
   "attendance.delete",
+
+  "attendance-session.read",
+  "attendance-session.create",
+  "attendance-session.update",
+  "attendance-session.delete",
+
+  "book.read",
+  "book.create",
+  "book.update",
+  "book.delete",
+
+  "book-loan.read",
+  "book-loan.create",
+  "book-loan.update",
+  "book-loan.delete",
 ];
 
 // Permission subsets used by non-admin roles
@@ -200,12 +215,13 @@ async function seedSchoolClasses() {
 }
 
 // =========================
-// Teacher User
+// Teacher User + Teacher record
 // =========================
 async function seedTeacherUser(teacherRoleId: string) {
   const password = await bcrypt.hash("teacher123", 10);
 
-  await prisma.user.upsert({
+  // 1. Buat User Guru
+  const teacherUser = await prisma.user.upsert({
     where: { email: "teacher@example.com" },
     update: {},
     create: {
@@ -217,6 +233,19 @@ async function seedTeacherUser(teacherRoleId: string) {
   });
 
   logger.info("✅ Teacher user seeded");
+
+  // 2. Buat Record Guru di tabel Teacher (PENTING!)
+  await prisma.teacher.upsert({
+    where: { userId: teacherUser.id },
+    update: {},
+    create: {
+      name: "Default Teacher",
+      gender: "MALE", // Adjust sesuai skema Prisma kamu jika ada (opsional)
+      user: { connect: { id: teacherUser.id } },
+    },
+  });
+
+  logger.info("✅ Teacher record seeded");
 }
 
 // =========================
@@ -344,6 +373,226 @@ async function seedAttendances() {
 }
 
 // =========================
+// Book Categories
+// =========================
+async function seedBookCategories() {
+  const categories = [
+    { name: "Fiksi", description: "Buku-buku fiksi dan novel" },
+    { name: "Teknologi", description: "Buku seputar teknologi dan komputer" },
+    { name: "Sejarah", description: "Buku sejarah dan peradaban" },
+    { name: "Pelajaran", description: "Buku pelajaran sekolah" },
+  ];
+
+  for (const cat of categories) {
+    await prisma.bookCategory.upsert({
+      where: { name: cat.name },
+      update: {},
+      create: cat,
+    });
+  }
+
+  logger.info("✅ Book categories seeded");
+}
+
+// =========================
+// Books
+// =========================
+async function seedBooks() {
+  // Ambil kategori yang sudah ada
+  const fiksi = await prisma.bookCategory.findUnique({ where: { name: "Fiksi" } });
+  const teknologi = await prisma.bookCategory.findUnique({ where: { name: "Teknologi" } });
+  const sejarah = await prisma.bookCategory.findUnique({ where: { name: "Sejarah" } });
+  const pelajaran = await prisma.bookCategory.findUnique({ where: { name: "Pelajaran" } });
+
+  if (!fiksi || !teknologi || !sejarah || !pelajaran) {
+    logger.error("⚠️  Book categories not found, skipping book seed");
+    return;
+  }
+
+  const books = [
+    {
+      isbn: "978-602-033-295-7",
+      title: "Laskar Pelangi",
+      author: "Andrea Hirata",
+      publisher: "Bentang Pustaka",
+      publishedYear: 2005,
+      stockTotal: 5,
+      stockAvailable: 5,
+      shelfLocation: "Rak A-01",
+      categoryId: fiksi.id,
+    },
+    {
+      isbn: "978-979-306-279-2",
+      title: "Bumi Manusia",
+      author: "Pramoedya Ananta Toer",
+      publisher: "Hasta Mitra",
+      publishedYear: 1980,
+      stockTotal: 3,
+      stockAvailable: 3,
+      shelfLocation: "Rak A-02",
+      categoryId: fiksi.id,
+    },
+    {
+      isbn: "978-602-291-490-7",
+      title: "Clean Code: A Handbook of Agile Software Craftsmanship",
+      author: "Robert C. Martin",
+      publisher: "Prentice Hall",
+      publishedYear: 2008,
+      stockTotal: 2,
+      stockAvailable: 2,
+      shelfLocation: "Rak B-01",
+      categoryId: teknologi.id,
+    },
+    {
+      isbn: "978-149-195-035-7",
+      title: "Designing Data-Intensive Applications",
+      author: "Martin Kleppmann",
+      publisher: "O'Reilly Media",
+      publishedYear: 2017,
+      stockTotal: 2,
+      stockAvailable: 2,
+      shelfLocation: "Rak B-02",
+      categoryId: teknologi.id,
+    },
+    {
+      isbn: "978-979-229-884-0",
+      title: "Sejarah Nasional Indonesia Jilid 1",
+      author: "Marwati Djoened Poesponegoro",
+      publisher: "Balai Pustaka",
+      publishedYear: 2008,
+      stockTotal: 4,
+      stockAvailable: 4,
+      shelfLocation: "Rak C-01",
+      categoryId: sejarah.id,
+    },
+    {
+      isbn: "978-602-434-194-2",
+      title: "Matematika SMA Kelas X",
+      author: "Kemendikbud",
+      publisher: "Pusat Kurikulum dan Perbukuan",
+      publishedYear: 2020,
+      stockTotal: 10,
+      stockAvailable: 10,
+      shelfLocation: "Rak D-01",
+      categoryId: pelajaran.id,
+    },
+  ];
+
+  for (const book of books) {
+    const { categoryId, ...bookData } = book;
+    await prisma.book.upsert({
+      where: { isbn: book.isbn ?? undefined }, // beberapa ISBN mungkin null, lebih aman pakai isbn unik
+      update: {},
+      create: {
+        ...bookData,
+        category: { connect: { id: categoryId } },
+      },
+    });
+  }
+
+  logger.info("✅ Books seeded");
+}
+
+// =========================
+// Book Loans
+// =========================
+async function seedBookLoans() {
+  // Ambil user yang sudah ada (student & admin)
+  const studentUser = await prisma.user.findUnique({ where: { email: "student@example.com" } });
+  const adminUser = await prisma.user.findUnique({ where: { email: "admin@example.com" } });
+
+  if (!studentUser || !adminUser) {
+    logger.error("⚠️  Users not found, skipping book loan seed");
+    return;
+  }
+
+  // Ambil buku yang sudah di-seed
+  const laskarPelangi = await prisma.book.findUnique({ where: { isbn: "978-602-033-295-7" } });
+  const cleanCode = await prisma.book.findUnique({ where: { isbn: "978-602-291-490-7" } });
+  const matematika = await prisma.book.findUnique({ where: { isbn: "978-602-434-194-2" } });
+
+  if (!laskarPelangi || !cleanCode || !matematika) {
+    logger.error("⚠️  Books not found, skipping book loan seed");
+    return;
+  }
+
+  // Tanggal bantu
+  const now = new Date();
+  const tenDaysAgo = new Date(now);
+  tenDaysAgo.setDate(now.getDate() - 10);
+  const fiveDaysAgo = new Date(now);
+  fiveDaysAgo.setDate(now.getDate() - 5);
+  const futureDue = new Date(now);
+  futureDue.setDate(now.getDate() + 7);
+
+  // Peminjaman 1: Laskar Pelangi oleh student, status DIPINJAM, due date besok
+  await prisma.bookLoan.upsert({
+    where: { id: "loan-seed-1" }, // kita tentukan ID custom untuk menghindari duplikasi
+    update: {},
+    create: {
+      id: "loan-seed-1",
+      bookId: laskarPelangi.id,
+      userId: studentUser.id,
+      borrowDate: fiveDaysAgo,
+      dueDate: new Date(now.getTime() + 24 * 60 * 60 * 1000), // besok
+      status: "DIPINJAM",
+      notes: "Pinjam untuk tugas membaca",
+    },
+  });
+
+  // Kurangi stok buku yang dipinjam (karena kita langsung insert, kita harus update stok manual di seeder)
+  await prisma.book.update({
+    where: { id: laskarPelangi.id },
+    data: { stockAvailable: { decrement: 1 } },
+  });
+
+  // Peminjaman 2: Clean Code oleh admin, sudah dikembalikan
+  await prisma.bookLoan.upsert({
+    where: { id: "loan-seed-2" },
+    update: {},
+    create: {
+      id: "loan-seed-2",
+      bookId: cleanCode.id,
+      userId: adminUser.id,
+      borrowDate: tenDaysAgo,
+      dueDate: fiveDaysAgo,
+      returnDate: fiveDaysAgo,
+      status: "DIKEMBALIKAN",
+      notes: "Selesai membaca",
+    },
+  });
+  // Tidak perlu kurangi stok karena sudah dikembalikan, stok akan diadjust manual?
+  // Karena dikembalikan, kita biarkan stok tetap (tidak dikurangi)
+  // Tetapi dalam logika normal, saat peminjaman stok berkurang, saat pengembalian bertambah.
+  // Untuk seeder kita bisa biarkan konsisten manual: stok Clean Code kita tetapkan tidak berubah dari awal.
+  // Karena awalnya stok 2, kita tidak kurangi karena sudah dikembalikan.
+
+  // Peminjaman 3: Matematika oleh student, status TERLAMBAT
+  await prisma.bookLoan.upsert({
+    where: { id: "loan-seed-3" },
+    update: {},
+    create: {
+      id: "loan-seed-3",
+      bookId: matematika.id,
+      userId: studentUser.id,
+      borrowDate: tenDaysAgo,
+      dueDate: fiveDaysAgo,
+      returnDate: null,
+      status: "TERLAMBAT",
+      fineAmount: 5000, // misal denda
+      notes: "Terlambat mengembalikan, denda diterapkan",
+    },
+  });
+  // Untuk yang ini, stok Matematika harus dikurangi karena masih dipinjam (TERLAMBAT = masih di luar).
+  await prisma.book.update({
+    where: { id: matematika.id },
+    data: { stockAvailable: { decrement: 1 } },
+  });
+
+  logger.info("✅ Book loans seeded");
+}
+
+// =========================
 // Main
 // =========================
 async function main() {
@@ -362,7 +611,11 @@ async function main() {
   await seedTeacherUser(roles.teacherRole.id);
 
   await seedStudentUserAndRecord(roles.studentRole.id);
-  await seedAttendances(); // <-- tambahkan ini
+  await seedAttendances();
+
+  await seedBookCategories();
+  await seedBooks();
+  await seedBookLoans();
 
   logger.info("🎉 Seed completed!");
 }

@@ -8,6 +8,11 @@ import classRoutes from "../modules/schoolClass/class.routes"
 import studentRoutes from "../modules/students/student.routes"
 import teacherRuotes from "../modules/teacher/teacher.routes"
 import attendanceRoutes from "../modules/attendances/attendance.routes";
+import attendanceSessionRoutes from "../modules/attendanceSession/attendanceSession.routes";
+import bookRoutes from "../modules/books/book.routes";
+import bookLoanRoutes from "../modules/bookLoan/bookLoan.routes";
+
+
 const router = Router();
 
 router.get("/permission-test", authenticate, authorize("dashboard.read"), (_req, res) => {
@@ -63,5 +68,8 @@ router.use("/class", classRoutes);
 router.use("/attendance", attendanceRoutes);
 router.use("/student", studentRoutes)
 router.use("/teacher", teacherRuotes)
+router.use("/attendance-session", attendanceSessionRoutes);
+router.use("/book", bookRoutes);
+router.use("/book-loan", bookLoanRoutes);
 
 export default router;

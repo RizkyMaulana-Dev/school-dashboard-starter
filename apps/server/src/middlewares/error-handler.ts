@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
+import { Prisma } from "@prisma/client"; // 1. Import Prisma Client
 
 import { ApiError } from "../errors/index.js";
 import { logger } from "../lib/logger.js";
@@ -23,6 +24,32 @@ export function globalErrorHandler(
       message: "Validation failed",
       errors: error.flatten().fieldErrors,
     });
+  }
+
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    // P2003: Foreign Key Constraint Violation (ID relasi tidak ditemukan)
+    if (error.code === "P2003") {
+      return res.status(400).json({
+        success: false,
+        message: "Resource ID tidak ditemukan di database (Foreign key constraint failed).",
+      });
+    }
+
+    // P2002: Unique Constraint Violation (Data duplikat)
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        success: false,
+        message: "Data sudah ada di database (Unique constraint failed).",
+      });
+    }
+
+    // P2025: Record Not Found (Misal saat update/delete ID yang tidak ada)
+    if (error.code === "P2025") {
+      return res.status(404).json({
+        success: false,
+        message: "Data yang dicari tidak ditemukan.",
+      });
+    }
   }
 
   logger.error(error);

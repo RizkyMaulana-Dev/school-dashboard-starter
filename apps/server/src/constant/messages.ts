@@ -63,3 +63,32 @@ export const ATTENDANCE_MESSAGES = {
   DELETED: "Presensi berhasil dihapus",
   NOT_FOUND: "Data presensi tidak ditemukan",
 };
+
+export const ATTENDANCE_SESSION_MESSAGES = {
+  FETCHED: "Data sesi absensi berhasil diambil",
+  FETCHED_ONE: "Data sesi absensi berhasil diambil",
+  CREATED: "Sesi absensi berhasil dibuat",
+  UPDATED: "Sesi absensi berhasil diperbarui",
+  DELETED: "Sesi absensi berhasil dihapus",
+  NOT_FOUND: "Sesi absensi tidak ditemukan",
+};
+
+export const BOOK_MESSAGES = {
+  FETCHED: "Data buku berhasil diambil",
+  FETCHED_ONE: "Data buku berhasil diambil",
+  CREATED: "Buku berhasil ditambahkan",
+  UPDATED: "Buku berhasil diperbarui",
+  DELETED: "Buku berhasil dihapus",
+  NOT_FOUND: "Buku tidak ditemukan",
+};
+
+export const BOOK_LOAN_MESSAGES = {
+  FETCHED: "Data peminjaman buku berhasil diambil",
+  FETCHED_ONE: "Data peminjaman buku berhasil diambil",
+  CREATED: "Peminjaman buku berhasil dibuat",
+  UPDATED: "Peminjaman buku berhasil diperbarui",
+  DELETED: "Peminjaman buku berhasil dihapus",
+  NOT_FOUND: "Data peminjaman tidak ditemukan",
+  BOOK_NOT_FOUND: "Buku tidak ditemukan",
+  OUT_OF_STOCK: "Stok buku tidak tersedia",
+};
