@@ -5,8 +5,6 @@ import { NotFoundError } from "../../errors";
 import { ATTENDANCE_MESSAGES } from "../../constant/messages";
 
 export class AttendanceRepository {
-    
-    
   async findMany(
     query: PaginationQuery & {
       sessionId?: string;
@@ -18,72 +16,78 @@ export class AttendanceRepository {
   ) {
     const where: any = {};
 
+    // 1. Text Search Filter
     if (query.search) {
       where.OR = [
         {
           student: {
-            name: { contains: query.search, mode: "insensitive" },
+            name: { contains: query.search },
           },
         },
         {
           student: {
-            user: { email: { contains: query.search, mode: "insensitive" } },
+            user: { email: { contains: query.search } },
+          },
+        },
+        {
+          session: {
+            title: { contains: query.search },
           },
         },
       ];
     }
 
+    // 2. Exact Filters
     if (query.sessionId) where.attendanceSessionId = query.sessionId;
     if (query.studentId) where.studentId = query.studentId;
     if (query.status) where.status = query.status;
 
     if (query.classId) {
-      where.session = { schoolClassId: query.classId };
+      where.session = { ...where.session, schoolClassId: query.classId };
     }
 
+    // 3. Date Range Filter
     if (query.date) {
-      where.session = { ...where.session, date: new Date(query.date) };
+      const startDate = new Date(query.date);
+      startDate.setUTCHours(0, 0, 0, 0);
+
+      const endDate = new Date(query.date);
+      endDate.setUTCHours(23, 59, 59, 999);
+
+      where.session = {
+        ...where.session,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      };
     }
 
-    return prisma.attendance.findMany({
-      skip: query.skip,
-      take: query.limit,
-      where,
-      orderBy: { [query.sort || "createdAt"]: query.order || "desc" },
-      include: {
-        session: {
-          select: {
-            id: true,
-            title: true,
-            date: true,
-            schoolClass: { select: { id: true, name: true } },
+    // 4. Fetch data and count in parallel
+    const [data, total] = await prisma.$transaction([
+      prisma.attendance.findMany({
+        skip: query.skip,
+        take: query.limit,
+        where,
+        orderBy: { [query.sort || "createdAt"]: query.order || "desc" },
+        include: {
+          session: {
+            select: {
+              id: true,
+              title: true,
+              date: true,
+              schoolClass: { select: { id: true, name: true } },
+            },
+          },
+          student: {
+            select: { id: true, name: true },
           },
         },
-        student: {
-          select: { id: true, name: true },
-        },
-      },
-    });
-  }
+      }),
+      prisma.attendance.count({ where }),
+    ]);
 
-  async count(query: any) {
-    const where: any = {};
-    if (query.search) {
-      where.OR = [
-        { student: { name: { contains: query.search, mode: "insensitive" } } },
-        { student: { user: { email: { contains: query.search, mode: "insensitive" } } } },
-      ];
-    }
-    if (query.sessionId) where.attendanceSessionId = query.sessionId;
-    if (query.studentId) where.studentId = query.studentId;
-    if (query.status) where.status = query.status;
-    if (query.classId) {
-      where.session = { schoolClassId: query.classId };
-    }
-    if (query.date) {
-      where.session = { ...where.session, date: new Date(query.date) };
-    }
-    return prisma.attendance.count({ where });
+    return { data, total };
   }
 
   async findById(id: string) {

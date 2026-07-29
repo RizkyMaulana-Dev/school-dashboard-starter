@@ -10,10 +10,12 @@ export class AttendanceService {
   private repository = new AttendanceRepository();
 
   async findAll(query: PaginationQuery & any) {
-    const records = await this.repository.findMany(query);
-    const total = await this.repository.count(query);
+    // Destructure `data` (array records) dan `total` (jumlah count) dari repository
+    const { data, total } = await this.repository.findMany(query);
+
     return {
-      data: toAttendancesResponse(records),
+      // Oper array `data` ke mapper, bukan wrapper object-nya
+      data: toAttendancesResponse(data),
       meta: createPaginationMeta(query.page, query.limit, total),
     };
   }
