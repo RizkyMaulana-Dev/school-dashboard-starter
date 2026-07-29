@@ -59,6 +59,21 @@ const PERMISSIONS = [
   "book-loan.create",
   "book-loan.update",
   "book-loan.delete",
+
+  "item.read",
+  "item.create",
+  "item.update",
+  "item.delete",
+
+  "item.read",
+  "item.create",
+  "item.update",
+  "item.delete",
+  
+  "item-loan.read",
+  "item-loan.create",
+  "item-loan.update",
+  "item-loan.delete",
 ];
 
 // Permission subsets used by non-admin roles
@@ -593,6 +608,146 @@ async function seedBookLoans() {
 }
 
 // =========================
+// Item Categories
+// =========================
+async function seedItemCategories() {
+  const categories = [
+    { name: "Elektronik", description: "Peralatan elektronik" },
+    { name: "Mebel", description: "Perabotan dan furnitur" },
+    { name: "Alat Kebersihan", description: "Peralatan kebersihan" },
+  ];
+
+  for (const cat of categories) {
+    await prisma.itemCategory.upsert({
+      where: { name: cat.name },
+      update: {},
+      create: cat,
+    });
+  }
+  logger.info("✅ Item categories seeded");
+}
+
+// =========================
+// Items (Master Barang)
+// =========================
+async function seedItems() {
+  const elektronik = await prisma.itemCategory.findUnique({ where: { name: "Elektronik" } });
+  const mebel = await prisma.itemCategory.findUnique({ where: { name: "Mebel" } });
+
+  if (!elektronik || !mebel) {
+    logger.error("⚠️  Item categories not found, skipping item seed");
+    return;
+  }
+
+  const items = [
+    {
+      itemCode: "ELEC-001",
+      name: "Proyektor Epson X400",
+      categoryId: elektronik.id,
+      stockTotal: 5,
+      stockAvailable: 5,
+      condition: "BAIK" as const,
+      location: "Lab Komputer A",
+      purchaseDate: new Date("2025-01-15"),
+    },
+    {
+      itemCode: "ELEC-002",
+      name: "Laptop Dell Latitude",
+      categoryId: elektronik.id,
+      stockTotal: 10,
+      stockAvailable: 10,
+      condition: "BAIK" as const,
+      location: "Ruang Guru",
+    },
+    {
+      itemCode: "MEB-001",
+      name: "Meja Lipat Serbaguna",
+      categoryId: mebel.id,
+      stockTotal: 20,
+      stockAvailable: 20,
+      condition: "BAIK" as const,
+      location: "Gudang Utama",
+    },
+  ];
+
+  for (const item of items) {
+    const { categoryId, ...rest } = item;
+    await prisma.item.upsert({
+      where: { itemCode: item.itemCode },
+      update: {},
+      create: {
+        ...rest,
+        category: { connect: { id: categoryId } },
+      },
+    });
+  }
+  logger.info("✅ Items seeded");
+}
+
+// =========================
+// Item Loans (Peminjaman Barang)
+// =========================
+async function seedItemLoans() {
+  const studentUser = await prisma.user.findUnique({ where: { email: "student@example.com" } });
+  const teacherUser = await prisma.user.findUnique({ where: { email: "teacher@example.com" } });
+  const proyektor = await prisma.item.findUnique({ where: { itemCode: "ELEC-001" } });
+  const laptop = await prisma.item.findUnique({ where: { itemCode: "ELEC-002" } });
+
+  if (!studentUser || !teacherUser || !proyektor || !laptop) {
+    logger.error("⚠️  Required data not found, skipping item loan seed");
+    return;
+  }
+
+  const now = new Date();
+  const pastDate = new Date(now);
+  pastDate.setDate(now.getDate() - 5);
+  const futureDate = new Date(now);
+  futureDate.setDate(now.getDate() + 5);
+
+  // Peminjaman 1: Proyektor oleh Student, status DIPINJAM
+  await prisma.itemLoan.upsert({
+    where: { id: "item-loan-seed-1" },
+    update: {},
+    create: {
+      id: "item-loan-seed-1",
+      itemId: proyektor.id,
+      userId: studentUser.id,
+      quantity: 1,
+      borrowDate: pastDate,
+      dueDate: futureDate,
+      status: "DIPINJAM",
+      notes: "Untuk presentasi tugas",
+    },
+  });
+
+  // Update stok barang yang dipinjam
+  await prisma.item.update({
+    where: { id: proyektor.id },
+    data: { stockAvailable: { decrement: 1 } },
+  });
+
+  // Peminjaman 2: Laptop oleh Teacher, sudah dikembalikan
+  await prisma.itemLoan.upsert({
+    where: { id: "item-loan-seed-2" },
+    update: {},
+    create: {
+      id: "item-loan-seed-2",
+      itemId: laptop.id,
+      userId: teacherUser.id,
+      quantity: 2,
+      borrowDate: pastDate,
+      dueDate: pastDate,
+      returnDate: pastDate,
+      status: "DIKEMBALIKAN",
+      notes: "Untuk workshop",
+    },
+  });
+  // Stok laptop tidak perlu diadjust karena sudah dikembalikan (tetap 10)
+
+  logger.info("✅ Item loans seeded");
+}
+
+// =========================
 // Main
 // =========================
 async function main() {
@@ -612,6 +767,10 @@ async function main() {
 
   await seedStudentUserAndRecord(roles.studentRole.id);
   await seedAttendances();
+
+  await seedItemCategories();
+  await seedItems();
+  await seedItemLoans();
 
   await seedBookCategories();
   await seedBooks();

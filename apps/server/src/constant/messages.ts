@@ -92,3 +92,23 @@ export const BOOK_LOAN_MESSAGES = {
   BOOK_NOT_FOUND: "Buku tidak ditemukan",
   OUT_OF_STOCK: "Stok buku tidak tersedia",
 };
+
+export const ITEM_MESSAGES = {
+  FETCHED: "Data barang berhasil diambil",
+  FETCHED_ONE: "Data barang berhasil diambil",
+  CREATED: "Barang berhasil ditambahkan",
+  UPDATED: "Barang berhasil diperbarui",
+  DELETED: "Barang berhasil dihapus",
+  NOT_FOUND: "Barang tidak ditemukan",
+};
+
+export const ITEM_LOAN_MESSAGES = {
+  FETCHED: "Data peminjaman barang berhasil diambil",
+  FETCHED_ONE: "Data peminjaman barang berhasil diambil",
+  CREATED: "Peminjaman barang berhasil dibuat",
+  UPDATED: "Peminjaman barang berhasil diperbarui",
+  DELETED: "Peminjaman barang berhasil dihapus",
+  NOT_FOUND: "Data peminjaman tidak ditemukan",
+  ITEM_NOT_FOUND: "Barang tidak ditemukan",
+  OUT_OF_STOCK: "Stok barang tidak mencukupi",
+};

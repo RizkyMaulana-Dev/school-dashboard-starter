@@ -4,14 +4,15 @@ import authRoutes from "../modules/auth/auth.routes";
 import { authenticate } from "../middlewares/auth.middleware";
 import { authorize } from "../middlewares/authorize";
 import userRoutes from "../modules/users/user.routes";
-import classRoutes from "../modules/schoolClass/class.routes"
-import studentRoutes from "../modules/students/student.routes"
-import teacherRuotes from "../modules/teacher/teacher.routes"
+import classRoutes from "../modules/schoolClass/class.routes";
+import studentRoutes from "../modules/students/student.routes";
+import teacherRuotes from "../modules/teacher/teacher.routes";
 import attendanceRoutes from "../modules/attendances/attendance.routes";
 import attendanceSessionRoutes from "../modules/attendanceSession/attendanceSession.routes";
 import bookRoutes from "../modules/books/book.routes";
 import bookLoanRoutes from "../modules/bookLoan/bookLoan.routes";
-
+import itemRoutes from "../modules/items/item.routes";
+import itemLoanRoutes from "../modules/itemLoan/itemLoan.routes";
 
 const router = Router();
 
@@ -66,10 +67,12 @@ router.get("/health", async (_req, res) => {
 
 router.use("/class", classRoutes);
 router.use("/attendance", attendanceRoutes);
-router.use("/student", studentRoutes)
-router.use("/teacher", teacherRuotes)
+router.use("/student", studentRoutes);
+router.use("/teacher", teacherRuotes);
 router.use("/attendance-session", attendanceSessionRoutes);
 router.use("/book", bookRoutes);
 router.use("/book-loan", bookLoanRoutes);
+router.use("/item", itemRoutes);
+router.use("/item-loan", itemLoanRoutes);
 
 export default router;
