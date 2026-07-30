@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CreateBookLoanDto, UpdateBookLoanDto } from "./bookLoan.types";
+import { CreateBookLoanDto, UpdateBookLoanDto } from "./bookLoan.type";
 import { PaginationQuery } from "../../utils/pagination";
 import { NotFoundError, ConflictError } from "../../errors";
 import { BOOK_LOAN_MESSAGES } from "../../constant/messages";
@@ -18,12 +18,12 @@ export class BookLoanRepository {
       where.OR = [
         {
           book: {
-            title: { contains: query.search, mode: "insensitive" },
+            title: { contains: query.search },
           },
         },
         {
           user: {
-            name: { contains: query.search, mode: "insensitive" },
+            name: { contains: query.search },
           },
         },
       ];
@@ -53,8 +53,8 @@ export class BookLoanRepository {
     const where: any = {};
     if (query.search) {
       where.OR = [
-        { book: { title: { contains: query.search, mode: "insensitive" } } },
-        { user: { name: { contains: query.search, mode: "insensitive" } } },
+        { book: { title: { contains: query.search } } },
+        { user: { name: { contains: query.search } } },
       ];
     }
     if (query.status) where.status = query.status;

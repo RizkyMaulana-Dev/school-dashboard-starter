@@ -54,7 +54,7 @@ export function clearTokens(): void {
  * Axios instance dengan base URL dari environment variable
  */
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1",
+  baseURL: "/api/v1", // ✅ relatif, akan diproxy oleh Vite
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
@@ -114,6 +114,10 @@ function processQueue(error: AxiosError | null, token: string | null = null): vo
 /**
  * Response interceptor untuk menangani error 401 dan refresh token
  */
+// ============================================================
+// Response Interceptor
+// ============================================================
+
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
@@ -123,12 +127,15 @@ axiosInstance.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Jika bukan error 401 atau request sudah di-retry, langsung reject
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    // 1. TAMBAHKAN PENGECEKAN URL DI SINI
+    const isLoginRequest = originalRequest.url?.includes("/login");
+
+    // 2. JIKA INI REQUEST LOGIN, LANGSUNG REJECT (JANGAN LAKUKAN LOGIC REFRESH TOKEN)
+    if (isLoginRequest || error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error);
     }
 
-    // Jika sedang dalam proses refresh, masukkan ke antrian
+    // --- Sisa kode di bawah ini tetap sama persis ---
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -150,7 +157,6 @@ axiosInstance.interceptors.response.use(
     const refreshToken = getRefreshToken();
 
     if (!refreshToken) {
-      // Tidak ada refresh token, redirect ke login
       clearTokens();
       window.location.href = "/login";
       return Promise.reject(error);
@@ -183,5 +189,4 @@ axiosInstance.interceptors.response.use(
     }
   },
 );
-
 export default axiosInstance;

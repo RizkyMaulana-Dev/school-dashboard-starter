@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { setTokens } from "@/lib/axios";
 import { ROUTE_PATHS } from "@/routes/route-paths";
 import type { LoginCredentials } from "@/types/entities";
-import type { ApiResponse } from "@/types/api";
+// import type { ApiResponse } from "@/types/api";
 import type { AuthResponse } from "@/types/entities";
 
 export function useLogin() {

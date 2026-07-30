@@ -4,9 +4,7 @@ import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { setTokens } from "@/lib/axios";
 import { ROUTE_PATHS } from "@/routes/route-paths";
-import type { LoginCredentials } from "@/types/entities";
-import type { ApiResponse } from "@/types/api";
-import type { AuthResponse } from "@/types/entities";
+import type { LoginCredentials, AuthResponse } from "@/types/entities";
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -15,15 +13,18 @@ export function useLogin() {
   return useMutation<AuthResponse, Error, LoginCredentials>({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
     onSuccess: (response) => {
-      const { user, tokens } = response.data;
+      // ✅ TypeScript sekarang mengenali accessToken & refreshToken secara langsung di response.data
+      const { user, accessToken, refreshToken } = response.data;
+
+      const refresh = refreshToken || "";
 
       // Save tokens to axios instance & localStorage
-      setTokens(tokens.accessToken, tokens.refreshToken);
+      setTokens(accessToken, refresh);
 
       // Update auth store
-      setAuth(user, tokens.accessToken, tokens.refreshToken);
+      setAuth(user, accessToken, refresh);
 
-      // Redirect based on role
+      // Redirect berdasarkan role
       if (user.roles?.some((role) => role.name === "Student")) {
         navigate(ROUTE_PATHS.PUBLIC, { replace: true });
       } else {

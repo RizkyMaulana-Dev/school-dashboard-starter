@@ -41,6 +41,7 @@ export default function LoginForm() {
 
         {/* Email */}
         <Input
+          className="text-black"
           label="Email"
           type="email"
           placeholder="nama@sekolah.id"
@@ -51,6 +52,7 @@ export default function LoginForm() {
 
         {/* Password */}
         <Input
+          className="text-black"
           label="Password"
           type="password"
           placeholder="Masukkan password"

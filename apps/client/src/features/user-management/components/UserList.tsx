@@ -1,14 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Table } from "@/components/ui/Table";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Badge } from "@/components/ui/Badge";
-import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
-import { ErrorMessage } from "@/components/feedback/ErrorMessage";
-import { EmptyState } from "@/components/feedback/EmptyState";
+import { Table, Button, Input, Badge, LoadingScreen } from "@/components/ui/";
+import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback/";
 import { PermissionGate } from "@/components/guard/PermissionGate";
+import { Pagination } from "@/components/ui/Pagination"; // ✅ import komponen Pagination
 import { useUsers } from "../hooks/useUsers";
 import { useDeleteUser } from "../hooks/useUserMutations";
 import { usePagination } from "@/hooks/usePagination";
@@ -27,96 +22,108 @@ export default function UserList() {
   const { page, limit, sortBy, sortOrder, queryParams, setSortBy, setPage, setTotalItems } =
     usePagination();
 
-  const { data, isLoading, isError, error, refetch } = useUsers({
+  const { data, isLoading, isFetching, isError, error, refetch } = useUsers({
     ...queryParams,
     search: debouncedSearch || undefined,
   });
 
   const deleteMutation = useDeleteUser();
 
-  // Update total items when data changes
-  if (data?.meta.totalItems !== undefined) {
-    setTotalItems(data.meta.totalItems);
-  }
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
 
-  const columns: TableColumn<User>[] = [
-    {
-      key: "name",
-      header: "Nama",
-      sortable: true,
-      render: (user) => (
-        <div>
-          <p className="font-medium text-gray-900">{user.name}</p>
-          <p className="text-sm text-gray-500">{user.email}</p>
-        </div>
-      ),
-    },
-    {
-      key: "roles",
-      header: "Role",
-      render: (user) => (
-        <div className="flex flex-wrap gap-1">
-          {user.roles?.map((role) => (
-            <Badge key={role.id} variant="info">
-              {role.name}
-            </Badge>
-          ))}
-        </div>
-      ),
-    },
-    {
-      key: "isActive",
-      header: "Status",
-      align: "center",
-      render: (user) => (
-        <Badge variant={user.isActive ? "success" : "error"}>
-          {user.isActive ? "Aktif" : "Nonaktif"}
-        </Badge>
-      ),
-    },
-    {
-      key: "createdAt",
-      header: "Dibuat",
-      sortable: true,
-      render: (user) => <span className="text-sm text-gray-500">{formatDate(user.createdAt)}</span>,
-    },
-    {
-      key: "actions",
-      header: "Aksi",
-      align: "center",
-      render: (user) => (
-        <div className="flex items-center justify-center gap-2">
-          <PermissionGate requiredPermissions="user.update">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(ROUTE_PATHS.USER_EDIT.replace(":id", user.id));
-              }}
-            >
-              Edit
-            </Button>
-          </PermissionGate>
-          <PermissionGate requiredPermissions="user.delete">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                setUserToDelete(user);
-              }}
-              className="text-red-600 hover:text-red-700"
-            >
-              Hapus
-            </Button>
-          </PermissionGate>
-        </div>
-      ),
-    },
-  ];
+  // ✅ Update total items dari meta backend (pakai meta.total, bukan meta.totalItems)
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
 
-  if (isLoading) {
+  const columns = useMemo<TableColumn<User>[]>(
+    () => [
+      {
+        key: "name",
+        header: "Nama",
+        sortable: true,
+        render: (user) => (
+          <div>
+            <p className="font-medium text-gray-900">{user.name}</p>
+            <p className="text-sm text-gray-500">{user.email}</p>
+          </div>
+        ),
+      },
+      {
+        key: "roles",
+        header: "Role",
+        render: (user) => (
+          <div className="flex flex-wrap gap-1">
+            {user.roles?.map((role) => (
+              <Badge key={role.id} variant="info">
+                {role.name}
+              </Badge>
+            ))}
+          </div>
+        ),
+      },
+      {
+        key: "isActive",
+        header: "Status",
+        align: "center",
+        render: (user) => (
+          <Badge variant={user.isActive ? "success" : "error"}>
+            {user.isActive ? "Aktif" : "Nonaktif"}
+          </Badge>
+        ),
+      },
+      {
+        key: "createdAt",
+        header: "Dibuat",
+        sortable: true,
+        render: (user) => (
+          <span className="text-sm text-gray-500">{formatDate(user.createdAt)}</span>
+        ),
+      },
+      {
+        key: "actions",
+        header: "Aksi",
+        align: "center",
+        render: (user) => (
+          <div className="flex items-center justify-center gap-2">
+            <PermissionGate requiredPermissions="user.update">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(ROUTE_PATHS.USER_EDIT.replace(":id", user.id));
+                }}
+              >
+                Edit
+              </Button>
+            </PermissionGate>
+            <PermissionGate requiredPermissions="user.delete">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setUserToDelete(user);
+                }}
+                className="text-red-600 hover:text-red-700"
+              >
+                Hapus
+              </Button>
+            </PermissionGate>
+          </div>
+        ),
+      },
+    ],
+    [navigate],
+  );
+
+  if (isLoading && !data) {
     return <LoadingScreen message="Memuat data user..." />;
   }
 
@@ -149,6 +156,7 @@ export default function UserList() {
           <Input
             placeholder="Cari nama atau email..."
             value={search}
+            className="text-black"
             onChange={(e) => setSearch(e.target.value)}
             leftIcon={
               <svg
@@ -169,59 +177,41 @@ export default function UserList() {
         </div>
       </div>
 
-      {/* Users Table */}
-      {data?.data.length === 0 ? (
-        <EmptyState
-          title="Belum ada user"
-          description="Buat user baru untuk memulai"
-          action={
-            <PermissionGate requiredPermissions="user.create">
-              <Button onClick={() => navigate(ROUTE_PATHS.USER_CREATE)}>Tambah User</Button>
-            </PermissionGate>
-          }
-        />
-      ) : (
-        <Table
-          columns={columns}
-          data={data?.data || []}
-          keyExtractor={(user) => user.id}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSort={setSortBy}
-          onRowClick={(user) => navigate(ROUTE_PATHS.USER_DETAIL.replace(":id", user.id))}
-        />
-      )}
+      {/* Table dengan efek loading background */}
+      <div
+        className={`transition-opacity duration-200 ${isFetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+      >
+        {data?.data.length === 0 ? (
+          <EmptyState
+            title="Belum ada user"
+            description="Buat user baru untuk memulai"
+            action={
+              <PermissionGate requiredPermissions="user.create">
+                <Button onClick={() => navigate(ROUTE_PATHS.USER_CREATE)}>Tambah User</Button>
+              </PermissionGate>
+            }
+          />
+        ) : (
+          <Table
+            columns={columns}
+            data={data?.data || []}
+            keyExtractor={(user) => user.id}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSort={setSortBy}
+            onRowClick={(user) => navigate(ROUTE_PATHS.USER_DETAIL.replace(":id", user.id))}
+          />
+        )}
+      </div>
 
-      {/* Pagination */}
-      {data && data.meta.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            Menampilkan {(page - 1) * limit + 1}-{Math.min(page * limit, data.meta.totalItems)} dari{" "}
-            {data.meta.totalItems} data
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-gray-600 px-3">
-              {page} / {data.meta.totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page === data.meta.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* ✅ Komponen Pagination baru */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
 
       {/* Delete Confirmation */}
       <ConfirmDialog

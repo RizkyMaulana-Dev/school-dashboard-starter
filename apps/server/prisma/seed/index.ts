@@ -747,6 +747,136 @@ async function seedItemLoans() {
   logger.info("✅ Item loans seeded");
 }
 
+// Helper untuk ambil item acak dari array
+function getRandomItem<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+// Helper untuk generate tanggal lahir acak (range umur SMA/SMK)
+function getRandomBirthDate(startYear = 2006, endYear = 2008): Date {
+  const year = startYear + Math.floor(Math.random() * (endYear - startYear + 1));
+  const month = Math.floor(Math.random() * 12);
+  const day = Math.floor(Math.random() * 28) + 1;
+  return new Date(year, month, day);
+}
+
+export async function seedBulkStudents(studentRoleId: string, count = 50) {
+  logger.info(`⏳ Memulai seeding ${count} data siswa...`);
+
+  // 1. Ambil semua kelas yang ada di database
+  const schoolClasses = await prisma.schoolClass.findMany();
+
+  if (schoolClasses.length === 0) {
+    logger.error("⚠️ Tidak ada data kelas di DB. Harap seed data kelas terlebih dahulu!");
+    return;
+  }
+
+  // 2. Hash password CUKUP 1 KALI saja di awal agar seeding cepat!
+  const hashedPassword = await bcrypt.hash("student123", 10);
+
+  // 3. Pool nama Indonesia untuk variasi dummy data
+  const firstNamesMale = [
+    "Rizky",
+    "Budi",
+    "Ahmad",
+    "Muhammad",
+    "Dimas",
+    "Bayu",
+    "Hendra",
+    "Fajar",
+    "Aditya",
+    "Farhan",
+    "Andi",
+    "Gilang",
+    "Rian",
+    "Daffa",
+    "Eka",
+  ];
+  const firstNamesFemale = [
+    "Siti",
+    "Nur",
+    "Anisa",
+    "Putri",
+    "Dewi",
+    "Rina",
+    "Indah",
+    "Maya",
+    "Aulia",
+    "Sarah",
+    "Nabila",
+    "Tia",
+    "Salsa",
+    "Fitri",
+    "Lestari",
+  ];
+  const lastNames = [
+    "Pratama",
+    "Saputra",
+    "Hidayat",
+    "Maulana",
+    "Kurniawan",
+    "Santoso",
+    "Wijaya",
+    "Ramadhan",
+    "Nugroho",
+    "Utomo",
+    "Kusuma",
+    "Setiawan",
+    "Syahputra",
+  ];
+
+  let successCount = 0;
+
+  // 4. Loop pembuatan data
+  for (let i = 1; i <= count; i++) {
+    const isMale = Math.random() > 0.5;
+    const gender = isMale ? "MALE" : "FEMALE";
+    const firstName = isMale ? getRandomItem(firstNamesMale) : getRandomItem(firstNamesFemale);
+    const lastName = getRandomItem(lastNames);
+    const fullName = `${firstName} ${lastName}`;
+
+    // Email unik menggunakan nomor urut iterasi
+    const email = `siswa${i}@sekolah.sch.id`;
+
+    // Pilih kelas acak dari daftar kelas yang tersedia
+    const randomClass = getRandomItem(schoolClasses);
+    const birthDate = getRandomBirthDate(2006, 2008);
+
+    try {
+      // Upsert User
+      const studentUser = await prisma.user.upsert({
+        where: { email },
+        update: {},
+        create: {
+          name: fullName,
+          email,
+          password: hashedPassword,
+          roles: { connect: [{ id: studentRoleId }] },
+        },
+      });
+
+      // Upsert Student Record
+      await prisma.student.upsert({
+        where: { userId: studentUser.id },
+        update: {},
+        create: {
+          name: fullName,
+          gender,
+          birthDate,
+          user: { connect: { id: studentUser.id } },
+          schoolClass: { connect: { id: randomClass.id } },
+        },
+      });
+
+      successCount++;
+    } catch (error) {
+      logger.error(`❌ Gagal seed siswa ke-${i} (${email}):`);
+    }
+  }
+
+  logger.info(`✅ Berhasil melakukan seed ${successCount} dari ${count} siswa!`);
+}
+
 // =========================
 // Main
 // =========================
@@ -775,6 +905,8 @@ async function main() {
   await seedBookCategories();
   await seedBooks();
   await seedBookLoans();
+
+  await seedBulkStudents(roles.studentRole.id, 50);
 
   logger.info("🎉 Seed completed!");
 }

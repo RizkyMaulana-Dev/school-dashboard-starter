@@ -15,14 +15,13 @@ export class StudentRepository {
               {
                 name: {
                   contains: query.search,
-                  mode: "insensitive",
                 },
               },
               {
                 user: {
                   email: {
                     contains: query.search,
-                    mode: "insensitive",
+
                   },
                 },
               },
@@ -57,14 +56,13 @@ export class StudentRepository {
               {
                 name: {
                   contains: search,
-                  mode: "insensitive",
                 },
               },
               {
                 user: {
                   email: {
                     contains: search,
-                    mode: "insensitive",
+
                   },
                 },
               },

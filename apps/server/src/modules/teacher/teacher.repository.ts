@@ -17,14 +17,13 @@ export class TeacherRepository {
               {
                 name: {
                   contains: query.search,
-                  mode: "insensitive",
                 },
               },
               {
                 user: {
                   email: {
                     contains: query.search,
-                    mode: "insensitive",
+
                   },
                 },
               },
@@ -58,14 +57,13 @@ export class TeacherRepository {
               {
                 name: {
                   contains: search,
-                  mode: "insensitive",
                 },
               },
               {
                 user: {
                   email: {
                     contains: search,
-                    mode: "insensitive",
+
                   },
                 },
               },

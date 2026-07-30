@@ -16,15 +16,15 @@ export class AttendanceSessionRepository {
 
     if (query.search) {
       where.OR = [
-        { title: { contains: query.search, mode: "insensitive" } },
+        { title: { contains: query.search } },
         {
           schoolClass: {
-            name: { contains: query.search, mode: "insensitive" },
+            name: { contains: query.search },
           },
         },
         {
           teacher: {
-            name: { contains: query.search, mode: "insensitive" },
+            name: { contains: query.search },
           },
         },
       ];
@@ -64,9 +64,9 @@ export class AttendanceSessionRepository {
     const where: any = {};
     if (query.search) {
       where.OR = [
-        { title: { contains: query.search, mode: "insensitive" } },
-        { schoolClass: { name: { contains: query.search, mode: "insensitive" } } },
-        { teacher: { name: { contains: query.search, mode: "insensitive" } } },
+        { title: { contains: query.search } },
+        { schoolClass: { name: { contains: query.search } } },
+        { teacher: { name: { contains: query.search } } },
       ];
     }
     if (query.classId) where.schoolClassId = query.classId;

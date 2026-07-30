@@ -11,10 +11,10 @@ export class ItemLoanRepository {
     if (query.search) {
       where.OR = [
         {
-          item: { name: { contains: query.search, mode: "insensitive" } },
+          item: { name: { contains: query.search } },
         },
         {
-          user: { name: { contains: query.search, mode: "insensitive" } },
+          user: { name: { contains: query.search } },
         },
       ];
     }
@@ -43,8 +43,8 @@ export class ItemLoanRepository {
     const where: any = {};
     if (query.search) {
       where.OR = [
-        { item: { name: { contains: query.search, mode: "insensitive" } } },
-        { user: { name: { contains: query.search, mode: "insensitive" } } },
+        { item: { name: { contains: query.search } } },
+        { user: { name: { contains: query.search } } },
       ];
     }
     if (query.status) where.status = query.status;

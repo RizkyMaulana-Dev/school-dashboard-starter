@@ -14,13 +14,11 @@ export class UserRepository {
               {
                 name: {
                   contains: query.search,
-                  mode: "insensitive",
                 },
               },
               {
                 email: {
                   contains: query.search,
-                  mode: "insensitive",
                 },
               },
             ],
@@ -45,13 +43,11 @@ export class UserRepository {
               {
                 name: {
                   contains: search,
-                  mode: "insensitive",
                 },
               },
               {
                 email: {
                   contains: search,
-                  mode: "insensitive",
                 },
               },
             ],

@@ -212,16 +212,20 @@ export interface LoginCredentials {
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
+}
+
+export interface AuthData {
+  accessToken: string;
+  refreshToken?: string; // Diisi optional (?) karena dari respon backend tidak selalu ada
+  user: User;
+  student?: Student | null;
 }
 
 export interface AuthResponse {
   success: boolean;
   message: string;
-  data: {
-    user: User;
-    tokens: AuthTokens;
-  };
+  data: AuthData;
 }
 
 // ============================================================
