@@ -1,9 +1,6 @@
 import { Router } from "express";
 import { BookLoanController } from "./bookLoan.controller";
-import {
-  createBookLoanSchema,
-  updateBookLoanSchema,
-} from "./bookLoan.validation";
+import { createBookLoanSchema, updateBookLoanSchema } from "./bookLoan.validation";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { authorize } from "../../middlewares/authorize";
 import { validate } from "../../middlewares/validate";
@@ -11,26 +8,16 @@ import { validate } from "../../middlewares/validate";
 const router = Router();
 const controller = new BookLoanController();
 
-router.get(
-  "/",
-  authenticate,
-  authorize("book-loan.read"),
-  controller.getAll
-);
+router.get("/", authenticate, authorize("book-loan.read"), controller.getAll);
 
-router.get(
-  "/:id",
-  authenticate,
-  authorize("book-loan.read"),
-  controller.getById
-);
+router.get("/:id", authenticate, authorize("book-loan.read"), controller.getById);
 
 router.post(
   "/",
   authenticate,
   authorize("book-loan.create"),
   validate(createBookLoanSchema),
-  controller.create
+  controller.create,
 );
 
 router.patch(
@@ -38,14 +25,9 @@ router.patch(
   authenticate,
   authorize("book-loan.update"),
   validate(updateBookLoanSchema),
-  controller.update
+  controller.update,
 );
 
-router.delete(
-  "/:id",
-  authenticate,
-  authorize("book-loan.delete"),
-  controller.delete
-);
+router.delete("/:id", authenticate, authorize("book-loan.delete"), controller.delete);
 
 export default router;

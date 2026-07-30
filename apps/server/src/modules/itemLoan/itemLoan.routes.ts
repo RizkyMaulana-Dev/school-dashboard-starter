@@ -15,14 +15,14 @@ router.post(
   authenticate,
   authorize("item-loan.create"),
   validate(createItemLoanSchema),
-  controller.create
+  controller.create,
 );
 router.patch(
   "/:id",
   authenticate,
   authorize("item-loan.update"),
   validate(updateItemLoanSchema),
-  controller.update
+  controller.update,
 );
 router.delete("/:id", authenticate, authorize("item-loan.delete"), controller.delete);
 

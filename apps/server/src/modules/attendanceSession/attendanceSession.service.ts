@@ -1,8 +1,5 @@
 import { AttendanceSessionRepository } from "./attendanceSession.repository";
-import {
-  CreateAttendanceSessionDto,
-  UpdateAttendanceSessionDto,
-} from "./attendanceSession.types";
+import { CreateAttendanceSessionDto, UpdateAttendanceSessionDto } from "./attendanceSession.types";
 import { NotFoundError } from "../../errors";
 import { PaginationQuery } from "../../utils/pagination";
 import { createPaginationMeta } from "../../utils/pagination/PaginatedResponse";

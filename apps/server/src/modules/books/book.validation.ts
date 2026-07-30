@@ -12,16 +12,8 @@ export const createBookSchema = z.object({
     .min(1000)
     .max(new Date().getFullYear() + 1)
     .optional(),
-  stockTotal: z
-    .number()
-    .int()
-    .min(0, "Stok total tidak boleh negatif")
-    .default(1),
-  stockAvailable: z
-    .number()
-    .int()
-    .min(0, "Stok tersedia tidak boleh negatif")
-    .default(1),
+  stockTotal: z.number().int().min(0, "Stok total tidak boleh negatif").default(1),
+  stockAvailable: z.number().int().min(0, "Stok tersedia tidak boleh negatif").default(1),
   shelfLocation: z.string().optional(),
   coverImage: z.string().optional(),
 });

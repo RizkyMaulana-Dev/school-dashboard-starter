@@ -9,10 +9,7 @@ export class ItemRepository {
     const where: any = {};
 
     if (query.search) {
-      where.OR = [
-        { name: { contains: query.search} },
-        { itemCode: { contains: query.search} },
-      ];
+      where.OR = [{ name: { contains: query.search } }, { itemCode: { contains: query.search } }];
     }
 
     if (query.categoryId) where.categoryId = query.categoryId;
@@ -34,10 +31,7 @@ export class ItemRepository {
   async count(search?: string, categoryId?: string, condition?: string) {
     const where: any = {};
     if (search) {
-      where.OR = [
-        { name: { contains: search} },
-        { itemCode: { contains: search} },
-      ];
+      where.OR = [{ name: { contains: search } }, { itemCode: { contains: search } }];
     }
     if (categoryId) where.categoryId = categoryId;
     if (condition) where.condition = condition;

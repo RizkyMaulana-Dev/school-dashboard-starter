@@ -18,12 +18,7 @@ export class BookLoanController {
       userId,
       bookId,
     });
-    return successResponseWithMeta(
-      res,
-      result.data,
-      result.meta,
-      BOOK_LOAN_MESSAGES.FETCHED
-    );
+    return successResponseWithMeta(res, result.data, result.meta, BOOK_LOAN_MESSAGES.FETCHED);
   };
 
   getById = async (req: Request<Params>, res: Response) => {

@@ -54,17 +54,17 @@ Backend API untuk sistem manajemen sekolah yang mencakup modul akademik (siswa, 
 
 # 🧱 Tech Stack
 
-| Category | Technology |
-|-----------|------------|
-| Runtime | Node.js 18+ |
-| Framework | Express.js |
-| Language | TypeScript |
-| ORM | Prisma ORM |
-| Validation | Zod |
-| Authentication | JWT (jsonwebtoken) |
-| Database | PostgreSQL *(Recommended)*, MySQL, SQLite |
-| Password Hashing | bcrypt |
-| Development | ts-node, nodemon |
+| Category         | Technology                                |
+| ---------------- | ----------------------------------------- |
+| Runtime          | Node.js 18+                               |
+| Framework        | Express.js                                |
+| Language         | TypeScript                                |
+| ORM              | Prisma ORM                                |
+| Validation       | Zod                                       |
+| Authentication   | JWT (jsonwebtoken)                        |
+| Database         | PostgreSQL _(Recommended)_, MySQL, SQLite |
+| Password Hashing | bcrypt                                    |
+| Development      | ts-node, nodemon                          |
 
 ---
 
@@ -130,7 +130,7 @@ Backend API untuk sistem manajemen sekolah yang mencakup modul akademik (siswa, 
 Pastikan sudah menginstall:
 
 - Node.js **18+**
-- PostgreSQL *(Recommended)*
+- PostgreSQL _(Recommended)_
 - npm / yarn / pnpm
 
 ---
@@ -195,9 +195,9 @@ Seeder akan membuat data awal seperti:
 
 ### 👤 Users
 
-| Role | Email | Password |
-|------|--------|----------|
-| Admin | admin@example.com | admin123 |
+| Role    | Email               | Password   |
+| ------- | ------------------- | ---------- |
+| Admin   | admin@example.com   | admin123   |
 | Teacher | teacher@example.com | teacher123 |
 | Student | student@example.com | student123 |
 
@@ -303,20 +303,20 @@ Permission dapat diatur melalui Role.
 
 # 📦 API Endpoints
 
-| Module | Endpoint |
-|---------|----------|
-| Authentication | `/api/v1/auth` |
-| Users | `/api/v1/users` |
-| Roles | `/api/v1/roles` |
-| Students | `/api/v1/student` |
-| Teachers | `/api/v1/teacher` |
-| School Class | `/api/v1/class` |
+| Module             | Endpoint                     |
+| ------------------ | ---------------------------- |
+| Authentication     | `/api/v1/auth`               |
+| Users              | `/api/v1/users`              |
+| Roles              | `/api/v1/roles`              |
+| Students           | `/api/v1/student`            |
+| Teachers           | `/api/v1/teacher`            |
+| School Class       | `/api/v1/class`              |
 | Attendance Session | `/api/v1/attendance-session` |
-| Attendance | `/api/v1/attendance` |
-| Book | `/api/v1/book` |
-| Book Loan | `/api/v1/book-loan` |
-| Item | `/api/v1/item` |
-| Item Loan | `/api/v1/item-loan` |
+| Attendance         | `/api/v1/attendance`         |
+| Book               | `/api/v1/book`               |
+| Book Loan          | `/api/v1/book-loan`          |
+| Item               | `/api/v1/item`               |
+| Item Loan          | `/api/v1/item-loan`          |
 
 ---
 
@@ -383,16 +383,16 @@ Testing mencakup:
 
 # 📡 HTTP Status Codes
 
-| Code | Description |
-|------|-------------|
-| 200 | OK |
-| 201 | Created |
-| 400 | Bad Request |
-| 401 | Unauthorized |
-| 403 | Forbidden |
-| 404 | Not Found |
-| 409 | Conflict |
-| 500 | Internal Server Error |
+| Code | Description           |
+| ---- | --------------------- |
+| 200  | OK                    |
+| 201  | Created               |
+| 400  | Bad Request           |
+| 401  | Unauthorized          |
+| 403  | Forbidden             |
+| 404  | Not Found             |
+| 409  | Conflict              |
+| 500  | Internal Server Error |
 
 ---
 

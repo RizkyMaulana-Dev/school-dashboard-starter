@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 #### Project Setup
+
 - Initialized npm workspace monorepo
 - Configured React, Vite, and TypeScript
 - Configured Express, Prisma, and SQLite
@@ -16,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Configured shadcn/ui
 
 #### Authentication
+
 - Implemented JWT authentication
 - Implemented password hashing using bcrypt
 - Added login endpoint
@@ -23,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Added authentication middleware
 
 #### Authorization
+
 - Implemented Role-Based Access Control (RBAC)
 - Added permission authorization middleware
 - Added role repository
@@ -30,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Added permission service
 
 #### Database
+
 - Created Prisma schema
 - Implemented database seed
 - Seeded Super Admin role
@@ -37,6 +41,7 @@ All notable changes to this project will be documented in this file.
 - Seeded administrator account
 
 #### Core
+
 - Added global error handler
 - Added request validation using Zod
 - Added Express type augmentation
@@ -48,6 +53,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 #### Core Infrastructure
+
 - Added standardized API response helper
 - Added environment variable validation
 - Added centralized logging with Pino
@@ -58,6 +64,7 @@ All notable changes to this project will be documented in this file.
 - Added base service abstraction
 
 #### Shared Package
+
 - Added shared package structure
 - Added shared API response types
 - Added shared pagination types
@@ -68,6 +75,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 #### Architecture
+
 - Refactored environment configuration
 - Improved logging architecture
 - Improved backend project structure
@@ -80,6 +88,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 #### User Management
+
 - Implemented complete User module
 - Added User repository
 - Added User service
@@ -90,6 +99,7 @@ All notable changes to this project will be documented in this file.
 - Added User validation using Zod
 
 #### User Features
+
 - Added user listing endpoint
 - Added user detail endpoint
 - Added user creation endpoint
@@ -100,6 +110,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 #### Architecture
+
 - Refactored User module using Repository pattern
 - Centralized response handling
 - Centralized application messages
@@ -108,6 +119,7 @@ All notable changes to this project will be documented in this file.
 - Improved password handling abstraction
 
 ### Security
+
 - Prevented duplicate email addresses
 - Prevented self-account deletion
 - Improved request validation

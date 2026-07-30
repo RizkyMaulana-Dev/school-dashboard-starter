@@ -15,14 +15,14 @@ router.post(
   authenticate,
   authorize("book.create"),
   validate(createBookSchema),
-  controller.create
+  controller.create,
 );
 router.patch(
   "/:id",
   authenticate,
   authorize("book.update"),
   validate(updateBookSchema),
-  controller.update
+  controller.update,
 );
 router.delete("/:id", authenticate, authorize("book.delete"), controller.delete);
 

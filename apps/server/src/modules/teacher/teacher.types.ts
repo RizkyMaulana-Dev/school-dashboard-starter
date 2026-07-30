@@ -1,5 +1,10 @@
 import z from "zod";
-import { createTeacherSchema, updateTeacherSchema, teacherQuerySchema, teacherResponseSchema } from "./teacher.validation";
+import {
+  createTeacherSchema,
+  updateTeacherSchema,
+  teacherQuerySchema,
+  teacherResponseSchema,
+} from "./teacher.validation";
 
 export type CreateTeacherDto = z.infer<typeof createTeacherSchema>;
 

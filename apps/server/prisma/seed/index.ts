@@ -69,7 +69,7 @@ const PERMISSIONS = [
   "item.create",
   "item.update",
   "item.delete",
-  
+
   "item-loan.read",
   "item-loan.create",
   "item-loan.update",

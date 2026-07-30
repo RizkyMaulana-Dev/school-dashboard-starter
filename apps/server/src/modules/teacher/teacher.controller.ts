@@ -15,12 +15,7 @@ export class TeacherController {
     const pagination = getPagination(req);
     const result = await this.service.findAll(pagination);
 
-    return successResponseWithMeta(
-      res,
-      result.data,
-      result.meta,
-      TEACHER_MESSAGE.FETCHED
-    );
+    return successResponseWithMeta(res, result.data, result.meta, TEACHER_MESSAGE.FETCHED);
   };
 
   getById = async (req: Request<TeacherParams>, res: Response) => {

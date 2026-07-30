@@ -22,7 +22,7 @@ export class AttendanceSessionController {
       res,
       result.data,
       result.meta,
-      ATTENDANCE_SESSION_MESSAGES.FETCHED
+      ATTENDANCE_SESSION_MESSAGES.FETCHED,
     );
   };
 

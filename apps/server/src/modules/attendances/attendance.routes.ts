@@ -1,9 +1,6 @@
 import { Router } from "express";
 import { AttendanceController } from "./attendance.controller";
-import {
-  createAttendanceSchema,
-  updateAttendanceSchema,
-} from "./attendance.validation";
+import { createAttendanceSchema, updateAttendanceSchema } from "./attendance.validation";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { authorize } from "../../middlewares/authorize";
 import { validate } from "../../middlewares/validate";
@@ -18,14 +15,14 @@ router.post(
   authenticate,
   authorize("attendance.create"),
   validate(createAttendanceSchema),
-  controller.create
+  controller.create,
 );
 router.patch(
   "/:id",
   authenticate,
   authorize("attendance.update"),
   validate(updateAttendanceSchema),
-  controller.update
+  controller.update,
 );
 router.delete("/:id", authenticate, authorize("attendance.delete"), controller.delete);
 

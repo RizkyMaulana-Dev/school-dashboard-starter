@@ -10,7 +10,7 @@ export class BookLoanRepository {
       status?: string;
       userId?: string;
       bookId?: string;
-    }
+    },
   ) {
     const where: any = {};
 
@@ -125,10 +125,7 @@ export class BookLoanRepository {
       if (data.returnDate !== undefined) updateData.returnDate = data.returnDate;
 
       // Jika status berubah menjadi DIKEMBALIKAN dan sebelumnya bukan DIKEMBALIKAN, kembalikan stok
-      if (
-        data.status === "DIKEMBALIKAN" &&
-        existingLoan.status !== "DIKEMBALIKAN"
-      ) {
+      if (data.status === "DIKEMBALIKAN" && existingLoan.status !== "DIKEMBALIKAN") {
         // Kembalikan stok hanya jika belum dikembalikan sebelumnya
         await tx.book.update({
           where: { id: existingLoan.bookId },

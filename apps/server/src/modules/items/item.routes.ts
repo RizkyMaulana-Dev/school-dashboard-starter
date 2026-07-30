@@ -15,14 +15,14 @@ router.post(
   authenticate,
   authorize("item.create"),
   validate(createItemSchema),
-  controller.create
+  controller.create,
 );
 router.patch(
   "/:id",
   authenticate,
   authorize("item.update"),
   validate(updateItemSchema),
-  controller.update
+  controller.update,
 );
 router.delete("/:id", authenticate, authorize("item.delete"), controller.delete);
 

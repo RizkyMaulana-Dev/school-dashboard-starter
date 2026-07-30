@@ -10,10 +10,10 @@ export class BookRepository {
 
     if (query.search) {
       where.OR = [
-        { title: { contains: query.search} },
-        { author: { contains: query.search} },
-        { isbn: { contains: query.search} },
-        { publisher: { contains: query.search} },
+        { title: { contains: query.search } },
+        { author: { contains: query.search } },
+        { isbn: { contains: query.search } },
+        { publisher: { contains: query.search } },
       ];
     }
 
@@ -43,10 +43,10 @@ export class BookRepository {
     const where: any = {};
     if (search) {
       where.OR = [
-        { title: { contains: search} },
-        { author: { contains: search} },
-        { isbn: { contains: search} },
-        { publisher: { contains: search} },
+        { title: { contains: search } },
+        { author: { contains: search } },
+        { isbn: { contains: search } },
+        { publisher: { contains: search } },
       ];
     }
     if (categoryId) {
