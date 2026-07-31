@@ -109,6 +109,7 @@ export default function BookList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.BOOK_DETAIL.replace(":id", user.id))}
         />
       )}
       {/* Pagination */}

@@ -63,8 +63,8 @@ export default function AttendanceTable() {
       <div>
         <h1 className="text-2xl font-bold">{session.data.title}</h1>
         <p className="text-sm text-gray-500">
-          {session.data.schoolClass?.name} |{" "}
-          {new Date(session.data.date).toLocaleDateString("id-ID")} | Guru:{" "}
+          {session.data.schoolClass?.name} |
+          {new Date(session.data.date).toLocaleDateString("id-ID")} | Guru:
           {session.data.teacher?.name}
         </p>
       </div>

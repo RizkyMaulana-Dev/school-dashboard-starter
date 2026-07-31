@@ -110,6 +110,7 @@ export default function ItemList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.ITEM_DETAIL.replace(":id", user.id))}
         />
       )}
 

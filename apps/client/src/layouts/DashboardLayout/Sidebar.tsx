@@ -196,7 +196,8 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto mb-16 custom-scrollbar">
         {filteredNavItems.map((item) => (
-          <div key={item.path || item.label} className="mb-1">
+          //   <div key={item.path || item.label} className="mb-1">
+          <div key={item.label} className="mb-1">
             {item.children ? (
               <div className="flex flex-col">
                 {/* Parent Button */}

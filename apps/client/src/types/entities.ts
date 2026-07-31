@@ -8,8 +8,8 @@ export interface User {
   email: string;
   isActive: boolean;
   roles: Role[];
-  student?: Student | null;
-  teacher?: Teacher | null;
+  student?: Student | null; // gunakan tipe Student lengkap
+  teacher?: Teacher | null; // gunakan tipe Teacher lengkap
   createdAt: string;
   updatedAt: string;
 }
@@ -38,7 +38,7 @@ export interface Student {
   gender: Gender;
   birthDate: string;
   userId: string;
-  user?: Pick<User, "id" | "email" | "isActive">;
+  user?: Pick<User, "id" | "name" | "email" | "isActive">;
   schoolClassId: string;
   schoolClass?: Pick<SchoolClass, "id" | "name" | "grade">;
   createdAt: string;
@@ -51,7 +51,7 @@ export interface Teacher {
   gender: Gender;
   birthDate: string;
   userId: string;
-  user?: Pick<User, "id" | "email" | "isActive">;
+  user?: Pick<User, "id" | "name" | "email" | "isActive">; // tambahkan name
   homeroomClasses?: Pick<SchoolClass, "id" | "name" | "grade">[];
   createdAt: string;
   updatedAt: string;
@@ -126,8 +126,13 @@ export interface Book {
   author: string;
   publisher: string;
   publishedYear: number;
-  bookCategoryId: string;
-  bookCategory?: BookCategory;
+  bookCategoryId?: string; // opsional (backend pakai category objek)
+  category?: {
+    // tambahan dari respons backend
+    id: string;
+    name: string;
+  };
+  bookCategory?: BookCategory; // tetap ada untuk backward compatibility
   stockTotal: number;
   stockAvailable: number;
   shelfLocation: string | null;
@@ -172,8 +177,9 @@ export interface Item {
   id: string;
   itemCode: string;
   name: string;
-  categoryId: string;
-  category?: ItemCategory;
+  categoryId?: string;
+  category?: { id: string; name: string };
+  itemCategory?: ItemCategory;
   stockTotal: number;
   stockAvailable: number;
   condition: ItemCondition;

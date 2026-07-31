@@ -106,6 +106,7 @@ export default function ClassList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.CLASS_DETAIL.replace(":id", user.id))}
         />
       )}
 

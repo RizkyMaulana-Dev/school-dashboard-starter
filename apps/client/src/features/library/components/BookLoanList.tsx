@@ -178,6 +178,7 @@ export default function BookLoanList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.BOOK_LOAN_DETAIL.replace(":id", user.id))}
         />
       )}
 

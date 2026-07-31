@@ -122,6 +122,7 @@ export default function TeacherList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.TEACHER_DETAIL.replace(":id", user.id))}
         />
       )}
 

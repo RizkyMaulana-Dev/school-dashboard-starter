@@ -102,6 +102,9 @@ export default function SessionList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) =>
+            navigate(ROUTE_PATHS.ATTENDANCE_SESSION_DETAIL.replace(":id", user.id))
+          }
         />
       )}
       {/* Pagination */}

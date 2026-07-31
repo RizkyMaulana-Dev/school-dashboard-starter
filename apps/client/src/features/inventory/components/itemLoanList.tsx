@@ -172,6 +172,7 @@ export default function ItemLoanList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.ITEM_LOAN_DETAIL.replace(":id", user.id))}
         />
       )}
 

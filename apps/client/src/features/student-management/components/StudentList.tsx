@@ -117,6 +117,7 @@ export default function StudentList() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={setSortBy}
+          onRowClick={(user) => navigate(ROUTE_PATHS.STUDENT_DETAIL.replace(":id", user.id))}
         />
       )}
 

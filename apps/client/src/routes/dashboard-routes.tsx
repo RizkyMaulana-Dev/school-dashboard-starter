@@ -26,6 +26,15 @@ const ItemList = lazy(() => import("@/features/inventory/components/ItemList"));
 const ItemForm = lazy(() => import("@/features/inventory/components/ItemForm"));
 const ItemLoanList = lazy(() => import("@/features/inventory/components/itemLoanList"));
 const ItemLoanForm = lazy(() => import("@/features/inventory/components/itemLoanForm"));
+const UserDetail = lazy(() => import("@/features/user-management/components/UserDetail"));
+const ClassDetail = lazy(() => import("@/features/class-management/components/ClassDetail"));
+const StudentDetail = lazy(() => import("@/features/student-management/components/StudentDetail"));
+const TeacherDetail = lazy(() => import("@/features/teacher-management/components/TeacherDetail"));
+const SessionDetail = lazy(() => import("@/features/attendance/components/SessionDetail"));
+const BookDetail = lazy(() => import("@/features/library/components/BookDetail"));
+const BookLoanDetail = lazy(() => import("@/features/library/components/BookLoanDetail"));
+const ItemDetail = lazy(() => import("@/features/inventory/components/ItemDetail"));
+const ItemLoanDetail = lazy(() => import("@/features/inventory/components/ItemLoanDetail"));
 
 export const dashboardRoutes: RouteObject[] = [
   {
@@ -262,6 +271,15 @@ export const dashboardRoutes: RouteObject[] = [
           </ProtectedRoute>
         ),
       },
+      { path: "users/:id", element: <UserDetail /> },
+      { path: "classes/:id", element: <ClassDetail /> },
+      { path: "students/:id", element: <StudentDetail /> },
+      { path: "teachers/:id", element: <TeacherDetail /> },
+      { path: "attendance/sessions/:id", element: <SessionDetail /> },
+      { path: "library/books/:id", element: <BookDetail /> },
+      { path: "library/loans/:id", element: <BookLoanDetail /> },
+      { path: "inventory/items/:id", element: <ItemDetail /> },
+      { path: "inventory/loans/:id", element: <ItemLoanDetail /> },
     ],
   },
 ];
