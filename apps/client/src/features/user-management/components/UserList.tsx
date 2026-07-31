@@ -142,7 +142,7 @@ export default function UserList() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Manajemen User</h1>
+          <h1 className="text-2xl font-bold text-black">Manajemen User</h1>
           <p className="mt-1 text-sm text-gray-500">Kelola pengguna dan role akses</p>
         </div>
         <PermissionGate requiredPermissions="user.create">

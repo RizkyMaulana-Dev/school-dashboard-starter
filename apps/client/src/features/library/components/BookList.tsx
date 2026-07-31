@@ -1,15 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  Button,
-  Input,
-  Badge,
-  ConfirmDialog,
-  LoadingScreen,
-  ErrorMessage,
-  EmptyState,
-} from "@/components/ui";
+import { Table, Button, Input, LoadingScreen } from "@/components/ui";
+import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useBooks } from "../hooks/useBooks";
 import { useDeleteBook } from "../hooks/useBookMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -21,21 +14,32 @@ export default function BookList() {
   const [search, setSearch] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Book | null>(null);
   const debouncedSearch = useDebounce(search, 500);
-  const { queryParams, sortBy, sortOrder, setSortBy, setTotalItems } = usePagination();
+  const { queryParams, sortBy, sortOrder, setSortBy, page, setPage, setTotalItems, limit } =
+    usePagination();
   const { data, isLoading, isError, error, refetch } = useBooks({
     ...queryParams,
     search: debouncedSearch || undefined,
   });
   const deleteMutation = useDeleteBook();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset halaman saat search berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
+
+  // Sinkronkan total dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
 
   const columns = [
     {
       key: "title",
       header: "Judul",
       sortable: true,
-      render: (b: Book) => (
+      render: (b: any) => (
         <div>
           <p className="font-medium">{b.title}</p>
           <p className="text-sm text-gray-500">{b.isbn}</p>
@@ -46,13 +50,18 @@ export default function BookList() {
     {
       key: "stockAvailable",
       header: "Stok",
-      render: (b: Book) => `${b.stockAvailable}/${b.stockTotal}`,
+      render: (b: any) => `${b.stockAvailable}/${b.stockTotal}`,
+    },
+    {
+      key: "category",
+      header: "Kategori",
+      render: (b: any) => b.category?.name || "-",
     },
     {
       key: "actions",
       header: "Aksi",
       align: "center" as const,
-      render: (b: Book) => (
+      render: (b: any) => (
         <div className="flex gap-2 justify-center">
           <Button
             size="sm"
@@ -74,21 +83,21 @@ export default function BookList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return <ErrorMessage title="Gagal memuat buku" message={error?.message} onRetry={refetch} />;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Manajemen Buku</h1>
+        <h1 className="text-2xl font-bold text-black">Manajemen Buku</h1>
         <Button onClick={() => navigate(ROUTE_PATHS.BOOK_CREATE)}>+ Tambah Buku</Button>
       </div>
       <Input
         placeholder="Cari judul, penulis, ISBN..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada buku" />
@@ -102,6 +111,14 @@ export default function BookList() {
           onSort={setSortBy}
         />
       )}
+      {/* Pagination */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

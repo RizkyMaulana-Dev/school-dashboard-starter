@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, Button, Input, LoadingScreen } from "@/components/ui";
 import type { TableColumn } from "@/components/ui/Table";
 import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useStudents } from "../hooks/useStudents";
 import { useDeleteStudent } from "../hooks/useStudentMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -23,32 +24,45 @@ export default function StudentList() {
   });
   const deleteMutation = useDeleteStudent();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset ke halaman 1 saat search berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
 
-  const columns: TableColumn<Student>[] = [
+  // Sinkronkan total items dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
+
+  // Karena respons backend saat ini menggunakan field datar (email, className)
+  // dan tipe Student di frontend mungkin masih menggunakan relasi (user, schoolClass),
+  // kita gunakan casting sementara. Nantinya sesuaikan tipe Student di entities.ts.
+  const columns: TableColumn<any>[] = [
     {
       key: "name",
       header: "Nama",
       sortable: true,
-      render: (s: Student) => (
+      render: (s: any) => (
         <div>
           <p className="font-medium">{s.name}</p>
-          <p className="text-sm text-gray-500">{s.user?.email}</p>
+          <p className="text-sm text-gray-500">{s.email}</p>
         </div>
       ),
     },
-    { key: "gender", header: "Gender", render: (s: Student) => formatGender(s.gender) },
-    { key: "schoolClass", header: "Kelas", render: (s: Student) => s.schoolClass?.name || "-" },
+    { key: "gender", header: "Gender", render: (s: any) => formatGender(s.gender) },
+    { key: "className", header: "Kelas", render: (s: any) => s.className || "-" },
     {
       key: "birthDate",
       header: "Tgl Lahir",
-      render: (s: Student) => new Date(s.birthDate).toLocaleDateString("id-ID"),
+      render: (s: any) => new Date(s.birthDate).toLocaleDateString("id-ID"),
     },
     {
       key: "actions",
       header: "Aksi",
       align: "center" as const,
-      render: (s: Student) => (
+      render: (s: any) => (
         <div className="flex gap-2 justify-center">
           <Button
             size="sm"
@@ -70,7 +84,7 @@ export default function StudentList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return (
       <ErrorMessage title="Gagal memuat data siswa" message={error?.message} onRetry={refetch} />
@@ -80,21 +94,23 @@ export default function StudentList() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Siswa</h1>
+          <h1 className="text-2xl font-bold text-black">Manajemen Siswa</h1>
           <p className="text-sm text-gray-500">Data siswa dan kelas</p>
         </div>
         <Button onClick={() => navigate(ROUTE_PATHS.STUDENT_CREATE)}>+ Tambah Siswa</Button>
       </div>
+
       <Input
         placeholder="Cari nama atau email..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
+
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada siswa" />
       ) : (
-        <Table<Student>
+        <Table<any>
           columns={columns}
           data={data?.data || []}
           keyExtractor={(s) => s.id}
@@ -103,6 +119,16 @@ export default function StudentList() {
           onSort={setSortBy}
         />
       )}
+
+      {/* Pagination */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
+
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

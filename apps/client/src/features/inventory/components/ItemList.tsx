@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, Button, Input, Badge, LoadingScreen } from "@/components/ui";
 import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useItems } from "../hooks/useItems";
 import { useDeleteItem } from "../hooks/useItemMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -14,14 +15,25 @@ export default function ItemList() {
   const [search, setSearch] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Item | null>(null);
   const debouncedSearch = useDebounce(search, 500);
-  const { queryParams, sortBy, sortOrder, setSortBy, setTotalItems } = usePagination();
+  const { queryParams, sortBy, sortOrder, setSortBy, setPage, setTotalItems, page, limit } =
+    usePagination();
   const { data, isLoading, isError, error, refetch } = useItems({
     ...queryParams,
     search: debouncedSearch || undefined,
   });
   const deleteMutation = useDeleteItem();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset halaman saat pencarian berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
+
+  // Sinkronkan total dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
 
   const columns = [
     { key: "itemCode", header: "Kode", sortable: true },
@@ -39,6 +51,12 @@ export default function ItemList() {
       key: "stockAvailable",
       header: "Stok",
       render: (i: Item) => `${i.stockAvailable}/${i.stockTotal}`,
+    },
+    {
+      key: "category",
+      header: "Kategori",
+      // Respons backend mengirim "category" sebagai objek
+      render: (i: any) => i.category?.name || "-",
     },
     {
       key: "actions",
@@ -66,21 +84,21 @@ export default function ItemList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return <ErrorMessage title="Gagal memuat barang" message={error?.message} onRetry={refetch} />;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Manajemen Barang</h1>
+        <h1 className="text-2xl font-bold text-black">Manajemen Barang</h1>
         <Button onClick={() => navigate(ROUTE_PATHS.ITEM_CREATE)}>+ Tambah Barang</Button>
       </div>
       <Input
         placeholder="Cari kode atau nama..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada barang" />
@@ -94,6 +112,15 @@ export default function ItemList() {
           onSort={setSortBy}
         />
       )}
+
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
+
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

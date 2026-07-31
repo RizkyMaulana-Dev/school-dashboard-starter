@@ -9,7 +9,6 @@ import { lazy } from "react";
 const DashboardHome = lazy(() => import("@/features/dashboard/components/DashboardHome"));
 const UserList = lazy(() => import("@/features/user-management/components/UserList"));
 const UserForm = lazy(() => import("@/features/user-management/components/UserForm"));
-const RoleList = lazy(() => import("@/features/user-management/components/RoleList"));
 const ClassList = lazy(() => import("@/features/class-management/components/ClassList"));
 const ClassForm = lazy(() => import("@/features/class-management/components/ClassForm"));
 const StudentList = lazy(() => import("@/features/student-management/components/StudentList"));
@@ -72,17 +71,6 @@ export const dashboardRoutes: RouteObject[] = [
           </ProtectedRoute>
         ),
       },
-
-      // Role Management
-      {
-        path: "roles",
-        element: (
-          <ProtectedRoute requiredPermissions={["role.read"]}>
-            <RoleList />
-          </ProtectedRoute>
-        ),
-      },
-
       // Class Management
       {
         path: "classes",

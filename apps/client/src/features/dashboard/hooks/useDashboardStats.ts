@@ -1,16 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { userService } from "@/services/user.service";
-import { studentService } from "@/services/student.service";
-import { teacherService } from "@/services/teacher.service";
-import { bookService } from "@/services/book.service";
-import { attendanceSessionService } from "@/services/attendance-session.service";
+// src/features/dashboard/hooks/useDashboardStats.ts
+import { useQuery } from '@tanstack/react-query';
+import { userService } from '@/services/user.service';
+import { studentService } from '@/services/student.service';
+import { teacherService } from '@/services/teacher.service';
+import { bookService } from '@/services/book.service';
+import { attendanceSessionService } from '@/services/attendance-session.service';
 
 export function useDashboardStats() {
   return useQuery({
-    queryKey: ["dashboard", "stats"],
+    queryKey: ['dashboard', 'stats'],
     queryFn: async () => {
-      // Fetch multiple stats in parallel
-      const [users, students, teachers, books, sessions] = await Promise.all([
+      const [usersRes, studentsRes, teachersRes, booksRes, sessionsRes] = await Promise.all([
         userService.getAll({ limit: 1 }),
         studentService.getAll({ limit: 1 }),
         teacherService.getAll({ limit: 1 }),
@@ -19,12 +19,13 @@ export function useDashboardStats() {
       ]);
 
       return {
-        totalUsers: users.meta.totalItems,
-        totalStudents: students.meta.totalItems,
-        totalTeachers: teachers.meta.totalItems,
-        totalBooks: books.meta.totalItems,
-        totalSessions: sessions.meta.totalItems,
+        totalUsers: usersRes?.meta?.total ?? 0,
+        totalStudents: studentsRes?.meta?.total ?? 0,
+        totalTeachers: teachersRes?.meta?.total ?? 0,
+        totalBooks: booksRes?.meta?.total ?? 0,
+        totalSessions: sessionsRes?.meta?.total ?? 0,
       };
     },
+    staleTime: 5 * 60 * 1000,
   });
 }

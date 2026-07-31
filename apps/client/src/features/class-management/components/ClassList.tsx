@@ -1,15 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  Button,
-  Input,
-  Badge,
-  ConfirmDialog,
-  LoadingScreen,
-  ErrorMessage,
-  EmptyState,
-} from "@/components/ui";
+import { Table, Button, Input, LoadingScreen } from "@/components/ui";
+import { ErrorMessage, EmptyState, ConfirmDialog } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useClasses } from "../hooks/useClasses";
 import { useDeleteClass } from "../hooks/useClassMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -29,7 +22,17 @@ export default function ClassList() {
   });
   const deleteMutation = useDeleteClass();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset ke halaman 1 saat search berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
+
+  // Update total items dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
 
   const columns = [
     {
@@ -44,7 +47,7 @@ export default function ClassList() {
       key: "studentCount",
       header: "Siswa",
       align: "center" as const,
-      render: (c: SchoolClass) => c.studentCount ?? 0,
+      render: (c: SchoolClass) => (c as any).studentCount ?? 0,
     },
     {
       key: "actions",
@@ -72,7 +75,7 @@ export default function ClassList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return <ErrorMessage title="Gagal memuat kelas" message={error?.message} onRetry={refetch} />;
 
@@ -80,17 +83,19 @@ export default function ClassList() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Kelas</h1>
+          <h1 className="text-2xl font-bold text-black">Manajemen Kelas</h1>
           <p className="text-sm text-gray-500">Daftar kelas dan rombongan belajar</p>
         </div>
         <Button onClick={() => navigate(ROUTE_PATHS.CLASS_CREATE)}>+ Tambah Kelas</Button>
       </div>
+
       <Input
         placeholder="Cari kelas..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
+
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada kelas" />
       ) : (
@@ -103,6 +108,16 @@ export default function ClassList() {
           onSort={setSortBy}
         />
       )}
+
+      {/* Pagination */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
+
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

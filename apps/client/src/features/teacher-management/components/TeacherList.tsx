@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, Button, Input, LoadingScreen } from "@/components/ui";
 import type { TableColumn } from "@/components/ui/Table";
 import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useTeachers } from "../hooks/useTeachers";
 import { useDeleteTeacher } from "../hooks/useTeacherMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -10,7 +11,7 @@ import { ROUTE_PATHS } from "@/routes/route-paths";
 import { formatGender } from "@/utils/formatters";
 import type { Teacher } from "@/types/entities";
 
-export default function StudentList() {
+export default function TeacherList() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Teacher | null>(null);
@@ -23,35 +24,50 @@ export default function StudentList() {
   });
   const deleteMutation = useDeleteTeacher();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
 
-  const columns: TableColumn<Teacher>[] = [
+  // Sinkronkan total items dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
+
+  // Karena respons backend memberikan email langsung dan classes sebagai array,
+  // sesuaikan kolom dengan data aktual.
+  const columns: TableColumn<any>[] = [
     {
       key: "name",
       header: "Nama",
       sortable: true,
-      render: (t) => (
+      render: (t: any) => (
         <div>
           <p className="font-medium">{t.name}</p>
-          <p className="text-sm text-gray-500">{t.user?.email}</p>
+          <p className="text-sm text-gray-500">{t.email}</p>
         </div>
       ),
     },
     {
       key: "gender",
       header: "Gender",
-      render: (t) => formatGender(t.gender),
+      render: (t: any) => formatGender(t.gender),
     },
     {
-      key: "birthDate",
-      header: "Tanggal Lahir",
-      render: (t) => new Date(t.birthDate).toLocaleDateString("id-ID"),
+      key: "classes",
+      header: "Kelas",
+      render: (t: any) => {
+        if (!t.classes || t.classes.length === 0) return "-";
+        return t.classes.map((c: any) => c.name ?? c).join(", ");
+      },
     },
     {
       key: "actions",
       header: "Aksi",
       align: "center",
-      render: (t) => (
+      render: (t: any) => (
         <div className="flex gap-2 justify-center">
           <Button
             size="sm"
@@ -73,7 +89,7 @@ export default function StudentList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return (
       <ErrorMessage title="Gagal memuat data Guru" message={error?.message} onRetry={refetch} />
@@ -83,21 +99,23 @@ export default function StudentList() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Guru</h1>
+          <h1 className="text-2xl font-bold text-black">Manajemen Guru</h1>
           <p className="text-sm text-gray-500">Data Guru dan kelas</p>
         </div>
         <Button onClick={() => navigate(ROUTE_PATHS.TEACHER_CREATE)}>+ Tambah Guru</Button>
       </div>
+
       <Input
         placeholder="Cari nama atau email..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
+
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada Guru" />
       ) : (
-        <Table<Teacher>
+        <Table<any>
           columns={columns}
           data={data?.data || []}
           keyExtractor={(s) => s.id}
@@ -106,6 +124,16 @@ export default function StudentList() {
           onSort={setSortBy}
         />
       )}
+
+      {/* Pagination */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
+
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

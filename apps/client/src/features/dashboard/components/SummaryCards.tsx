@@ -1,9 +1,10 @@
+// src/features/dashboard/components/SummaryCards.tsx
 import { StatCard } from "./StatCard";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ErrorMessage } from "@/components/feedback/ErrorMessage";
 
-// SVG Icons
+// Ikon SVG
 const UsersIcon = () => (
   <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path
@@ -48,49 +49,49 @@ const BookIcon = () => (
   </svg>
 );
 
+const SessionIcon = () => (
+  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    />
+  </svg>
+);
+
 export function SummaryCards() {
   const { data, isLoading, isError, error, refetch } = useDashboardStats();
 
   if (isLoading) {
-    return <LoadingScreen message="Loading dashboard..." />;
+    return <LoadingScreen message="Memuat ringkasan..." />;
   }
 
   if (isError) {
     return (
       <ErrorMessage
-        title="Gagal memuat dashboard"
+        title="Gagal memuat ringkasan"
         message={error instanceof Error ? error.message : "Terjadi kesalahan"}
         onRetry={() => refetch()}
       />
     );
   }
 
+  const stats = data ?? {
+    totalUsers: 0,
+    totalStudents: 0,
+    totalTeachers: 0,
+    totalBooks: 0,
+    totalSessions: 0,
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatCard
-        title="Total Users"
-        value={data?.totalUsers ?? 0}
-        icon={<UsersIcon />}
-        trend={{ value: 12, isPositive: true }}
-      />
-      <StatCard
-        title="Total Siswa"
-        value={data?.totalStudents ?? 0}
-        icon={<StudentIcon />}
-        trend={{ value: 8, isPositive: true }}
-      />
-      <StatCard
-        title="Total Guru"
-        value={data?.totalTeachers ?? 0}
-        icon={<TeacherIcon />}
-        trend={{ value: 5, isPositive: true }}
-      />
-      <StatCard
-        title="Total Buku"
-        value={data?.totalBooks ?? 0}
-        icon={<BookIcon />}
-        trend={{ value: 3, isPositive: false }}
-      />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <StatCard title="Total Users" value={stats.totalUsers} icon={<UsersIcon />} />
+      <StatCard title="Siswa" value={stats.totalStudents} icon={<StudentIcon />} />
+      <StatCard title="Guru" value={stats.totalTeachers} icon={<TeacherIcon />} />
+      <StatCard title="Buku" value={stats.totalBooks} icon={<BookIcon />} />
+      <StatCard title="Sesi Presensi" value={stats.totalSessions} icon={<SessionIcon />} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, Button, Input, LoadingScreen } from "@/components/ui";
 import { ConfirmDialog, ErrorMessage, EmptyState } from "@/components/feedback";
+import { Pagination } from "@/components/ui/Pagination";
 import { useSessions } from "../hooks/useSessions";
 import { useDeleteSession } from "../hooks/useAttendanceMutations";
 import { usePagination, useDebounce } from "@/hooks";
@@ -13,7 +14,7 @@ export default function SessionList() {
   const [search, setSearch] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<AttendanceSession | null>(null);
   const debouncedSearch = useDebounce(search, 500);
-  const { queryParams, sortBy, sortOrder, setSortBy, page, setPage, setTotalItems } =
+  const { queryParams, limit, sortBy, sortOrder, setSortBy, page, setPage, setTotalItems } =
     usePagination();
   const { data, isLoading, isError, error, refetch } = useSessions({
     ...queryParams,
@@ -21,7 +22,17 @@ export default function SessionList() {
   });
   const deleteMutation = useDeleteSession();
 
-  if (data?.meta?.totalItems) setTotalItems(data.meta.totalItems);
+  // Reset halaman saat pencarian berubah
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, setPage]);
+
+  // Sinkronkan total dari meta backend
+  useEffect(() => {
+    if (data?.meta?.total !== undefined) {
+      setTotalItems(data.meta.total);
+    }
+  }, [data?.meta?.total, setTotalItems]);
 
   const columns = [
     { key: "title", header: "Judul", sortable: true },
@@ -65,21 +76,21 @@ export default function SessionList() {
     },
   ];
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading && !data) return <LoadingScreen />;
   if (isError)
     return <ErrorMessage title="Gagal memuat sesi" message={error?.message} onRetry={refetch} />;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Sesi Presensi</h1>
+        <h1 className="text-2xl font-bold text-black">Sesi Presensi</h1>
         <Button onClick={() => navigate(ROUTE_PATHS.ATTENDANCE_SESSION_CREATE)}>+ Buat Sesi</Button>
       </div>
       <Input
         placeholder="Cari sesi..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="max-w-md"
+        className="max-w-md text-black"
       />
       {data?.data.length === 0 ? (
         <EmptyState title="Belum ada sesi" />
@@ -93,6 +104,14 @@ export default function SessionList() {
           onSort={setSortBy}
         />
       )}
+      {/* Pagination */}
+      <Pagination
+        page={page}
+        totalPages={data?.meta?.totalPages ?? 1}
+        total={data?.meta?.total ?? 0}
+        limit={limit}
+        onPageChange={setPage}
+      />
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
