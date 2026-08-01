@@ -46,6 +46,7 @@ export const ROUTE_PATHS = {
   ATTENDANCE_SESSION_EDIT: "/app/attendance/sessions/:id/edit",
   ATTENDANCE_SESSION_DETAIL: "/app/attendance/sessions/:id",
   ATTENDANCE_RECORDS: "/app/attendance/records",
+  ATTENDANCE_RECORDS_DETAIL: "/app/attendance/records/:id",
 
   // Library
   BOOKS: "/app/library/books",

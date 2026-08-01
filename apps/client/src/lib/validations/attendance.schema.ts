@@ -11,8 +11,18 @@ export const sessionSchema = z.object({
 export type SessionFormData = z.infer<typeof sessionSchema>;
 
 export const attendanceRecordSchema = z.object({
-  studentId: z.string().min(1),
+  attendanceSessionId: z.string().min(1, "Sesi wajib dipilih"),
+  studentId: z.string().min(1, "Siswa wajib dipilih"),
   status: z.enum(["PRESENT", "ABSENT", "LATE", "EXCUSED"]),
   notes: z.string().optional(),
 });
+
 export type AttendanceRecordFormData = z.infer<typeof attendanceRecordSchema>;
+
+// src/lib/validations/attendance.schema.ts
+export const attendanceRecordEditSchema = z.object({
+  status: z.enum(['PRESENT', 'ABSENT', 'LATE', 'EXCUSED']),
+  notes: z.string().optional().nullable(),
+});
+
+export type AttendanceRecordEditFormData = z.infer<typeof attendanceRecordEditSchema>;

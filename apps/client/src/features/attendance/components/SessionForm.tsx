@@ -65,24 +65,37 @@ export default function SessionForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">{isEdit ? "Edit Sesi" : "Buat Sesi Baru"}</h1>
+      <h1 className="text-2xl font-bold text-black">{isEdit ? "Edit Sesi" : "Buat Sesi Baru"}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow p-6 space-y-4">
-        <Input label="Judul Sesi" {...register("title")} error={errors.title?.message} />
+        <Input
+          className="text-black"
+          label="Judul Sesi"
+          {...register("title")}
+          error={errors.title?.message}
+        />
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Tanggal" type="date" {...register("date")} error={errors.date?.message} />
+          <Input
+            label="Tanggal"
+            className="text-black"
+            type="date"
+            {...register("date")}
+            error={errors.date?.message}
+          />
           <div className="grid grid-cols-2 gap-2">
-            <Input label="Mulai" type="time" {...register("startTime")} />
-            <Input label="Selesai" type="time" {...register("endTime")} />
+            <Input className="text-black" label="Mulai" type="time" {...register("startTime")} />
+            <Input className="text-black" label="Selesai" type="time" {...register("endTime")} />
           </div>
         </div>
         <Select
           label="Kelas"
+          className="text-black"
           options={classesData?.data?.map((c) => ({ value: c.id, label: c.name })) || []}
           {...register("schoolClassId")}
           error={errors.schoolClassId?.message}
         />
         <Select
           label="Guru Pengawas"
+          className="text-black"
           options={teachersData?.data?.map((t) => ({ value: t.id, label: t.name })) || []}
           {...register("teacherId")}
           error={errors.teacherId?.message}

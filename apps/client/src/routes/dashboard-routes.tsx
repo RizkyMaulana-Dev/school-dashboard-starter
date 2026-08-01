@@ -17,7 +17,16 @@ const TeacherList = lazy(() => import("@/features/teacher-management/components/
 const TeacherForm = lazy(() => import("@/features/teacher-management/components/TeacherForm"));
 const AttendanceSessionList = lazy(() => import("@/features/attendance/components/SessionList"));
 const AttendanceSessionForm = lazy(() => import("@/features/attendance/components/SessionForm"));
-const AttendanceRecords = lazy(() => import("@/features/attendance/components/AttendanceTable"));
+const AttendanceRecordList = lazy(
+  () => import("@/features/attendance/components/AttendanceRecordList"),
+);
+const AttendanceRecordForm = lazy(
+  () => import("@/features/attendance/components/AttendanceRecordForm"),
+);
+const AttendanceRecordDetail = lazy(
+  () => import("@/features/attendance/components/AttendanceRecordDetail"),
+);
+
 const BookList = lazy(() => import("@/features/library/components/BookList"));
 const BookForm = lazy(() => import("@/features/library/components/BookForm"));
 const BookLoanList = lazy(() => import("@/features/library/components/BookLoanList"));
@@ -175,11 +184,35 @@ export const dashboardRoutes: RouteObject[] = [
           </ProtectedRoute>
         ),
       },
+      //   {
+      //     path: "attendance/sessions/:id",
+      //     element: (
+      //       <ProtectedRoute requiredPermissions={["attendance.read"]}>
+      //         <AttendanceRecords />
+      //       </ProtectedRoute>
+      //     ),
+      //   },
       {
-        path: "attendance/sessions/:id",
+        path: "attendance/records",
         element: (
           <ProtectedRoute requiredPermissions={["attendance.read"]}>
-            <AttendanceRecords />
+            <AttendanceRecordList />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "attendance/records/:id",
+        element: (
+          <ProtectedRoute requiredPermissions={["attendance.read"]}>
+            <AttendanceRecordDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "attendance/records/:id/edit",
+        element: (
+          <ProtectedRoute requiredPermissions={["attendance.update"]}>
+            <AttendanceRecordForm />
           </ProtectedRoute>
         ),
       },

@@ -97,9 +97,15 @@ export interface AttendanceRecord {
   id: string;
   status: AttendanceStatus;
   attendanceSessionId: string;
-  attendanceSession?: Pick<AttendanceSession, "id" | "title" | "date">;
+  attendanceSession?: Pick<AttendanceSession, 'id' | 'title' | 'date'> & {
+    class?: Pick<SchoolClass, 'id' | 'name'>;
+  };
+  // Tambahkan properti `session` untuk respons backend terbaru (sebagai alias opsional)
+  session?: Pick<AttendanceSession, 'id' | 'title' | 'date'> & {
+    class?: Pick<SchoolClass, 'id' | 'name'>;
+  };
   studentId: string;
-  student?: Pick<Student, "id" | "name">;
+  student?: Pick<Student, 'id' | 'name'>;
   recordedAt: string;
   notes: string | null;
   verificationData: Record<string, unknown> | null;

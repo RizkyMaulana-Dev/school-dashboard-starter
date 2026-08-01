@@ -8,6 +8,8 @@ import type {
   CreateAttendanceRecordDTO,
 } from "@/types/entities";
 
+import type { UpdateAttendanceRecordDTO } from "@/types/entities";
+
 export function useCreateSession() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -43,6 +45,24 @@ export function useDeleteSession() {
       addToast({ type: "success", title: "Sesi dihapus" });
     },
     onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+  });
+}
+
+export function useUpdateAttendanceRecord() {
+  const queryClient = useQueryClient();
+  const addToast = useUIStore((s) => s.addToast);
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateAttendanceRecordDTO }) =>
+      attendanceService.update(id, data),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["attendance-records"] });
+      addToast({
+        type: "success",
+        title: "Berhasil",
+        message: response.message || "Kehadiran diperbarui",
+      });
+    },
+    onError: (error) => addToast({ type: "error", title: "Gagal", message: error.message }),
   });
 }
 

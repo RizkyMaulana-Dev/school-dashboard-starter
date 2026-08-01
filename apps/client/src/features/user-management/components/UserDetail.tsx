@@ -18,7 +18,7 @@ export default function UserDetail() {
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Detail User</h1>
+        <h1 className="text-2xl font-bold text-black">Detail User</h1>
         <Link to={ROUTE_PATHS.USER_EDIT.replace(":id", user.id)}>
           <Button size="sm">Edit</Button>
         </Link>
@@ -26,7 +26,7 @@ export default function UserDetail() {
 
       <div className="bg-white shadow rounded-lg divide-y">
         <div className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Informasi Akun</h2>
+          <h2 className="text-lg font-semibold mb-4 text-black">Informasi Akun</h2>
           <dl className="grid grid-cols-2 gap-4">
             <div>
               <dt className="text-sm text-gray-500">Nama</dt>

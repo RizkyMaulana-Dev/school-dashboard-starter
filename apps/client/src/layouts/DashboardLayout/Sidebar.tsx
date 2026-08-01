@@ -87,6 +87,12 @@ export function Sidebar() {
           icon: "calendar",
           requiredPermission: "attendance-session.read",
         },
+        {
+          path: ROUTE_PATHS.ATTENDANCE_RECORDS,
+          label: "Record",
+          icon: "calendar",
+          requiredPermission: "attendance.read",
+        },
       ],
     },
     {
