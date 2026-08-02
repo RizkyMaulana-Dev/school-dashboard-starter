@@ -17,14 +17,15 @@ const TeacherList = lazy(() => import("@/features/teacher-management/components/
 const TeacherForm = lazy(() => import("@/features/teacher-management/components/TeacherForm"));
 const AttendanceSessionList = lazy(() => import("@/features/attendance/components/SessionList"));
 const AttendanceSessionForm = lazy(() => import("@/features/attendance/components/SessionForm"));
+const AttendanceSessionDetail = lazy(() => import("@/features/attendance/components/SessionDetail"));
 const AttendanceRecordList = lazy(
-  () => import("@/features/attendance/components/AttendanceRecordList"),
+    () => import("@/features/attendance/components/AttendanceRecordList"),
 );
 const AttendanceRecordForm = lazy(
-  () => import("@/features/attendance/components/AttendanceRecordForm"),
+    () => import("@/features/attendance/components/AttendanceRecordForm"),
 );
 const AttendanceRecordDetail = lazy(
-  () => import("@/features/attendance/components/AttendanceRecordDetail"),
+    () => import("@/features/attendance/components/AttendanceRecordDetail"),
 );
 
 const BookList = lazy(() => import("@/features/library/components/BookList"));
@@ -44,275 +45,323 @@ const BookDetail = lazy(() => import("@/features/library/components/BookDetail")
 const BookLoanDetail = lazy(() => import("@/features/library/components/BookLoanDetail"));
 const ItemDetail = lazy(() => import("@/features/inventory/components/ItemDetail"));
 const ItemLoanDetail = lazy(() => import("@/features/inventory/components/ItemLoanDetail"));
+const ItemCategoryList = lazy(() => import("@/features/inventory/components/ItemCategoryList"));
+const ItemCategoryForm = lazy(() => import("@/features/inventory/components/ItemCategoryForm"));
+const ItemCategoryDetail = lazy(() => import("@/features/inventory/components/ItemCategoryDetail"));
+
 
 export const dashboardRoutes: RouteObject[] = [
-  {
-    path: ROUTE_PATHS.DASHBOARD,
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
-    children: [
-      // Dashboard Home
-      {
-        index: true,
-        element: <DashboardHome />,
-      },
-      {
-        path: "dashboard",
-        element: <DashboardHome />,
-      },
+    {
+        path: ROUTE_PATHS.DASHBOARD,
+        element: (
+            <ProtectedRoute>
+                <DashboardLayout />
+            </ProtectedRoute>
+        ),
+        children: [
+            // Dashboard Home
+            {
+                index: true,
+                element: <DashboardHome />,
+            },
+            {
+                path: "dashboard",
+                element: <DashboardHome />,
+            },
 
-      // User Management
-      {
-        path: "users",
-        element: (
-          <ProtectedRoute requiredPermissions={["user.read"]}>
-            <UserList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "users/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["user.create"]}>
-            <UserForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "users/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["user.update"]}>
-            <UserForm />
-          </ProtectedRoute>
-        ),
-      },
-      // Class Management
-      {
-        path: "classes",
-        element: (
-          <ProtectedRoute requiredPermissions={["class.read"]}>
-            <ClassList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "classes/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["class.create"]}>
-            <ClassForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "classes/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["class.update"]}>
-            <ClassForm />
-          </ProtectedRoute>
-        ),
-      },
+            // User Management
+            {
+                path: "users",
+                element: (
+                    <ProtectedRoute requiredPermissions={["user.read"]}>
+                        <UserList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "users/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["user.create"]}>
+                        <UserForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "users/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["user.update"]}>
+                        <UserForm />
+                    </ProtectedRoute>
+                ),
+            },
+            // Class Management
+            {
+                path: "classes",
+                element: (
+                    <ProtectedRoute requiredPermissions={["class.read"]}>
+                        <ClassList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "classes/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["class.create"]}>
+                        <ClassForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "classes/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["class.update"]}>
+                        <ClassForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Student Management
-      {
-        path: "students",
-        element: (
-          <ProtectedRoute requiredPermissions={["student.read"]}>
-            <StudentList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "students/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["student.create"]}>
-            <StudentForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "students/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["student.update"]}>
-            <StudentForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Student Management
+            {
+                path: "students",
+                element: (
+                    <ProtectedRoute requiredPermissions={["student.read"]}>
+                        <StudentList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "students/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["student.create"]}>
+                        <StudentForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "students/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["student.update"]}>
+                        <StudentForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Teacher Management
-      {
-        path: "teachers",
-        element: (
-          <ProtectedRoute requiredPermissions={["teacher.read"]}>
-            <TeacherList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "teachers/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["teacher.create"]}>
-            <TeacherForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "teachers/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["teacher.update"]}>
-            <TeacherForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Teacher Management
+            {
+                path: "teachers",
+                element: (
+                    <ProtectedRoute requiredPermissions={["teacher.read"]}>
+                        <TeacherList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "teachers/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["teacher.create"]}>
+                        <TeacherForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "teachers/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["teacher.update"]}>
+                        <TeacherForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Attendance
-      {
-        path: "attendance/sessions",
-        element: (
-          <ProtectedRoute requiredPermissions={["attendance-session.read"]}>
-            <AttendanceSessionList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "attendance/sessions/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["attendance-session.create"]}>
-            <AttendanceSessionForm />
-          </ProtectedRoute>
-        ),
-      },
-      //   {
-      //     path: "attendance/sessions/:id",
-      //     element: (
-      //       <ProtectedRoute requiredPermissions={["attendance.read"]}>
-      //         <AttendanceRecords />
-      //       </ProtectedRoute>
-      //     ),
-      //   },
-      {
-        path: "attendance/records",
-        element: (
-          <ProtectedRoute requiredPermissions={["attendance.read"]}>
-            <AttendanceRecordList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "attendance/records/:id",
-        element: (
-          <ProtectedRoute requiredPermissions={["attendance.read"]}>
-            <AttendanceRecordDetail />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "attendance/records/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["attendance.update"]}>
-            <AttendanceRecordForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Attendance
+            {
+                path: "attendance/sessions",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance-session.read"]}>
+                        <AttendanceSessionList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "attendance/sessions/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance-session.create"]}>
+                        <AttendanceSessionForm />
+                    </ProtectedRoute>
+                ),
+            },
+            // Di bagian Attendance, setelah create:
+            {
+                path: "attendance/sessions/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance-session.update"]}>
+                        <AttendanceSessionForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "attendance/sessions/:id",
+                element: <SessionDetail />, // pindahkan dari bawah, letakkan di sini setelah edit
+            }, {
+                path: "attendance/records",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance.read"]}>
+                        <AttendanceRecordList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "attendance/records/:id",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance.read"]}>
+                        <AttendanceRecordDetail />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "attendance/records/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["attendance.update"]}>
+                        <AttendanceRecordForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Library - Books
-      {
-        path: "library/books",
-        element: (
-          <ProtectedRoute requiredPermissions={["book.read"]}>
-            <BookList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "library/books/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["book.create"]}>
-            <BookForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "library/books/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["book.update"]}>
-            <BookForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Library - Books
+            {
+                path: "library/books",
+                element: (
+                    <ProtectedRoute requiredPermissions={["book.read"]}>
+                        <BookList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "library/books/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["book.create"]}>
+                        <BookForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "library/books/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["book.update"]}>
+                        <BookForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Library - Book Loans
-      {
-        path: "library/loans",
-        element: (
-          <ProtectedRoute requiredPermissions={["book-loan.read"]}>
-            <BookLoanList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "library/loans/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["book-loan.create"]}>
-            <BookLoanForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Library - Book Loans
+            {
+                path: "library/loans",
+                element: (
+                    <ProtectedRoute requiredPermissions={["book-loan.read"]}>
+                        <BookLoanList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "library/loans/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["book-loan.create"]}>
+                        <BookLoanForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Inventory - Items
-      {
-        path: "inventory/items",
-        element: (
-          <ProtectedRoute requiredPermissions={["item.read"]}>
-            <ItemList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "inventory/items/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["item.create"]}>
-            <ItemForm />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "inventory/items/:id/edit",
-        element: (
-          <ProtectedRoute requiredPermissions={["item.update"]}>
-            <ItemForm />
-          </ProtectedRoute>
-        ),
-      },
+            // Inventory - Items
+            {
+                path: "inventory/items",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.read"]}>
+                        <ItemList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/items/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.create"]}>
+                        <ItemForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/items/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.update"]}>
+                        <ItemForm />
+                    </ProtectedRoute>
+                ),
+            },
 
-      // Inventory - Item Loans
-      {
-        path: "inventory/loans",
-        element: (
-          <ProtectedRoute requiredPermissions={["item-loan.read"]}>
-            <ItemLoanList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "inventory/loans/create",
-        element: (
-          <ProtectedRoute requiredPermissions={["item-loan.create"]}>
-            <ItemLoanForm />
-          </ProtectedRoute>
-        ),
-      },
-      { path: "users/:id", element: <UserDetail /> },
-      { path: "classes/:id", element: <ClassDetail /> },
-      { path: "students/:id", element: <StudentDetail /> },
-      { path: "teachers/:id", element: <TeacherDetail /> },
-      { path: "attendance/sessions/:id", element: <SessionDetail /> },
-      { path: "library/books/:id", element: <BookDetail /> },
-      { path: "library/loans/:id", element: <BookLoanDetail /> },
-      { path: "inventory/items/:id", element: <ItemDetail /> },
-      { path: "inventory/loans/:id", element: <ItemLoanDetail /> },
-    ],
-  },
+            // Inventory - Item Loans
+            {
+                path: "inventory/loans",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item-loan.read"]}>
+                        <ItemLoanList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/loans/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item-loan.create"]}>
+                        <ItemLoanForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/loans/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item-loan.update"]}>
+                        <ItemLoanForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/categories",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.read"]}>
+                        <ItemCategoryList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/categories/create",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.create"]}>
+                        <ItemCategoryForm />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/categories/:id",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.read"]}>
+                        <ItemCategoryDetail />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "inventory/categories/:id/edit",
+                element: (
+                    <ProtectedRoute requiredPermissions={["item.update"]}>
+                        <ItemCategoryForm />
+                    </ProtectedRoute>
+                ),
+            },
+            { path: "users/:id", element: <UserDetail /> },
+            { path: "classes/:id", element: <ClassDetail /> },
+            { path: "students/:id", element: <StudentDetail /> },
+            { path: "teachers/:id", element: <TeacherDetail /> },
+            { path: "attendance/sessions/:id", element: <SessionDetail /> },
+            { path: "library/books/:id", element: <BookDetail /> },
+            { path: "library/loans/:id", element: <BookLoanDetail /> },
+            { path: "inventory/items/:id", element: <ItemDetail /> },
+            { path: "inventory/loans/:id", element: <ItemLoanDetail /> },
+        ],
+    },
 ];

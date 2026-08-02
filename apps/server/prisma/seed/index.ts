@@ -74,6 +74,11 @@ const PERMISSIONS = [
   "item-loan.create",
   "item-loan.update",
   "item-loan.delete",
+
+  "item-category.read",
+  "item-category.create",
+  "item-category.update",
+  "item-category.delete",
 ];
 
 // Permission subsets used by non-admin roles
@@ -83,6 +88,37 @@ const STUDENT_PERMISSIONS = ["dashboard.read", "student.read"];
 
 const VIEWER_PERMISSIONS = ["dashboard.read"];
 
+const STAFF_PERMISSIONS = [
+  "dashboard.read",
+
+  "class.read",
+  "student.read",
+  "teacher.read",
+
+  "book.read",
+  "book.create",
+  "book.update",
+  "book.delete",
+  "book-loan.read",
+  "book-loan.create",
+  "book-loan.update",
+  "book-loan.delete",
+
+  "item.read",
+  "item.create",
+  "item.update",
+  "item.delete",
+
+  "item-loan.read",
+  "item-loan.create",
+  "item-loan.update",
+  "item-loan.delete",
+
+  "attendance-session.read",
+  "attendance.read",
+  "attendance.create",
+  "attendance.update",
+];
 async function seedPermissions() {
   for (const permission of PERMISSIONS) {
     await prisma.permission.upsert({
@@ -126,9 +162,15 @@ async function seedRoles() {
     create: { name: "Viewer", description: "Read only role" },
   });
 
+  const staffRole = await prisma.role.upsert({
+    where: { name: "Staff" },
+    update: {},
+    create: { name: "Staff", description: "Verificator daily transaction" },
+  });
+
   logger.info("✅ Roles seeded");
 
-  return { superAdminRole, teacherRole, studentRole, viewerRole };
+  return { superAdminRole, teacherRole, studentRole, viewerRole, staffRole };
 }
 
 // =========================
@@ -139,6 +181,7 @@ async function seedRolePermissions(roles: {
   teacherRole: { id: string };
   studentRole: { id: string };
   viewerRole: { id: string };
+  staffRole: { id: string };
 }) {
   const allPermissions = await prisma.permission.findMany();
   const findIds = (names: string[]) =>
@@ -168,6 +211,11 @@ async function seedRolePermissions(roles: {
   await prisma.role.update({
     where: { id: roles.viewerRole.id },
     data: { permissions: { set: findIds(VIEWER_PERMISSIONS) } },
+  });
+
+  await prisma.role.update({
+    where: { id: roles.staffRole.id },
+    data: { permissions: { set: findIds(STAFF_PERMISSIONS) } },
   });
 
   logger.info("✅ Role permissions assigned");

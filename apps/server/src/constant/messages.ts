@@ -112,3 +112,19 @@ export const ITEM_LOAN_MESSAGES = {
   ITEM_NOT_FOUND: "Barang tidak ditemukan",
   OUT_OF_STOCK: "Stok barang tidak mencukupi",
 };
+
+export const ROLE_MESSAGES = {
+  FETCHED: "Data role berhasil diambil",
+  FETCHED_ONE: "Detail role berhasil diambil",
+  NOT_FOUND: "Role tidak ditemukan",
+};
+
+export const ITEM_CATEGORY_MESSAGES = {
+  FETCHED: "Data kategori barang berhasil diambil",
+  FETCHED_ONE: "Detail kategori barang berhasil diambil",
+  CREATED: "Kategori barang berhasil dibuat",
+  UPDATED: "Kategori barang berhasil diperbarui",
+  DELETED: "Kategori barang berhasil dihapus",
+  NOT_FOUND: "Kategori barang tidak ditemukan",
+  ALREADY_EXISTS: "Nama kategori barang sudah ada",
+};

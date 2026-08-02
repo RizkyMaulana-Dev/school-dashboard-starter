@@ -1,13 +1,19 @@
+// src/features/inventory/components/ItemLoanForm.tsx
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Select, Button, LoadingScreen } from "@/components/ui";
+import { Select, Button, LoadingScreen, Input } from "@/components/ui";
 import { useItemLoanDetail } from "../hooks/useItemLoan";
 import { useCreateItemLoan, useUpdateItemLoan } from "../hooks/useItemLoanMutations";
 import { useItems } from "../hooks/useItems";
 import { useUsers } from "@/features/user-management/hooks/useUsers";
-import { itemLoanSchema, type ItemLoanFormData } from "@/lib/validations/inventory.schema";
+import {
+  itemLoanSchema,
+  itemLoanEditSchema,
+  type ItemLoanFormData,
+  type ItemLoanEditFormData,
+} from "@/lib/validations/inventory.schema";
 import { ROUTE_PATHS } from "@/routes/route-paths";
 
 export default function ItemLoanForm() {
@@ -26,11 +32,12 @@ export default function ItemLoanForm() {
   const items = itemsResponse?.data ?? [];
   const users = usersResponse?.data ?? [];
 
+  // Form untuk tambah
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    register: registerCreate,
+    handleSubmit: handleSubmitCreate,
+    // reset: resetCreate,
+    formState: { errors: errorsCreate },
   } = useForm<ItemLoanFormData>({
     resolver: zodResolver(itemLoanSchema),
     defaultValues: {
@@ -43,35 +50,137 @@ export default function ItemLoanForm() {
     },
   });
 
+  // Form untuk edit
+  const {
+    register: registerEdit,
+    handleSubmit: handleSubmitEdit,
+    reset: resetEdit,
+    formState: { errors: errorsEdit },
+  } = useForm<ItemLoanEditFormData>({
+    resolver: zodResolver(itemLoanEditSchema),
+    defaultValues: {
+      status: "DIPINJAM",
+      notes: "",
+    },
+  });
+
+  // Reset form edit saat data loan tersedia
   useEffect(() => {
     if (loan && isEdit) {
-      reset({
-        itemId: loan.itemId,
-        userId: loan.userId,
-        quantity: loan.quantity,
-        borrowDate: loan.borrowDate.split("T")[0],
-        dueDate: loan.dueDate.split("T")[0],
+      resetEdit({
+        status: loan.status,
         notes: loan.notes ?? "",
       });
     }
-  }, [loan, isEdit, reset]);
+  }, [loan, isEdit, resetEdit]);
 
-  const onSubmit = (data: ItemLoanFormData) => {
+  const onSubmitCreate = (data: ItemLoanFormData) => {
+    createMutation.mutate(data, { onSuccess: () => navigate(ROUTE_PATHS.ITEM_LOANS) });
+  };
+
+  const onSubmitEdit = (data: ItemLoanEditFormData) => {
     if (isEdit && id) {
       updateMutation.mutate({ id, data }, { onSuccess: () => navigate(ROUTE_PATHS.ITEM_LOANS) });
-    } else {
-      createMutation.mutate(data, { onSuccess: () => navigate(ROUTE_PATHS.ITEM_LOANS) });
     }
   };
 
   if (isEdit && loadingDetail) return <LoadingScreen />;
 
-  const isSubmitting = createMutation.isPending || updateMutation.isPending;
+  // Jika edit, tampilkan info readonly + form status
+  if (isEdit && loan) {
+    const isSubmitting = updateMutation.isPending;
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        <h1 className="text-2xl font-bold text-black">Edit Peminjaman Barang</h1>
+        <form onSubmit={handleSubmitEdit(onSubmitEdit)} className="space-y-6">
+          <div className="bg-white shadow rounded-lg p-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <label className="text-gray-500">Barang</label>
+                <p className="font-medium text-black">{loan.item?.name ?? "-"}</p>
+                <p className="text-xs text-gray-500">{loan.item?.itemCode}</p>
+              </div>
+              <div>
+                <label className="text-gray-500">Peminjam</label>
+                <p className="font-medium text-black">{loan.user?.name ?? "-"}</p>
+                <p className="text-xs text-gray-500">{loan.user?.email}</p>
+              </div>
+              <div>
+                <label className="text-gray-500">Jumlah</label>
+                <p className="font-medium text-black">{loan.quantity}</p>
+              </div>
+              <div>
+                <label className="text-gray-500">Tanggal Pinjam</label>
+                <p className="font-medium text-black">
+                  {new Date(loan.borrowDate).toLocaleDateString("id-ID")}
+                </p>
+              </div>
+              <div>
+                <label className="text-gray-500">Jatuh Tempo</label>
+                <p className="font-medium text-black">
+                  {new Date(loan.dueDate).toLocaleDateString("id-ID")}
+                </p>
+              </div>
+              <div>
+                <label className="text-gray-500">Tanggal Kembali</label>
+                <p className="font-medium text-black">
+                  {loan.returnDate ? new Date(loan.returnDate).toLocaleDateString("id-ID") : "-"}
+                </p>
+              </div>
+            </div>
 
+            <hr />
+
+            <Select
+              label="Status"
+              options={[
+                { value: "DIPINJAM", label: "Dipinjam" },
+                { value: "DIKEMBALIKAN", label: "Dikembalikan" },
+                { value: "HILANG", label: "Hilang" },
+                { value: "RUSAK", label: "Rusak" },
+              ]}
+              {...registerEdit("status")}
+              error={errorsEdit.status?.message}
+              disabled={isSubmitting}
+              className="text-black"
+            />
+
+            <Input
+              label="Catatan (opsional)"
+              {...registerEdit("notes")}
+              error={errorsEdit.notes?.message}
+              disabled={isSubmitting}
+              className="text-black"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => navigate(ROUTE_PATHS.ITEM_LOANS)}
+              disabled={isSubmitting}
+            >
+              Batal
+            </Button>
+            <Button type="submit" isLoading={isSubmitting}>
+              Simpan
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  // Tampilan tambah (create) biasa
+  const isSubmittingCreate = createMutation.isPending;
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">{isEdit ? "Edit Peminjaman" : "Pinjam Barang"}</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow rounded-lg p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Pinjam Barang</h1>
+      <form
+        onSubmit={handleSubmitCreate(onSubmitCreate)}
+        className="bg-white shadow rounded-lg p-6 space-y-4"
+      >
         <Select
           label="Barang"
           options={items.map((item) => ({
@@ -80,10 +189,10 @@ export default function ItemLoanForm() {
             disabled: item.stockAvailable <= 0,
           }))}
           placeholder="Pilih barang..."
-          {...register("itemId")}
-          error={errors.itemId?.message}
-          disabled={isEdit || isSubmitting}
-          helperText={!isEdit ? "Stok tersedia harus > 0" : "Barang tidak dapat diubah"}
+          {...registerCreate("itemId")}
+          error={errorsCreate.itemId?.message}
+          disabled={isSubmittingCreate}
+          helperText="Stok tersedia harus > 0"
         />
 
         <Select
@@ -92,48 +201,52 @@ export default function ItemLoanForm() {
             .filter((u) => u.isActive)
             .map((user) => ({ value: user.id, label: `${user.name} (${user.email})` }))}
           placeholder="Pilih peminjam..."
-          {...register("userId")}
-          error={errors.userId?.message}
-          disabled={isSubmitting}
+          {...registerCreate("userId")}
+          error={errorsCreate.userId?.message}
+          disabled={isSubmittingCreate}
         />
 
         <div className="grid grid-cols-3 gap-4">
           <Input
             label="Jumlah"
             type="number"
-            {...register("quantity", { valueAsNumber: true })}
-            error={errors.quantity?.message}
-            disabled={isSubmitting}
+            {...registerCreate("quantity", { valueAsNumber: true })}
+            error={errorsCreate.quantity?.message}
+            disabled={isSubmittingCreate}
           />
           <Input
             label="Tanggal Pinjam"
             type="date"
-            {...register("borrowDate")}
-            error={errors.borrowDate?.message}
-            disabled={isSubmitting}
+            {...registerCreate("borrowDate")}
+            error={errorsCreate.borrowDate?.message}
+            disabled={isSubmittingCreate}
           />
           <Input
             label="Jatuh Tempo"
             type="date"
-            {...register("dueDate")}
-            error={errors.dueDate?.message}
-            disabled={isSubmitting}
+            {...registerCreate("dueDate")}
+            error={errorsCreate.dueDate?.message}
+            disabled={isSubmittingCreate}
           />
         </div>
 
-        <Input label="Catatan (opsional)" {...register("notes")} disabled={isSubmitting} />
+        <Input
+          label="Catatan (opsional)"
+          {...registerCreate("notes")}
+          disabled={isSubmittingCreate}
+        />
 
         <div className="flex justify-end gap-3 pt-4">
           <Button
             variant="ghost"
             type="button"
             onClick={() => navigate(ROUTE_PATHS.ITEM_LOANS)}
-            disabled={isSubmitting}
+            disabled={isSubmittingCreate}
           >
             Batal
           </Button>
-          <Button type="submit" isLoading={isSubmitting}>
-            {isEdit ? "Update" : "Pinjam"}
+          <Button type="submit" isLoading={isSubmittingCreate}>
+            Pinjam
           </Button>
         </div>
       </form>

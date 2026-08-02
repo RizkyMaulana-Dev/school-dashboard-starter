@@ -61,7 +61,7 @@ export interface SchoolClass {
   id: string;
   name: string;
   description: string | null;
-  grade: string;
+  grade: number;
   academicYear: string;
   teacherId?: string | null;
   teacher?: Pick<Teacher, "id" | "name"> | null;
@@ -277,7 +277,7 @@ export interface UpdateStudentDTO {
 export interface CreateTeacherDTO {
   name: string;
   gender: Gender;
-  birthDate: string;
+  birthDate?: string;
   userId: string;
 }
 
@@ -285,12 +285,14 @@ export interface UpdateTeacherDTO {
   name?: string;
   gender?: Gender;
   birthDate?: string;
+  userId?: string | null;   // ✅ opsional & nullable
 }
+
 
 export interface CreateSchoolClassDTO {
   name: string;
   description?: string | null;
-  grade: string;
+  grade: number;
   academicYear: string;
   teacherId?: string | null;
 }
@@ -298,7 +300,7 @@ export interface CreateSchoolClassDTO {
 export interface UpdateSchoolClassDTO {
   name?: string;
   description?: string | null;
-  grade?: string;
+  grade?: number;
   academicYear?: string;
   teacherId?: string | null;
 }

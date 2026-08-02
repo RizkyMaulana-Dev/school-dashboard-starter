@@ -6,7 +6,7 @@ import { getPagination } from "../../utils/pagination";
 
 type Params = { id: string };
 
-export class BookController {
+export class RoleController {
   private service = new BookService();
 
   getAll = async (req: Request, res: Response) => {

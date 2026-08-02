@@ -2,7 +2,7 @@ import { prisma } from "../../lib/prisma";
 import { CreateBookDto, UpdateBookDto } from "./book.types";
 import { PaginationQuery } from "../../utils/pagination";
 import { NotFoundError } from "../../errors";
-import { BOOK_MESSAGES } from "../../constant/messages";
+import { ROLE_MESSAGES } from "../../constant/messages";
 
 export class BookRepository {
   async findMany(query: PaginationQuery & { categoryId?: string }) {
@@ -116,7 +116,7 @@ export class BookRepository {
 
   async delete(id: string) {
     const book = await prisma.book.findUnique({ where: { id }, select: { id: true } });
-    if (!book) throw new NotFoundError(BOOK_MESSAGES.NOT_FOUND);
+    if (!book) throw new NotFoundError(ROLE_MESSAGES.NOT_FOUND);
     return prisma.book.delete({ where: { id } });
   }
 }

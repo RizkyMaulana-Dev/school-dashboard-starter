@@ -15,7 +15,7 @@ export const userCreateSchema = z.object({
     .regex(/[a-z]/, "Password harus mengandung huruf kecil")
     .regex(/[0-9]/, "Password harus mengandung angka"),
   isActive: z.boolean().default(true),
-  roleIds: z.array(z.string()).min(1, "Minimal pilih satu role"),
+  roleId: z.string().min(1, 'Role wajib dipilih'), // dulu roleIds array
 });
 
 export const userUpdateSchema = z.object({
@@ -26,7 +26,7 @@ export const userUpdateSchema = z.object({
     .max(100, "Nama maksimal 100 karakter"),
   email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),
   isActive: z.boolean().default(true),
-  roleIds: z.array(z.string()).min(1, "Minimal pilih satu role"),
+  roleId: z.string().min(1, 'Role wajib dipilih'), // dulu roleIds array
 });
 
 export type UserCreateFormData = z.infer<typeof userCreateSchema>;

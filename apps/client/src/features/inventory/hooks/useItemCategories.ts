@@ -1,9 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { itemService } from "@/services/item.service";
+import { useQuery } from '@tanstack/react-query';
+import { itemCategoryService } from '@/services/item-category.service';
+import type { QueryParams } from '@/types/api';
 
-export function useItemCategories() {
+export function useItemCategories(params?: QueryParams) {
   return useQuery({
-    queryKey: ["item-categories"],
-    queryFn: () => itemService.getAllCategories(),
+    queryKey: ['item-categories', params],
+    queryFn: () => itemCategoryService.getAll(params),
+  });
+}
+
+export function useItemCategoryDetail(id?: string) {
+  return useQuery({
+    queryKey: ['item-categories', id],
+    queryFn: () => itemCategoryService.getById(id!),
+    enabled: !!id,
   });
 }

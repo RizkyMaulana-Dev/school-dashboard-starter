@@ -26,7 +26,6 @@ export default function ItemForm() {
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors },
   } = useForm<ItemFormData>({
     resolver: zodResolver(itemSchema),
@@ -71,17 +70,19 @@ export default function ItemForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">{isEdit ? "Edit Barang" : "Tambah Barang"}</h1>
+      <h1 className="text-2xl font-bold text-black">{isEdit ? "Edit Barang" : "Tambah Barang"}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow rounded-lg p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="Kode Barang (SKU)"
+            className="text-black"
             {...register("itemCode")}
             error={errors.itemCode?.message}
             disabled={isSubmitting}
           />
           <Input
             label="Nama Barang"
+            className="text-black"
             {...register("name")}
             error={errors.name?.message}
             disabled={isSubmitting}
@@ -89,6 +90,7 @@ export default function ItemForm() {
         </div>
         <Select
           label="Kategori"
+          className="text-black"
           options={categories.map((cat) => ({ value: cat.id, label: cat.name }))}
           {...register("categoryId")}
           error={errors.categoryId?.message}
@@ -98,6 +100,7 @@ export default function ItemForm() {
         <div className="grid grid-cols-3 gap-4">
           <Input
             label="Stok Total"
+            className="text-black"
             type="number"
             {...register("stockTotal", { valueAsNumber: true })}
             error={errors.stockTotal?.message}
@@ -105,6 +108,7 @@ export default function ItemForm() {
           />
           <Input
             label="Stok Tersedia"
+            className="text-black"
             type="number"
             {...register("stockAvailable", { valueAsNumber: true })}
             error={errors.stockAvailable?.message}
@@ -112,6 +116,7 @@ export default function ItemForm() {
           />
           <Select
             label="Kondisi"
+            className="text-black"
             options={[
               { value: "BAIK", label: "Baik" },
               { value: "RUSAK_RINGAN", label: "Rusak Ringan" },
@@ -122,9 +127,15 @@ export default function ItemForm() {
             disabled={isSubmitting}
           />
         </div>
-        <Input label="Lokasi" {...register("location")} disabled={isSubmitting} />
+        <Input
+          label="Lokasi"
+          {...register("location")}
+          disabled={isSubmitting}
+          className="text-black"
+        />
         <Input
           label="Tanggal Pembelian"
+          className="text-black"
           type="date"
           {...register("purchaseDate")}
           disabled={isSubmitting}

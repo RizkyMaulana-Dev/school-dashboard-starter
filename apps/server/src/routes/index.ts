@@ -13,6 +13,8 @@ import bookRoutes from "../modules/books/book.routes";
 import bookLoanRoutes from "../modules/bookLoan/bookLoan.routes";
 import itemRoutes from "../modules/items/item.routes";
 import itemLoanRoutes from "../modules/itemLoan/itemLoan.routes";
+import roleRoutes from "../modules/role/role.routes";
+import itemCategoryRoutes from "../modules/itemCategories/itemCategory.routes";
 
 const router = Router();
 
@@ -74,5 +76,7 @@ router.use("/book", bookRoutes);
 router.use("/book-loan", bookLoanRoutes);
 router.use("/item", itemRoutes);
 router.use("/item-loan", itemLoanRoutes);
+router.use("/roles", roleRoutes);
+router.use("/item-category", itemCategoryRoutes);
 
 export default router;

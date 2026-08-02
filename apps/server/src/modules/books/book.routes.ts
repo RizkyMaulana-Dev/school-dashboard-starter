@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { BookController } from "./book.controller";
+import { RoleController } from "./book.controller";
 import { createBookSchema, updateBookSchema } from "./book.validation";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { authorize } from "../../middlewares/authorize";
 import { validate } from "../../middlewares/validate";
 
 const router = Router();
-const controller = new BookController();
+const controller = new RoleController();
 
 router.get("/", authenticate, authorize("book.read"), controller.getAll);
 router.get("/:id", authenticate, authorize("book.read"), controller.getById);

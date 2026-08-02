@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { useUserDetail } from "../hooks/useUsers";
 import { useCreateUser, useUpdateUser } from "../hooks/useUserMutations";
@@ -16,25 +16,28 @@ export default function UserForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEditing = !!id;
+  const [isRoleOpen, setIsRoleOpen] = useState(false);
 
-  // Queries
   const { data: userResponse, isLoading: isLoadingUser } = useUserDetail(id);
-  const { data: rolesData } = useRoles();
+  const {
+    data: rolesData,
+    isLoading: isLoadingRoles,
+    isError: isRolesError,
+    error: rolesError,
+  } = useRoles();
 
-  // Mutations
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
 
   const user = userResponse?.data;
   const roles = rolesData?.data || [];
 
-  // Definisikan tipe yang mencakup semua field dari kedua schema
   type UserFormValues = {
     name: string;
     email: string;
-    password?: string; // tetap opsional
-    isActive?: boolean; // <-- ubah jadi opsional
-    roleIds: string[];
+    password?: string;
+    isActive?: boolean;
+    roleId: string; // single role ID
   };
 
   const {
@@ -48,39 +51,42 @@ export default function UserForm() {
       name: "",
       email: "",
       password: "",
-      isActive: true, // meskipun opsional di tipe, nilai default true tetap valid
-      roleIds: [],
+      isActive: true,
+      roleId: "",
     },
   });
 
-  // Populate form when editing
   useEffect(() => {
     if (user) {
       reset({
         name: user.name,
         email: user.email,
         isActive: user.isActive,
-        roleIds: user.roles?.map((r) => r.id) || [],
+        roleId: user.roles?.[0]?.id || "", // ambil role pertama sebagai default
       });
     }
   }, [user, reset]);
 
   const onSubmit = (data: UserFormValues) => {
+    // Jika backend masih menerima array roleIds, kirim sebagai array
+    const payload = {
+      ...data,
+      roleIds: [data.roleId], // konversi ke array jika perlu
+      roleId: undefined, // hapus field tunggal jika tidak diperlukan
+    };
+
     if (isEditing && id) {
       updateMutation.mutate(
-        // Cast data to UserUpdateFormData since zod guarantees it passed userUpdateSchema
-        { id, data: data as UserUpdateFormData },
-        {
-          onSuccess: () => navigate(ROUTE_PATHS.USERS),
-        },
+        { id, data: payload as any },
+        { onSuccess: () => navigate(ROUTE_PATHS.USERS) },
       );
     } else {
-      // Cast data to UserCreateFormData since zod guarantees it passed userCreateSchema
-      createMutation.mutate(data as UserCreateFormData, {
+      createMutation.mutate(payload as any, {
         onSuccess: () => navigate(ROUTE_PATHS.USERS),
       });
     }
   };
+
   if (isEditing && isLoadingUser) {
     return <LoadingScreen message="Memuat data user..." />;
   }
@@ -89,7 +95,6 @@ export default function UserForm() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
           {isEditing ? "Edit User" : "Tambah User"}
@@ -99,21 +104,20 @@ export default function UserForm() {
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          {/* Name */}
           <Input
             label="Nama Lengkap"
+            className="text-black"
             placeholder="Masukkan nama lengkap"
             {...register("name")}
             error={errors.name?.message}
             disabled={isSubmitting}
           />
 
-          {/* Email */}
           <Input
             label="Email"
+            className="text-black"
             type="email"
             placeholder="nama@sekolah.id"
             {...register("email")}
@@ -121,11 +125,11 @@ export default function UserForm() {
             disabled={isSubmitting}
           />
 
-          {/* Password (only for create) */}
           {!isEditing && (
             <Input
               label="Password"
               type="password"
+              className="text-black"
               placeholder="Minimal 8 karakter"
               {...register("password")}
               error={(errors as any).password?.message}
@@ -134,36 +138,75 @@ export default function UserForm() {
             />
           )}
 
-          {/* Roles */}
+          {/* Role – Radio Button Collapsible */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-            <div className="space-y-2">
-              {roles.map((role) => (
-                <label
-                  key={role.id}
-                  className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    value={role.id}
-                    {...register("roleIds")}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{role.name}</p>
-                    {role.description && (
-                      <p className="text-xs text-gray-500">{role.description}</p>
-                    )}
-                  </div>
-                </label>
-              ))}
+            <button
+              type="button"
+              onClick={() => setIsRoleOpen(!isRoleOpen)}
+              className="flex items-center justify-between w-full text-sm font-medium text-gray-700 hover:text-gray-900 mb-1"
+            >
+              <span>Role</span>
+              <svg
+                className={`w-5 h-5 transition-transform duration-200 ${
+                  isRoleOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                isRoleOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              }`}
+            >
+              {isLoadingRoles && <p className="text-sm text-gray-500 py-2">Memuat role...</p>}
+              {isRolesError && (
+                <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+                  Gagal memuat role: {rolesError?.message}
+                </div>
+              )}
+              {!isLoadingRoles && !isRolesError && (
+                <div className="space-y-2 pt-2">
+                  {roles.length === 0 ? (
+                    <p className="text-sm text-gray-500">Tidak ada role tersedia.</p>
+                  ) : (
+                    roles.map((role) => (
+                      <label
+                        key={role.id}
+                        className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer text-black"
+                      >
+                        <input
+                          type="radio"
+                          value={role.id}
+                          {...register("roleId")}
+                          className="border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{role.name}</p>
+                          {role.description && (
+                            <p className="text-xs text-gray-500">{role.description}</p>
+                          )}
+                        </div>
+                      </label>
+                    ))
+                  )}
+                </div>
+              )}
+              {errors.roleId?.message && (
+                <p className="mt-1 text-sm text-red-600">{errors.roleId.message}</p>
+              )}
             </div>
-            {errors.roleIds?.message && (
-              <p className="mt-1 text-sm text-red-600">{errors.roleIds.message}</p>
-            )}
           </div>
 
-          {/* Active Status */}
           <label className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -174,7 +217,6 @@ export default function UserForm() {
           </label>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center justify-end gap-3">
           <Button
             variant="ghost"

@@ -25,3 +25,10 @@ export const itemLoanSchema = z.object({
 });
 
 export type ItemLoanFormData = z.infer<typeof itemLoanSchema>;
+
+export const itemLoanEditSchema = z.object({
+  status: z.enum(["DIPINJAM", "DIKEMBALIKAN", "HILANG", "RUSAK"]),
+  notes: z.string().optional().nullable(),
+});
+
+export type ItemLoanEditFormData = z.infer<typeof itemLoanEditSchema>;

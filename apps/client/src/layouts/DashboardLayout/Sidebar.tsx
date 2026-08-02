@@ -133,6 +133,12 @@ export function Sidebar() {
           icon: "clipboard-list",
           requiredPermission: "item-loan.read",
         },
+        {
+          path: ROUTE_PATHS.ITEM_CATEGORIES,
+          label: "Kategori Barang",
+          icon: "tag",
+          requiredPermission: "item.read",
+        },
       ],
     },
   ];

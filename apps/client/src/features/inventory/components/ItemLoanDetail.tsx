@@ -1,7 +1,7 @@
 // src/features/inventory/components/ItemLoanDetail.tsx
 import { useParams, Link } from "react-router-dom";
 import { useItemLoanDetail } from "../hooks/useItemLoan";
-import { LoadingScreen, Badge } from "@/components/ui";
+import { LoadingScreen, Badge, Button } from "@/components/ui";
 import { ErrorMessage } from "@/components/feedback";
 import { ROUTE_PATHS } from "@/routes/route-paths";
 import { formatDate } from "@/utils/formatters";
@@ -25,8 +25,17 @@ export default function ItemLoanDetail() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-black">Detail Peminjaman Barang</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-black">Detail Peminjaman Barang</h1>
+        <Link to={ROUTE_PATHS.ITEM_LOAN_EDIT.replace(":id", loan.id)}>
+          <Button size="sm" variant="outline">
+            Edit
+          </Button>
+        </Link>
+      </div>
+
       <div className="bg-white shadow rounded-lg p-6 grid grid-cols-2 gap-4">
+        {/* Informasi sama seperti sebelumnya */}
         <div>
           <dt className="text-sm text-gray-500">Barang</dt>
           <dd className="text-black">
@@ -82,7 +91,7 @@ export default function ItemLoanDetail() {
         </div>
         <div className="col-span-2">
           <dt className="text-sm text-gray-500">Catatan</dt>
-          <dd>{loan.notes || "-"}</dd>
+          <dd className="text-black">{loan.notes || "-"}</dd>
         </div>
       </div>
     </div>
