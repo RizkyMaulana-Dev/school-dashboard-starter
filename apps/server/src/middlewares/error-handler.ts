@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client"; // 1. Import Prisma Client
+import { Prisma } from "@prisma/client";
 
 import { ApiError } from "../errors/index.js";
 import { logger } from "../lib/logger.js";
@@ -21,41 +21,51 @@ export function globalErrorHandler(
   if (error instanceof ZodError) {
     return res.status(400).json({
       success: false,
-      message: "Validation failed",
+      message: "Data yang dimasukkan tidak lengkap atau tidak sesuai.",
       errors: error.flatten().fieldErrors,
     });
   }
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    // P2003: Foreign Key Constraint Violation (ID relasi tidak ditemukan)
+    // P2014: Relation Violation (Kasus nyambungin akun 2x ke relasi 1-to-1)
+    if (error.code === "P2014") {
+      return res.status(400).json({
+        success: false,
+        message: "Akun ini sudah terhubung dengan data lain. Satu akun hanya bisa digunakan satu kali.",
+      });
+    }
+
+    // P2003: Foreign Key Constraint Violation
     if (error.code === "P2003") {
       return res.status(400).json({
         success: false,
-        message: "Resource ID tidak ditemukan di database (Foreign key constraint failed).",
+        message: "Data referensi tidak ditemukan. Pastikan pilihanmu valid (misalnya, data kelas atau akun sudah benar).",
       });
     }
 
-    // P2002: Unique Constraint Violation (Data duplikat)
+    // P2002: Unique Constraint Violation (Data duplikat, misal email/NISN sama)
     if (error.code === "P2002") {
       return res.status(409).json({
         success: false,
-        message: "Data sudah ada di database (Unique constraint failed).",
+        message: "Data ini sudah digunakan oleh orang lain. Silakan gunakan data yang berbeda.",
       });
     }
 
-    // P2025: Record Not Found (Misal saat update/delete ID yang tidak ada)
+    // P2025: Record Not Found
     if (error.code === "P2025") {
       return res.status(404).json({
         success: false,
-        message: "Data yang dicari tidak ditemukan.",
+        message: "Data yang ingin kamu ubah atau hapus tidak ditemukan.",
       });
     }
   }
 
+  // Log error aslinya untuk developer melihat detailnya di console/server
   logger.error(error);
 
+  // Pesan default untuk error yang tidak terduga
   return res.status(500).json({
     success: false,
-    message: "Internal Server Error",
+    message: "Terjadi kesalahan pada sistem kami. Silakan coba beberapa saat lagi.",
   });
 }

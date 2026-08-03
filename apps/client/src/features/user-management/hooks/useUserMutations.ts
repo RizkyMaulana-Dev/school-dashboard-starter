@@ -1,7 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios"; // 👈 Import ini
 import { userService } from "@/services/user.service";
 import { useUIStore } from "@/stores/ui.store";
 import type { CreateUserDTO, UpdateUserDTO } from "@/types/entities";
+
+// 🔹 Helper untuk mengekstrak pesan dari backend
+const getErrorMessage = (error: unknown, defaultMessage: string): string => {
+  if (isAxiosError(error)) {
+    // Ambil pesan dari backend, jika tidak ada baru pakai default Axios
+    return error.response?.data?.message || error.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return defaultMessage;
+};
 
 export function useCreateUser() {
   const queryClient = useQueryClient();
@@ -21,7 +34,8 @@ export function useCreateUser() {
       addToast({
         type: "error",
         title: "Gagal",
-        message: error instanceof Error ? error.message : "Gagal membuat user",
+        // 👈 Gunakan helper di sini
+        message: getErrorMessage(error, "Gagal membuat user"),
         duration: 8000,
       });
     },
@@ -46,7 +60,8 @@ export function useUpdateUser() {
       addToast({
         type: "error",
         title: "Gagal",
-        message: error instanceof Error ? error.message : "Gagal mengupdate user",
+        // 👈 Gunakan helper di sini
+        message: getErrorMessage(error, "Gagal mengupdate user"),
         duration: 8000,
       });
     },
@@ -71,7 +86,8 @@ export function useDeleteUser() {
       addToast({
         type: "error",
         title: "Gagal",
-        message: error instanceof Error ? error.message : "Gagal menghapus user",
+        // 👈 Gunakan helper di sini
+        message: getErrorMessage(error, "Gagal menghapus user"),
         duration: 8000,
       });
     },

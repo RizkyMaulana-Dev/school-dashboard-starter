@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios"; // 👈 Import ini untuk mengecek error Axios
 import { attendanceSessionService } from "@/services/attendance-session.service";
 import { attendanceService } from "@/services/attendance.service";
 import { useUIStore } from "@/stores/ui.store";
@@ -6,9 +7,19 @@ import type {
   CreateAttendanceSessionDTO,
   UpdateAttendanceSessionDTO,
   CreateAttendanceRecordDTO,
+  UpdateAttendanceRecordDTO,
 } from "@/types/entities";
 
-import type { UpdateAttendanceRecordDTO } from "@/types/entities";
+// 🔹 Fungsi pembantu untuk membongkar pesan dari Backend
+const getErrorMessage = (error: unknown): string => {
+  if (isAxiosError(error)) {
+    return error.response?.data?.message || error.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Terjadi kesalahan yang tidak terduga";
+};
 
 export function useCreateSession() {
   const qc = useQueryClient();
@@ -19,9 +30,11 @@ export function useCreateSession() {
       qc.invalidateQueries({ queryKey: ["attendance-sessions"] });
       addToast({ type: "success", title: "Sesi dibuat", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    // 👈 Gunakan getErrorMessage di sini
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
+
 export function useUpdateSession() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -32,9 +45,11 @@ export function useUpdateSession() {
       qc.invalidateQueries({ queryKey: ["attendance-sessions"] });
       addToast({ type: "success", title: "Sesi diupdate", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    // 👈 Gunakan getErrorMessage di sini
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
+
 export function useDeleteSession() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -44,7 +59,8 @@ export function useDeleteSession() {
       qc.invalidateQueries({ queryKey: ["attendance-sessions"] });
       addToast({ type: "success", title: "Sesi dihapus" });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    // 👈 Gunakan getErrorMessage di sini
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -62,7 +78,8 @@ export function useUpdateAttendanceRecord() {
         message: response.message || "Kehadiran diperbarui",
       });
     },
-    onError: (error) => addToast({ type: "error", title: "Gagal", message: error.message }),
+    // 👈 Gunakan getErrorMessage di sini
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -75,6 +92,7 @@ export function useCreateAttendanceRecord() {
       qc.invalidateQueries({ queryKey: ["attendance-records"] });
       addToast({ type: "success", title: "Kehadiran dicatat", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    // 👈 Gunakan getErrorMessage di sini
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
