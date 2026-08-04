@@ -9,14 +9,14 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
     "client": "npm run dev --prefix apps/client",
     "server": "npm run dev --prefix apps/server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "type:check": "npx tsc --noEmit",
-    "build": "prisma generate && tsc",
-    "start": "node dist/server.js"
+    "type:check": "npx tsc --noEmit"
   },
   "keywords": [],
   "author": "",
