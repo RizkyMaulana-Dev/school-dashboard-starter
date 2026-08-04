@@ -5,6 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx prisma generate && tsc",
     "dev": "tsx watch src/server.ts",
     "seed": "tsx prisma/seed/index.ts",
     "typecheck": "tsc --noEmit",
