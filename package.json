@@ -9,8 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "prisma generate",
-    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate --schema=apps/server/prisma/schema.prisma",
+    "build": "prisma generate --schema=apps/server/prisma/schema.prisma && tsc",
     "start": "node dist/server.js",
     "client": "npm run dev --prefix apps/client",
     "server": "npm run dev --prefix apps/server",
