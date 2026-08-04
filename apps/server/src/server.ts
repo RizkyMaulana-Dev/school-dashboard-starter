@@ -1,10 +1,15 @@
-import express from 'express';
+import app from "./app.js";
+import { env } from "./config/env.js";
+import { logger } from "./lib/logger";
 
-const app = express();
+const PORT = env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Server is running smoothly!' });
-});
+// Jalankan app.listen HANYA saat lokal / bukan di Vercel
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    logger.info(`🚀 API running at http://localhost:${PORT}`);
+  });
+}
 
-// Penting untuk Vercel Serverless Function:
+// WAJIB: Export app sebagai default untuk Vercel Serverless Function
 export default app;
