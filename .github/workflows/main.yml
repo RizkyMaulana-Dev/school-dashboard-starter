@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  # -------------------------------------------------------------
+  # JOB 1: CI (Validate Backend & SQLite Seeder)
+  # -------------------------------------------------------------
+  validate-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test Prisma Migration & Seeder
+        run: |
+          npx prisma generate
+          npx prisma migrate dev --name init
+          npx prisma db seed
+        env:
+          DATABASE_URL: "file:./dev.db"
+
+  # -------------------------------------------------------------
+  # JOB 2: CD (Build & Deploy Frontend to GitHub Pages)
+  # -------------------------------------------------------------
+  deploy-frontend:
+    needs: validate-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install & Build Frontend
+        run: |
+          npm ci
+          npm run build
+        env:
+          # Arahkan URL API ke backend Render yang sudah kamu buat
+          VITE_API_URL: "https://nama-app-backend-kamu.onrender.com/api" 
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Sesuaikan dengan folder output build frontend (dist/out/build)
