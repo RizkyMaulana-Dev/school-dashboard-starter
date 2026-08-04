@@ -14,7 +14,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "type:check" : "npx tsc --noEmit"
+    "type:check": "npx tsc --noEmit",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",

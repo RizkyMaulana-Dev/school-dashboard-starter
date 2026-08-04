@@ -1,5 +1,5 @@
 import { ItemRepository } from "./item.repository";
-import { CreateItemDto, UpdateItemDto } from "./item.types";
+import { CreateItemDto, UpdateItemDto } from "./item.type";
 import { NotFoundError } from "../../errors";
 import { PaginationQuery } from "../../utils/pagination";
 import { createPaginationMeta } from "../../utils/pagination/PaginatedResponse";

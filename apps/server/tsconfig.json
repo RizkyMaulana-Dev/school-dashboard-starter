@@ -7,7 +7,6 @@
     "noEmitOnError": false,
     "rootDir": "./src",
     "outDir": "./dist",
-
     "strict": true,
 
     "esModuleInterop": true,
