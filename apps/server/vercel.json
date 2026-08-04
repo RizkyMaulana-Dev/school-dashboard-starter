@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "installCommand": "npm install --ignore-scripts",
   "builds": [
     {
-      "src": "src/server.ts",
+      "src": "apps/server/src/server.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/server.ts"
+      "dest": "apps/server/src/server.ts"
     }
   ]
 }
