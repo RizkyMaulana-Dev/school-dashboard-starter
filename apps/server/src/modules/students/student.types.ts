@@ -11,6 +11,7 @@ export interface UpdateStudentDto {
   gender?: "MALE" | "FEMALE";
   birthDate?: string | Date;
   schoolClassId: string;
+  userId?: string; // tambahkan jika diizinkan mengganti user
 }
 
 export interface StudentQueryDto {

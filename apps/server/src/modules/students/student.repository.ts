@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { CreateStudentDto, UpdateStudentDto } from "./student.types";
 import { PaginationQuery } from "../../utils/pagination";
-import { NotFoundError } from "../../errors";
+import { NotFoundError, ConflictError } from "../../errors";  // 🔥 ConflictError ditambahkan
 import { STUDENT_MESSAGES } from "../../constant/messages";
 
 export class StudentRepository {
@@ -21,7 +21,6 @@ export class StudentRepository {
                 user: {
                   email: {
                     contains: query.search,
-
                   },
                 },
               },
@@ -62,7 +61,6 @@ export class StudentRepository {
                 user: {
                   email: {
                     contains: search,
-
                   },
                 },
               },
@@ -96,6 +94,26 @@ export class StudentRepository {
   }
 
   async create(data: CreateStudentDto) {
+    // 🔒 Validasi: pastikan user memiliki role "Student"
+    const user = await prisma.user.findUnique({
+      where: { id: data.userId },
+      include: {
+        roles: {
+          select: { name: true },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundError("User tidak ditemukan");
+    }
+
+    const isStudent = user.roles.some((role) => role.name === "Student");
+    if (!isStudent) {
+      throw new ConflictError("User tidak memiliki role Student");
+    }
+
+    // Lanjutkan pembuatan student
     return prisma.student.create({
       data: {
         name: data.name,
@@ -114,6 +132,7 @@ export class StudentRepository {
   }
 
   async update(id: string, data: UpdateStudentDto) {
+    // Update tidak mengubah userId, jadi tidak perlu validasi role
     return prisma.student.update({
       where: { id },
       data: {
