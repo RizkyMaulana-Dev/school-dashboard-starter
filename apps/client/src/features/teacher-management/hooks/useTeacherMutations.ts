@@ -3,6 +3,11 @@ import { teacherService } from "@/services/teacher.service";
 import { useUIStore } from "@/stores/ui.store";
 import type { CreateTeacherDTO, UpdateTeacherDTO } from "@/types/entities";
 
+// 🔥 Helper untuk mengambil pesan error dari response server
+function getErrorMessage(error: any): string {
+  return error?.response?.data?.message || error.message || "Terjadi kesalahan";
+}
+
 export function useCreateTeacher() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -12,9 +17,11 @@ export function useCreateTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru dibuat", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
+
 export function useUpdateTeacher() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -25,9 +32,11 @@ export function useUpdateTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru diupdate", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
+
 export function useDeleteTeacher() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -37,6 +46,7 @@ export function useDeleteTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru dihapus" });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
