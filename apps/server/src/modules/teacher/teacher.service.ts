@@ -81,7 +81,7 @@ export class TeacherService {
       throw new NotFoundError("User tidak ditemukan");
     }
 
-    const hasRole = user.roles.some((role) => role.name === roleName);
+    const hasRole = user.roles.some((role: any) => role.name === roleName);
     if (!hasRole) {
       throw new ConflictError(
         `User harus memiliki role '${roleName}' untuk dapat dihubungkan sebagai ${roleName.toLowerCase()}.`,

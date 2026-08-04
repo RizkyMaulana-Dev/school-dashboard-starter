@@ -108,7 +108,7 @@ export class StudentRepository {
       throw new NotFoundError("User tidak ditemukan");
     }
 
-    const isStudent = user.roles.some((role) => role.name === "Student");
+    const isStudent = user.roles.some((role: any) => role.name === "Student");
     if (!isStudent) {
       throw new ConflictError("User tidak memiliki role Student");
     }

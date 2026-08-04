@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import { CreateBookLoanDto, UpdateBookLoanDto } from "./bookLoan.type";
 import { PaginationQuery } from "../../utils/pagination";
@@ -74,7 +75,7 @@ export class BookLoanRepository {
   }
 
   async create(data: CreateBookLoanDto) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Validasi buku dan stok
       const book = await tx.book.findUnique({
         where: { id: data.bookId },
@@ -111,7 +112,7 @@ export class BookLoanRepository {
   }
 
   async update(id: string, data: UpdateBookLoanDto) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const existingLoan = await tx.bookLoan.findUnique({
         where: { id },
         include: { book: { select: { id: true } } },
@@ -154,7 +155,7 @@ export class BookLoanRepository {
   }
 
   async delete(id: string) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const loan = await tx.bookLoan.findUnique({
         where: { id },
         include: { book: { select: { id: true } } },

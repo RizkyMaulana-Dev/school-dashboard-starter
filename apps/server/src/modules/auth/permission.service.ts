@@ -10,6 +10,6 @@ export class PermissionService {
       return false;
     }
 
-    return user.roles.some((role) => role.permissions.some((p) => p.name === permission));
+    return user.roles.some((role: any) => role.permissions.some((p: any) => p.name === permission));
   }
 }

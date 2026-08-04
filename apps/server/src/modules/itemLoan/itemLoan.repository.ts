@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { Prisma } from "@prisma/client";
 import { CreateItemLoanDto, UpdateItemLoanDto } from "./itemLoan.types";
 import { PaginationQuery } from "../../utils/pagination";
 import { NotFoundError, ConflictError } from "../../errors";
@@ -64,7 +65,7 @@ export class ItemLoanRepository {
   }
 
   async create(data: CreateItemLoanDto) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const item = await tx.item.findUnique({
         where: { id: data.itemId },
         select: { id: true, stockAvailable: true },
@@ -100,7 +101,7 @@ export class ItemLoanRepository {
   }
 
   async update(id: string, data: UpdateItemLoanDto) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const existingLoan = await tx.itemLoan.findUnique({
         where: { id },
         include: { item: { select: { id: true } } },
@@ -139,7 +140,7 @@ export class ItemLoanRepository {
   }
 
   async delete(id: string) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const loan = await tx.itemLoan.findUnique({
         where: { id },
         include: { item: { select: { id: true } } },
