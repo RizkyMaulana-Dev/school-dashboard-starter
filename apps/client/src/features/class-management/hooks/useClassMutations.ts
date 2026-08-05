@@ -3,6 +3,10 @@ import { classService } from "@/services/class.service";
 import { useUIStore } from "@/stores/ui.store";
 import type { CreateSchoolClassDTO, UpdateSchoolClassDTO } from "@/types/entities";
 
+function getErrorMessage(error: any): string {
+  return error?.response?.data?.message || error.message || "Terjadi kesalahan";
+}
+
 export function useCreateClass() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
@@ -12,7 +16,8 @@ export function useCreateClass() {
       qc.invalidateQueries({ queryKey: ["classes"] });
       addToast({ type: "success", title: "Kelas dibuat", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err: any) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -26,7 +31,8 @@ export function useUpdateClass() {
       qc.invalidateQueries({ queryKey: ["classes"] });
       addToast({ type: "success", title: "Kelas diupdate", message: res.message });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err: any) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -39,6 +45,7 @@ export function useDeleteClass() {
       qc.invalidateQueries({ queryKey: ["classes"] });
       addToast({ type: "success", title: "Kelas dihapus" });
     },
-    onError: (err) => addToast({ type: "error", title: "Gagal", message: err.message }),
+    onError: (err: any) =>
+      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
