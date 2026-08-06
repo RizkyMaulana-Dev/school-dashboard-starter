@@ -58,6 +58,7 @@ export const ROUTE_PATHS = {
   BOOK_LOANS: "/app/library/loans",
   BOOK_LOAN_CREATE: "/app/library/loans/create",
   BOOK_LOAN_DETAIL: "/app/library/loans/:id",
+  BOOK_LOAN_EDIT: "/app/library/loans/:id/edit", // ← tambahkan baris ini
 
   // Inventory
   ITEMS: "/app/inventory/items",

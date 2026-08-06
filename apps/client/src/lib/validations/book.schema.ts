@@ -15,10 +15,11 @@ export const bookSchema = z.object({
 export type BookFormData = z.infer<typeof bookSchema>;
 
 export const bookLoanSchema = z.object({
-  bookId: z.string().min(1),
-  userId: z.string().min(1),
-  borrowDate: z.string().min(1),
-  dueDate: z.string().min(1),
+  bookId: z.string().min(1, "Wajib ada book id"),
+  userId: z.string().min(1, "Wajib ada user id"),
+  borrowDate: z.string().min(1, "wajib ada borrow date"),
+  dueDate: z.string().min(1, "Wajib ada due date"),
+  status: z.enum(["DIPINJAM", "DIKEMBALIKAN", "TERLAMBAT", "HILANG"]).optional(),
   notes: z.string().optional(),
 });
 export type BookLoanFormData = z.infer<typeof bookLoanSchema>;

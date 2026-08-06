@@ -269,6 +269,15 @@ export const dashboardRoutes: RouteObject[] = [
                     </ProtectedRoute>
                 ),
             },
+            {
+                path: 'library/loans/:id/edit',
+                element: (
+                    <ProtectedRoute requiredPermissions={['book-loan.update']}>
+                        <BookLoanForm />
+                    </ProtectedRoute>
+                ),
+            },
+
 
             // Inventory - Items
             {

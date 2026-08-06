@@ -8,6 +8,7 @@ export interface CreateBookLoanDto {
 export interface UpdateBookLoanDto {
   status?: "DIPINJAM" | "DIKEMBALIKAN" | "TERLAMBAT" | "HILANG";
   returnDate?: string | Date;
+  dueDate?: string | Date;
   fineAmount?: number;
   notes?: string;
 }

@@ -40,8 +40,10 @@ export function useUpdateBookLoan() {
       addToast({
         type: "success",
         title: "Berhasil",
-        message: response.message || "Status peminjaman diperbarui",
+        message: response.message,
       });
+      console.log("response data")
+      console.log(response.data)
     },
     onError: (error) => {
       addToast({

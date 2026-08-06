@@ -374,6 +374,7 @@ export interface CreateBookLoanDTO {
 export interface UpdateBookLoanDTO {
   status?: BookLoanStatus;
   returnDate?: string | null;
+  dueDate?: string | null;
   fineAmount?: number;
   notes?: string | null;
 }

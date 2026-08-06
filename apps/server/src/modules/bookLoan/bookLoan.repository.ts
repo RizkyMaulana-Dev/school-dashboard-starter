@@ -125,21 +125,21 @@ export class BookLoanRepository {
       if (data.fineAmount !== undefined) updateData.fineAmount = data.fineAmount;
       if (data.returnDate !== undefined) updateData.returnDate = data.returnDate;
 
+      // 💡 Tambahkan baris ini untuk memperbarui dueDate
+      if (data.dueDate) {
+        updateData.dueDate = new Date(data.dueDate);
+      }
+
       // Jika status berubah menjadi DIKEMBALIKAN dan sebelumnya bukan DIKEMBALIKAN, kembalikan stok
       if (data.status === "DIKEMBALIKAN" && existingLoan.status !== "DIKEMBALIKAN") {
-        // Kembalikan stok hanya jika belum dikembalikan sebelumnya
         await tx.book.update({
           where: { id: existingLoan.bookId },
           data: { stockAvailable: { increment: 1 } },
         });
-        // Jika returnDate tidak disediakan, isi dengan sekarang
         if (!data.returnDate) {
           updateData.returnDate = new Date();
         }
       }
-
-      // Jika status HILANG, stok tidak bertambah (dianggap hilang)
-      // Tidak ada perubahan stok untuk status lain
 
       const updatedLoan = await tx.bookLoan.update({
         where: { id },

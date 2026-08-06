@@ -10,6 +10,7 @@ export const createBookLoanSchema = z.object({
 export const updateBookLoanSchema = z.object({
   status: z.enum(["DIPINJAM", "DIKEMBALIKAN", "TERLAMBAT", "HILANG"]).optional(),
   returnDate: z.coerce.date().optional(),
+  dueDate: z.coerce.date().optional(), // 👈 TAMBAHKAN BARIS INI  
   fineAmount: z.number().min(0, "Denda tidak boleh negatif").optional(),
   notes: z.string().max(500).optional(),
 });
