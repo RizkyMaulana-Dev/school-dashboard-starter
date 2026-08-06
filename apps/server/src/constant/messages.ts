@@ -128,3 +128,13 @@ export const ITEM_CATEGORY_MESSAGES = {
   NOT_FOUND: "Kategori barang tidak ditemukan",
   ALREADY_EXISTS: "Nama kategori barang sudah ada",
 };
+
+export const BOOK_CATEGORY_MESSAGES = {
+  FETCHED: "Data kategori buku berhasil diambil",
+  FETCHED_ONE: "Detail kategori buku berhasil diambil",
+  CREATED: "Kategori buku berhasil dibuat",
+  UPDATED: "Kategori buku berhasil diperbarui",
+  DELETED: "Kategori buku berhasil dihapus",
+  NOT_FOUND: "Kategori buku tidak ditemukan",
+  ALREADY_EXISTS: "Nama kategori buku sudah ada",
+};

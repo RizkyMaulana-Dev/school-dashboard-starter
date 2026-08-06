@@ -13,9 +13,6 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

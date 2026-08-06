@@ -79,6 +79,11 @@ const PERMISSIONS = [
   "item-category.create",
   "item-category.update",
   "item-category.delete",
+
+  "book-category.read",
+  "book-category.create",
+  "book-category.update",
+  "book-category.delete",
 ];
 
 // Permission subsets used by non-admin roles
