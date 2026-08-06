@@ -398,7 +398,6 @@ async function seedAttendances() {
       startTime: new Date(new Date(today).setHours(7, 0, 0, 0)),
       endTime: new Date(new Date(today).setHours(8, 0, 0, 0)),
       schoolClassId: classXIPA1.id,
-      teacherId: teacher.id,
     },
   });
 
@@ -409,7 +408,6 @@ async function seedAttendances() {
       startTime: new Date(new Date(yesterday).setHours(13, 0, 0, 0)),
       endTime: new Date(new Date(yesterday).setHours(14, 0, 0, 0)),
       schoolClassId: classXIPA1.id,
-      teacherId: teacher.id,
     },
   });
 

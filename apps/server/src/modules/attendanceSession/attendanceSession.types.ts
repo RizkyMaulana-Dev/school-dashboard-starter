@@ -4,7 +4,6 @@ export interface CreateAttendanceSessionDto {
   startTime?: string | Date;
   endTime?: string | Date;
   schoolClassId: string;
-  teacherId: string;
 }
 
 export interface UpdateAttendanceSessionDto {
@@ -13,7 +12,6 @@ export interface UpdateAttendanceSessionDto {
   startTime?: string | Date | null;
   endTime?: string | Date | null;
   schoolClassId?: string;
-  teacherId?: string;
 }
 
 export interface AttendanceSessionQueryDto {
@@ -21,7 +19,6 @@ export interface AttendanceSessionQueryDto {
   limit?: number;
   search?: string;
   classId?: string;
-  teacherId?: string;
   date?: string;
   sort?: string;
   order?: "asc" | "desc";
@@ -34,10 +31,6 @@ export interface AttendanceSessionResponseDto {
   startTime: Date | null;
   endTime: Date | null;
   schoolClass: {
-    id: string;
-    name: string;
-  };
-  teacher: {
     id: string;
     name: string;
   };

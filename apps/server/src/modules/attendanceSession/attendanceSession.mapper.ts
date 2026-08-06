@@ -6,8 +6,6 @@ export function toAttendanceSessionResponse(session: any) {
     startTime: session.startTime,
     endTime: session.endTime,
     schoolClass: session.schoolClass,
-    teacher: session.teacher,
-    // optional: total records
     totalRecords: session._count?.records,
     createdAt: session.createdAt,
     updatedAt: session.updatedAt,

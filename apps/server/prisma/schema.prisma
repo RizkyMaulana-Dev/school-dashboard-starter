@@ -84,8 +84,6 @@ model Teacher {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classes SchoolClass[]
-
-  attendanceSessions AttendanceSession[]
 }
 
 model AttendanceSession {
@@ -96,8 +94,6 @@ model AttendanceSession {
   endTime       DateTime?
   schoolClassId String
   schoolClass   SchoolClass  @relation(fields: [schoolClassId], references: [id], onDelete: Cascade)
-  teacherId     String
-  teacher       Teacher      @relation(fields: [teacherId], references: [id])
   records       Attendance[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

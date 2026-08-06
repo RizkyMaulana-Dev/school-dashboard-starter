@@ -6,7 +6,6 @@ export const createAttendanceSessionSchema = z.object({
   startTime: z.coerce.date().optional(),
   endTime: z.coerce.date().optional(),
   schoolClassId: z.string().min(1, "Kelas wajib dipilih"),
-  teacherId: z.string().min(1, "Guru wajib dipilih"),
 });
 
 export const updateAttendanceSessionSchema = z.object({
@@ -15,7 +14,6 @@ export const updateAttendanceSessionSchema = z.object({
   startTime: z.coerce.date().optional().nullable(),
   endTime: z.coerce.date().optional().nullable(),
   schoolClassId: z.string().min(1).optional(),
-  teacherId: z.string().min(1).optional(),
 });
 
 export const attendanceSessionQuerySchema = z.object({
@@ -23,7 +21,6 @@ export const attendanceSessionQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(10),
   search: z.string().optional(),
   classId: z.string().optional(),
-  teacherId: z.string().optional(),
   date: z.string().optional(),
   sort: z.string().default("date"),
   order: z.enum(["asc", "desc"]).default("desc"),
