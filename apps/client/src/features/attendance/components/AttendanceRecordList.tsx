@@ -24,7 +24,10 @@ export default function AttendanceRecordList() {
         ...(statusFilter && { status: statusFilter }),
     });
 
+<<<<<<< Updated upstream
     // Reset halaman saat filter berubah
+=======
+>>>>>>> Stashed changes
     useEffect(() => {
         setPage(1);
     }, [debouncedSearch, statusFilter, setPage]);
@@ -36,6 +39,88 @@ export default function AttendanceRecordList() {
         }
     }, [data?.meta?.total, setTotalItems]);
 
+<<<<<<< Updated upstream
+=======
+    const filterOptions: FilterOption[] = useMemo(() => {
+        if (!data?.data) return [];
+
+        const sessions = Array.from(
+            new Set(data.data.map((r) => r.session?.title).filter(Boolean))
+        ).sort() as string[];
+
+        const classes = Array.from(
+            new Set(data.data.map((r) => r.session?.class?.name).filter(Boolean))
+        ).sort() as string[];
+
+        const options: FilterOption[] = [
+            {
+                key: "status",
+                label: "Status",
+                type: "select",
+                options: [
+                    { value: "", label: "Semua" },
+                    { value: "PRESENT", label: "Hadir" },
+                    { value: "ABSENT", label: "Tidak Hadir" },
+                    { value: "LATE", label: "Terlambat" },
+                    { value: "EXCUSED", label: "Izin" },
+                ],
+                placeholder: "Semua Status",
+            },
+        ];
+
+        if (sessions.length > 0) {
+            options.push({
+                key: "sessionTitle",
+                label: "Sesi",
+                type: "select",
+                options: [{ value: "", label: "Semua" }, ...sessions.map((s) => ({ value: s, label: s }))],
+                placeholder: "Semua Sesi",
+            });
+        }
+
+        if (classes.length > 0) {
+            options.push({
+                key: "class",
+                label: "Kelas",
+                type: "select",
+                options: [{ value: "", label: "Semua" }, ...classes.map((c) => ({ value: c, label: c }))],
+                placeholder: "Semua Kelas",
+            });
+        }
+
+        return options;
+    }, [data?.data]);
+
+    const groupByOptions = [
+        { value: "", label: "Tidak Dikelompokkan" },
+        { value: "status", label: "Status" },
+        { value: "sessionTitle", label: "Sesi" },
+        { value: "className", label: "Kelas" },
+    ];
+
+    const transformedData = useMemo(() => {
+        if (!data?.data) return [];
+        let result = data.data.map((r) => ({
+            ...r,
+            sessionTitle: r.session?.title ?? "Tanpa Sesi",
+            className: r.session?.class?.name ?? "Tanpa Kelas",
+            statusLabel: formatAttendanceStatus(r.status),
+        }));
+
+        if (filterValues.status) {
+            result = result.filter((r) => r.status === filterValues.status);
+        }
+        if (filterValues.sessionTitle) {
+            result = result.filter((r) => r.sessionTitle === filterValues.sessionTitle);
+        }
+        if (filterValues.class) {
+            result = result.filter((r) => r.className === filterValues.class);
+        }
+
+        return result;
+    }, [data?.data, filterValues]);
+
+>>>>>>> Stashed changes
     const columns = [
         {
             key: "session",
@@ -103,6 +188,25 @@ export default function AttendanceRecordList() {
         },
     ];
 
+<<<<<<< Updated upstream
+=======
+    const renderGridItem = (r: any) => (
+        <div className="space-y-2 text-black">
+            <h3 className="font-semibold text-black">{r.student?.name ?? "-"}</h3>
+            <p className="text-sm text-black">Sesi: {r.session?.title ?? "-"}</p>
+            <p className="text-sm text-black">Kelas: {r.session?.class?.name ?? "-"}</p>
+            <p className="text-sm text-black">Tanggal: {r.session?.date ? formatDate(r.session.date) : ""}</p>
+            <Badge
+                variant={
+                    r.status === "PRESENT" ? "success" : r.status === "ABSENT" ? "error" : r.status === "LATE" ? "warning" : "info"
+                }
+            >
+                {formatAttendanceStatus(r.status)}
+            </Badge>
+        </div>
+    );
+
+>>>>>>> Stashed changes
     if (isLoading && !data) return <LoadingScreen />;
     if (isError)
         return (
@@ -115,6 +219,7 @@ export default function AttendanceRecordList() {
                 <h1 className="text-2xl font-bold text-gray-900">Rekap Kehadiran</h1>
             </div>
 
+<<<<<<< Updated upstream
             <div className="flex gap-4 items-center">
                 <Input
                     placeholder="Cari siswa atau sesi..."
@@ -151,6 +256,30 @@ export default function AttendanceRecordList() {
                     }
                 />
             )}
+=======
+            <DataView<any>
+                columns={columns}
+                data={transformedData}
+                keyExtractor={(r) => r.id}
+                isLoading={isLoading}
+                emptyMessage="Belum ada data kehadiran"
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSort={setSortBy}
+                filters={filterOptions}
+                onFilterChange={setFilterValues}
+                onResetFilter={() => setFilterValues({})}
+                renderGridItem={renderGridItem}
+                defaultViewMode="table"
+                onRowClick={(r) => navigate(ROUTE_PATHS.ATTENDANCE_RECORDS_DETAIL.replace(":id", r.id))}
+                searchValue={search}
+                onSearchChange={setSearch}
+                searchPlaceholder="Cari siswa atau sesi..."
+                groupBy={groupBy}
+                groupByOptions={groupByOptions}
+                onGroupByChange={setGroupBy}
+            />
+>>>>>>> Stashed changes
 
             <Pagination
                 page={page}
