@@ -1,8 +1,10 @@
 // src/features/attendance/components/AttendanceRecordList.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Table, Badge, Input, Select, LoadingScreen, Button } from "@/components/ui";
-import { ErrorMessage, EmptyState } from "@/components/feedback";
+import { DataView } from "@/components/ui/DataView";
+import type { FilterOption } from "@/components/ui/DataView";
+import { Badge, LoadingScreen, Button } from "@/components/ui";
+import { ErrorMessage } from "@/components/feedback";
 import { Pagination } from "@/components/ui/Pagination";
 import { useAttendanceRecords } from "../hooks/useAttendanceRecords";
 import { usePagination, useDebounce } from "@/hooks";
@@ -12,35 +14,29 @@ import { formatAttendanceStatus, formatDate } from "@/utils/formatters";
 export default function AttendanceRecordList() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
-    const debouncedSearch = useDebounce(search, 500);
+    const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+    const [groupBy, setGroupBy] = useState<string>("");
 
+    const debouncedSearch = useDebounce(search, 500);
     const { page, limit, sortBy, sortOrder, queryParams, setSortBy, setPage, setTotalItems } =
         usePagination();
 
     const { data, isLoading, isError, error, refetch } = useAttendanceRecords({
         ...queryParams,
         search: debouncedSearch || undefined,
-        ...(statusFilter && { status: statusFilter }),
+        ...filterValues,
     });
 
-<<<<<<< Updated upstream
-    // Reset halaman saat filter berubah
-=======
->>>>>>> Stashed changes
     useEffect(() => {
         setPage(1);
-    }, [debouncedSearch, statusFilter, setPage]);
+    }, [debouncedSearch, filterValues, setPage]);
 
-    // Sinkronkan total dari meta
     useEffect(() => {
         if (data?.meta?.total !== undefined) {
             setTotalItems(data.meta.total);
         }
     }, [data?.meta?.total, setTotalItems]);
 
-<<<<<<< Updated upstream
-=======
     const filterOptions: FilterOption[] = useMemo(() => {
         if (!data?.data) return [];
 
@@ -120,16 +116,15 @@ export default function AttendanceRecordList() {
         return result;
     }, [data?.data, filterValues]);
 
->>>>>>> Stashed changes
     const columns = [
         {
             key: "session",
             header: "Sesi",
-            render: (record: any) => (
+            render: (r: any) => (
                 <div>
-                    <p className="font-medium text-gray-900">{record.session?.title ?? "-"}</p>
-                    <p className="text-sm text-gray-500">
-                        {record.session?.date ? formatDate(record.session.date) : ""}
+                    <p className="font-medium text-black">{r.session?.title ?? "-"}</p>
+                    <p className="text-sm text-black">
+                        {r.session?.date ? formatDate(r.session.date) : ""}
                     </p>
                 </div>
             ),
@@ -137,59 +132,59 @@ export default function AttendanceRecordList() {
         {
             key: "class",
             header: "Kelas",
-            render: (record: any) => record.session?.class?.name ?? "-",
+            render: (r: any) => <span className="text-black">{r.session?.class?.name ?? "-"}</span>,
         },
         {
             key: "student",
             header: "Siswa",
-            render: (record: any) => <span className="font-medium">{record.student?.name ?? "-"}</span>,
+            render: (r: any) => <span className="font-medium text-black">{r.student?.name ?? "-"}</span>,
         },
         {
             key: "status",
             header: "Status",
             align: "center" as const,
-            render: (record: any) => (
+            render: (r: any) => (
                 <Badge
                     variant={
-                        record.status === "PRESENT"
+                        r.status === "PRESENT"
                             ? "success"
-                            : record.status === "ABSENT"
+                            : r.status === "ABSENT"
                                 ? "error"
-                                : record.status === "LATE"
+                                : r.status === "LATE"
                                     ? "warning"
                                     : "info"
                     }
                 >
-                    {formatAttendanceStatus(record.status)}
+                    {formatAttendanceStatus(r.status)}
                 </Badge>
             ),
         },
         {
             key: "notes",
             header: "Catatan",
-            render: (record: any) => record.notes || "-",
+            render: (r: any) => <span className="text-black">{r.notes || "-"}</span>,
         },
         {
             key: "actions",
             header: "Aksi",
             align: "center" as const,
-            render: (s: any) => (
-                <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(ROUTE_PATHS.ATTENDANCE_RECORD_EDIT.replace(":id", s.id));
-                    }}
-                >
-                    Edit
-                </Button>
+            render: (r: any) => (
+                <div className="flex gap-2 justify-center">
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(ROUTE_PATHS.ATTENDANCE_RECORD_EDIT.replace(":id", r.id));
+                        }}
+                    >
+                        Edit
+                    </Button>
+                </div>
             ),
         },
     ];
 
-<<<<<<< Updated upstream
-=======
     const renderGridItem = (r: any) => (
         <div className="space-y-2 text-black">
             <h3 className="font-semibold text-black">{r.student?.name ?? "-"}</h3>
@@ -206,7 +201,6 @@ export default function AttendanceRecordList() {
         </div>
     );
 
->>>>>>> Stashed changes
     if (isLoading && !data) return <LoadingScreen />;
     if (isError)
         return (
@@ -216,47 +210,9 @@ export default function AttendanceRecordList() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">Rekap Kehadiran</h1>
+                <h1 className="text-2xl font-bold text-black">Rekap Kehadiran</h1>
             </div>
 
-<<<<<<< Updated upstream
-            <div className="flex gap-4 items-center">
-                <Input
-                    placeholder="Cari siswa atau sesi..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-md text-black"
-                />
-                <Select
-                    options={[
-                        { value: "", label: "Semua Status" },
-                        { value: "PRESENT", label: "Hadir" },
-                        { value: "ABSENT", label: "Tidak Hadir" },
-                        { value: "LATE", label: "Terlambat" },
-                        { value: "EXCUSED", label: "Izin" },
-                    ]}
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-48 text-black"
-                />
-            </div>
-
-            {data?.data.length === 0 ? (
-                <EmptyState title="Belum ada data kehadiran" />
-            ) : (
-                <Table
-                    columns={columns}
-                    data={data?.data || []}
-                    keyExtractor={(record) => record.id}
-                    sortBy={sortBy}
-                    sortOrder={sortOrder}
-                    onSort={setSortBy}
-                    onRowClick={(user) =>
-                        navigate(ROUTE_PATHS.ATTENDANCE_RECORDS_DETAIL.replace(":id", user.id))
-                    }
-                />
-            )}
-=======
             <DataView<any>
                 columns={columns}
                 data={transformedData}
@@ -279,7 +235,6 @@ export default function AttendanceRecordList() {
                 groupByOptions={groupByOptions}
                 onGroupByChange={setGroupBy}
             />
->>>>>>> Stashed changes
 
             <Pagination
                 page={page}
