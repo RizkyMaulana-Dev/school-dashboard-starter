@@ -17,7 +17,6 @@ const TeacherList = lazy(() => import("@/features/teacher-management/components/
 const TeacherForm = lazy(() => import("@/features/teacher-management/components/TeacherForm"));
 const AttendanceSessionList = lazy(() => import("@/features/attendance/components/SessionList"));
 const AttendanceSessionForm = lazy(() => import("@/features/attendance/components/SessionForm"));
-const AttendanceSessionDetail = lazy(() => import("@/features/attendance/components/SessionDetail"));
 const AttendanceRecordList = lazy(
     () => import("@/features/attendance/components/AttendanceRecordList"),
 );
