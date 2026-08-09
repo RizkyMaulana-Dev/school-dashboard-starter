@@ -38,8 +38,8 @@ export function useLogin() {
       setTokens(accessToken, refresh);
       setAuth(user, accessToken, refresh);
 
-      if (user.roles?.some((role) => role.name === "Student")) {
-        navigate(ROUTE_PATHS.PUBLIC, { replace: true });
+      if (user.roles?.some((role) => role.name === "Student" || "Teacher")) {
+        navigate(ROUTE_PATHS.PUBLIC_HOME, { replace: true });
       } else {
         navigate(ROUTE_PATHS.DASHBOARD_HOME, { replace: true });
       }

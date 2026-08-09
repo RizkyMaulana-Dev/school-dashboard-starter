@@ -71,6 +71,7 @@ export const ROUTE_PATHS = {
 
   // Public Area
   PUBLIC: "/activity",
+  PUBLIC_HOME: "/activity/home",
   PUBLIC_ATTENDANCE: "/activity/attendance",
   PUBLIC_LOANS: "/activity/loans",
   PUBLIC_PROFILE: "/activity/profile",

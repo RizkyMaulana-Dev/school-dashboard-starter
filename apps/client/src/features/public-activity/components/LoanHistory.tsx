@@ -1,3 +1,4 @@
+// src/features/public-activity/components/LoanHistory.tsx
 import { useQuery } from "@tanstack/react-query";
 import { bookLoanService } from "@/services/book-loan.service";
 import { itemLoanService } from "@/services/item-loan.service";
@@ -9,7 +10,8 @@ import { useState } from "react";
 import type { BookLoan, ItemLoan } from "@/types/entities";
 
 export default function LoanHistory() {
-    const userId = useAuthStore((state) => state.user?.id);
+    const user = useAuthStore((state) => state.user);
+    const userId = user?.id;
     const [tab, setTab] = useState<"books" | "items">("books");
 
     // Book loans
@@ -84,16 +86,16 @@ export default function LoanHistory() {
                         <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <span className="text-gray-500">Tanggal Pinjam:</span>
-                                <p className="font-medium">{formatDate(loan.borrowDate)}</p>
+                                <p className="font-medium text-gray-900">{formatDate(loan.borrowDate)}</p>
                             </div>
                             <div>
                                 <span className="text-gray-500">Jatuh Tempo:</span>
-                                <p className="font-medium">{formatDate(loan.dueDate)}</p>
+                                <p className="font-medium text-gray-900">{formatDate(loan.dueDate)}</p>
                             </div>
                             {loan.returnDate && (
                                 <div>
                                     <span className="text-gray-500">Tanggal Kembali:</span>
-                                    <p className="font-medium">{formatDate(loan.returnDate)}</p>
+                                    <p className="font-medium text-gray-900">{formatDate(loan.returnDate)}</p>
                                 </div>
                             )}
                             {loan.fineAmount > 0 && (
@@ -127,15 +129,15 @@ export default function LoanHistory() {
                         <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
                             <div>
                                 <span className="text-gray-500">Jumlah:</span>
-                                <p className="font-medium">{loan.quantity}</p>
+                                <p className="font-medium text-gray-900">{loan.quantity}</p>
                             </div>
                             <div>
                                 <span className="text-gray-500">Tanggal Pinjam:</span>
-                                <p className="font-medium">{formatDate(loan.borrowDate)}</p>
+                                <p className="font-medium text-gray-900">{formatDate(loan.borrowDate)}</p>
                             </div>
                             <div>
                                 <span className="text-gray-500">Jatuh Tempo:</span>
-                                <p className="font-medium">{formatDate(loan.dueDate)}</p>
+                                <p className="font-medium text-gray-900">{formatDate(loan.dueDate)}</p>
                             </div>
                         </div>
                     </div>
@@ -148,16 +150,17 @@ export default function LoanHistory() {
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900">Riwayat Peminjaman</h2>
 
-            {/* Tabs */}
             <div className="flex border-b">
                 <button
-                    className={`px-4 py-2 text-sm font-medium ${tab === "books" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
+                    className={`px-4 py-2 text-sm font-medium ${tab === "books" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-600 hover:text-gray-900"
+                        }`}
                     onClick={() => setTab("books")}
                 >
                     Buku ({bookLoans.length})
                 </button>
                 <button
-                    className={`px-4 py-2 text-sm font-medium ${tab === "items" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
+                    className={`px-4 py-2 text-sm font-medium ${tab === "items" ? "border-b-2 border-blue-500 text-blue-600" : "text-gray-600 hover:text-gray-900"
+                        }`}
                     onClick={() => setTab("items")}
                 >
                     Barang ({itemLoans.length})
