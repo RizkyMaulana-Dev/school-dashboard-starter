@@ -1,3 +1,5 @@
+import { Student } from "@prisma/client";
+
 export interface CreateUserDto {
   name: string;
   email: string;
@@ -31,7 +33,7 @@ export interface UserResponseDto {
     id: string;
     name: string;
   }[];
-
+  student?: Student | null;
   createdAt: Date;
   updatedAt: Date;
 }

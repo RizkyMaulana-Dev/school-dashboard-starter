@@ -31,6 +31,17 @@ export class UserRepository {
 
       include: {
         roles: true,
+        student: {
+          select: {
+            schoolClass: {
+              select: {
+                id: true,
+                name: true,
+                academicYear: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -63,6 +74,17 @@ export class UserRepository {
       },
       include: {
         roles: true,
+        student: {
+          select: {
+            schoolClass: {
+              select: {
+                id: true,
+                name: true,
+                academicYear: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -72,9 +94,27 @@ export class UserRepository {
       where: {
         email,
       },
+      // Tambahkan include ini agar data student terbawa saat proses login!
+      include: {
+        roles: true,
+        student: {
+          select: {
+            id: true,
+            name: true,
+            gender: true,
+            birthDate: true,
+            schoolClass: {
+              select: {
+                id: true,
+                name: true,
+                academicYear: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
-
   async findByEmailExceptId(email: string, id: string) {
     return prisma.user.findFirst({
       where: {

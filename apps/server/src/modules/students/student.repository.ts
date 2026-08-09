@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { CreateStudentDto, UpdateStudentDto } from "./student.types";
 import { PaginationQuery } from "../../utils/pagination";
-import { NotFoundError, ConflictError } from "../../errors";  // 🔥 ConflictError ditambahkan
+import { NotFoundError, ConflictError } from "../../errors"; // 🔥 ConflictError ditambahkan
 import { STUDENT_MESSAGES } from "../../constant/messages";
 
 export class StudentRepository {
@@ -71,16 +71,23 @@ export class StudentRepository {
   }
 
   async findByUserId(userId: string) {
-    return prisma.student.findUnique({
-      where: {
-        userId,
-      },
+    return prisma.student.findFirst({
+      where: { userId: userId },
       select: {
         id: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        schoolClass: {
+          select: {
+            id: true,
+            name: true,
+            academicYear: true,
+          },
+        },
       },
     });
   }
-
   async findById(id: string) {
     return prisma.student.findUnique({
       where: {
