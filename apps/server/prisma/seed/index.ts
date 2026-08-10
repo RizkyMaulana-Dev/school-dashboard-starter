@@ -89,7 +89,7 @@ const PERMISSIONS = [
 // Permission subsets used by non-admin roles
 const TEACHER_PERMISSIONS = ["dashboard.read", "class.read", "student.read", "student.update"];
 
-const STUDENT_PERMISSIONS = ["dashboard.read", "student.read", "book-loan.read", "item-loan.read"];
+const STUDENT_PERMISSIONS = ["dashboard.read", "student.read", "book-loan.read", "item-loan.read", "attendance.read", "attendance.create", "attendance-session.read"];
 
 const VIEWER_PERMISSIONS = ["dashboard.read"];
 

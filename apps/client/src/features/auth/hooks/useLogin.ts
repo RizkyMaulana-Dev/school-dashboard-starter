@@ -24,8 +24,7 @@ export function useLogin() {
       } catch (error) {
         if (isAxiosError<ApiErrorResponse>(error)) {
           // Ambil "Email atau password salah" dari response backend
-          const errorMessage =
-            error.response?.data?.message || "Terjadi kesalahan saat login";
+          const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat login";
           throw new Error(errorMessage);
         }
         throw error;
@@ -40,7 +39,8 @@ export function useLogin() {
 
       if (user.roles?.some((role) => role.name === "Student" || "Teacher")) {
         navigate(ROUTE_PATHS.PUBLIC_HOME, { replace: true });
-      } else {
+      }
+      if (user.roles?.some((role) => role.name == "Super Admin")) {
         navigate(ROUTE_PATHS.DASHBOARD_HOME, { replace: true });
       }
     },
