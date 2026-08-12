@@ -9,24 +9,24 @@ import { ROUTE_PATHS } from "./route-paths";
  * Menggabungkan semua route modules
  */
 export const router = createBrowserRouter([
-  // Auth routes (login, etc.)
-  ...authRoutes,
+    // Auth routes (login, etc.)
+    ...authRoutes,
 
-  // Dashboard routes (protected)
-  ...dashboardRoutes,
+    // Dashboard routes (protected)
+    ...dashboardRoutes,
 
-  // Public routes (activity viewer)
-  ...publicRoutes,
+    // Public routes (activity viewer)
+    ...publicRoutes,
 
-  // Root redirect
-  {
-    path: "/",
-    element: <Navigate to={ROUTE_PATHS.DASHBOARD_HOME} replace />,
-  },
+    // Root redirect
+    {
+        path: "/",
+        element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
+    },
 
-  // 404 Not Found
-  {
-    path: "*",
-    element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
-  },
+    // 404 Not Found
+    {
+        path: "*",
+        element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
+    },
 ]);
