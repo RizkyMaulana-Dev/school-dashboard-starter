@@ -88,7 +88,7 @@ export interface AttendanceSession {
   teacherId: string;
   teacher?: Pick<Teacher, "id" | "name">;
   recordCount?: number;
-  attendanceRecords?: AttendanceRecord[];
+  sessionRecords?: any[];
   createdAt: string;
   updatedAt: string;
 }

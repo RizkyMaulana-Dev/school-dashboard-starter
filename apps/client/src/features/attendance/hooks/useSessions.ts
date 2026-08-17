@@ -8,6 +8,7 @@ export function useSessions(params?: QueryParams) {
     queryFn: () => attendanceSessionService.getAll(params),
   });
 }
+
 export function useSessionDetail(id?: string) {
   return useQuery({
     queryKey: ["attendance-sessions", id],

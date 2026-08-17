@@ -34,6 +34,7 @@ export interface AttendanceSessionResponseDto {
     id: string;
     name: string;
   };
+  sessionRecords?: any[];
   createdAt: Date;
   updatedAt: Date;
 }

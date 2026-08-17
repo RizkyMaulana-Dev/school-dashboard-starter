@@ -47,6 +47,7 @@ export class AttendanceSessionRepository {
           select: { id: true, name: true },
         },
         _count: { select: { records: true } },
+        records: { select: { student: true } },
       },
     });
   }
@@ -70,6 +71,7 @@ export class AttendanceSessionRepository {
       include: {
         schoolClass: { select: { id: true, name: true } },
         _count: { select: { records: true } },
+        records: { select: { student: true } },
       },
     });
   }
