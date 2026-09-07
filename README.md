@@ -62,7 +62,7 @@ Backend API untuk sistem manajemen sekolah yang mencakup modul akademik (siswa, 
 | ORM              | Prisma ORM                                |
 | Validation       | Zod                                       |
 | Authentication   | JWT (jsonwebtoken)                        |
-| Database         | PostgreSQL _(Recommended)_, MySQL, SQLite |
+| Database         | PostgreSQL, MySQL _(Recommended)_, SQLite |
 | Password Hashing | bcrypt                                    |
 | Development      | ts-node, nodemon                          |
 
@@ -130,7 +130,7 @@ Backend API untuk sistem manajemen sekolah yang mencakup modul akademik (siswa, 
 Pastikan sudah menginstall:
 
 - Node.js **18+**
-- PostgreSQL _(Recommended)_
+- PostgreSQL / Mysql  _(Recommended)_
 - npm / yarn / pnpm
 
 ---
@@ -445,7 +445,7 @@ Dibangun menggunakan:
 - Express.js
 - TypeScript
 - Prisma ORM
-- PostgreSQL
+- PostgreSQL / Mysql
 - Zod
 - JWT Authentication
 
