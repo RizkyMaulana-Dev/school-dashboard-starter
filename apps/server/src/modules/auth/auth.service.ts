@@ -63,12 +63,12 @@ export class AuthService {
     };
   }
 
-  // Google Login dengan Otomatis Buat User + Profil Student
+  // Google Login dengan Auto-Register User Murni
   async googleLogin(payload: GooglePayload) {
     // 1. Cari user berdasarkan email
     let user = await this.repository.findByEmailWithRoles(payload.email);
 
-    // 2. Jika user belum ada, daftarkan otomatis beserta record Student & Role-nya
+    // 2. Jika user belum ada, daftarkan akun User secara otomatis
     if (!user) {
       user = await this.repository.createFromGoogle({
         email: payload.email,
@@ -86,10 +86,10 @@ export class AuthService {
       email: user.email,
     });
 
-    // 4. Ambil data Student beserta schoolClass milik user yang baru dibuat/sudah ada
+    // 4. Ambil data Student (akan bernilai null jika user baru belum memiliki record student)
     const student = await this.studentRepository.findByUserId(user.id);
 
-    // 5. Kembalikan respons yang cocok dengan kebutuhan frontend home/dashboard
+    // 5. Kembalikan respons yang cocok dengan format frontend
     return {
       accessToken,
       user: {
@@ -97,7 +97,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         isActive: user.isActive,
-        roles: user.roles,
+        roles: user.roles ?? [],
         student: student
           ? {
               id: student.id,
