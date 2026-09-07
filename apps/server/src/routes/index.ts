@@ -1,3 +1,4 @@
+// ./apps/server/src/routes/index.ts
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import authRoutes from "../modules/auth/auth.routes";
