@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useItemCategories } from "../hooks/useItemCategories";
 import { useDeleteItemCategory } from "../hooks/useItemCategoryMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { ItemCategory } from "@/types/entities";
 
 export default function ItemCategoryList() {

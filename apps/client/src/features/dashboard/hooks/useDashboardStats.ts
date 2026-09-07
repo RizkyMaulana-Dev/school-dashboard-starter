@@ -4,7 +4,7 @@ import { userService } from '@/services/user.service';
 import { studentService } from '@/services/student.service';
 import { teacherService } from '@/services/teacher.service';
 import { bookService } from '@/services/book.service';
-import { attendanceSessionService } from '@/services/attendance-session.service';
+import { attendanceSessionService } from '@/services/attendanceSession.service';
 
 export function useDashboardStats() {
   return useQuery({

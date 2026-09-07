@@ -10,7 +10,7 @@ import { useCreateBookLoan, useUpdateBookLoan } from "../hooks/useBookLoanMutati
 import { useBooks } from "../hooks/useBooks";
 import { useUsers } from "@/features/user-management/hooks/useUsers";
 import { bookLoanSchema, type BookLoanFormData } from "@/lib/validations/book.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function BookLoanForm() {
     const { id } = useParams<{ id: string }>();

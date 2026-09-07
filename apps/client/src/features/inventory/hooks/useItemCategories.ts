@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { itemCategoryService } from '@/services/item-category.service';
+import { itemCategoryService } from '@/services/itemCategory.service';
 import type { QueryParams } from '@/types/api';
 
 export function useItemCategories(params?: QueryParams) {

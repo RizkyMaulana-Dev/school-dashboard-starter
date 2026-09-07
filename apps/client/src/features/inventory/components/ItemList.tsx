@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useItems } from "../hooks/useItems";
 import { useDeleteItem } from "../hooks/useItemMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { formatItemCondition } from "@/utils/formatters";
 import type { Item } from "@/types/entities";
 

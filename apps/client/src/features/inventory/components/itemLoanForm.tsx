@@ -15,7 +15,7 @@ import {
     type ItemLoanFormData,
     type ItemLoanEditFormData,
 } from "@/lib/validations/inventory.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function ItemLoanForm() {
     const { id } = useParams<{ id: string }>();

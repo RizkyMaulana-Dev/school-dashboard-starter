@@ -1,5 +1,5 @@
 import type { RouteObject } from "react-router-dom";
-import { ROUTE_PATHS } from "./route-paths";
+import { ROUTE_PATHS } from "./route.paths";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { lazy } from "react";
 

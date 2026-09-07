@@ -11,7 +11,7 @@ import { useDeleteUser } from "../hooks/useUserMutations";
 import { useRoles } from "../hooks/useRoles";
 import { usePagination } from "@/hooks/usePagination";
 import { useDebounce } from "@/hooks/useDebounce";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { formatDate } from "@/utils/formatters";
 import type { User } from "@/types/entities";
 import type { TableColumn } from "@/components/ui/Table";

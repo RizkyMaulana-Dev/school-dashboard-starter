@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { itemLoanService } from "@/services/item-loan.service";
+import { itemLoanService } from "@/services/itemLoan.service";
 import type { QueryParams } from "@/types/api";
 
 export function useItemLoans(params?: QueryParams) {

@@ -4,7 +4,7 @@ import { isAxiosError } from "axios";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { setTokens } from "@/lib/axios";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { LoginCredentials, AuthResponse } from "@/types/entities";
 
 // Interface untuk struktur JSON error dari backend Anda

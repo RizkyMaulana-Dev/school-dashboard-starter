@@ -1,4 +1,4 @@
-import apiClient from "./api-client";
+import apiClient from "./apiClient";
 import type { Item, ItemCategory, CreateItemDTO, UpdateItemDTO } from "@/types/entities";
 import type { ApiResponse, PaginatedResponse, QueryParams } from "@/types/api";
 

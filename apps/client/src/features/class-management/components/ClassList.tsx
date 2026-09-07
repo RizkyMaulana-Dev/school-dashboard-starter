@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useClasses } from "../hooks/useClasses";
 import { useDeleteClass } from "../hooks/useClassMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { SchoolClass } from "@/types/entities";
 
 export default function ClassList() {

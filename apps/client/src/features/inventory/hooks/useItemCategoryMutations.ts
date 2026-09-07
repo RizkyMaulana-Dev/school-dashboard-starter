@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { itemCategoryService } from '@/services/item-category.service';
+import { itemCategoryService } from '@/services/itemCategory.service';
 import { useUIStore } from '@/stores/ui.store';
 
 export function useCreateItemCategory() {

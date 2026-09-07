@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { bookLoanService } from "@/services/book-loan.service";
+import { bookLoanService } from "@/services/bookLoan.service";
 import { useUIStore } from "@/stores/ui.store";
 import type { CreateBookLoanDTO, UpdateBookLoanDTO } from "@/types/entities";
 

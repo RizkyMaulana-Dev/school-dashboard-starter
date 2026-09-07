@@ -14,7 +14,7 @@ import {
     type TeacherFormData,
     type TeacherEditFormData,
 } from "@/lib/validations/teacher.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function TeacherForm() {
     const { id } = useParams<{ id: string }>();

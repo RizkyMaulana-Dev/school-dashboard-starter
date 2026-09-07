@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Input, Button, LoadingScreen } from "@/components/ui";
 import { useClasses } from "@/features/class-management/hooks/useClasses";
 import { useCreateSession } from "../hooks/useAttendanceMutations";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 // Schema form minimal: judul dan waktu opsional
 const sessionSchema = z.object({

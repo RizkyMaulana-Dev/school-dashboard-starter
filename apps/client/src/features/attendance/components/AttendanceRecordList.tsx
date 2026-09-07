@@ -8,7 +8,7 @@ import { ErrorMessage } from "@/components/feedback";
 import { Pagination } from "@/components/ui/Pagination";
 import { useAttendanceRecords } from "../hooks/useAttendanceRecords";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { formatAttendanceStatus, formatDate } from "@/utils/formatters";
 
 export default function AttendanceRecordList() {

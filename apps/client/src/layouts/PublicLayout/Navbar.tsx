@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { useAuthStore } from "@/stores/auth.store";
 import { useState } from "react";
 
@@ -110,8 +110,8 @@ export function Navbar() {
                                     to={link.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={`px-3 py-2 rounded-lg text-sm font-medium ${isActive(link.path)
-                                            ? "bg-blue-50 text-blue-600"
-                                            : "text-gray-600 hover:bg-gray-100"
+                                        ? "bg-blue-50 text-blue-600"
+                                        : "text-gray-600 hover:bg-gray-100"
                                         }`}
                                 >
                                     {link.label}

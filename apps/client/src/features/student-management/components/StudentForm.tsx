@@ -9,7 +9,7 @@ import { useCreateStudent, useUpdateStudent } from "../hooks/useStudentMutations
 import { useUsers } from "@/features/user-management/hooks/useUsers";
 import { useClasses } from "@/features/class-management/hooks/useClasses";
 import { studentSchema, type StudentFormData } from "@/lib/validations/student.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function StudentForm() {
     const { id } = useParams();

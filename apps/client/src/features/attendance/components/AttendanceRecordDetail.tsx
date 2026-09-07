@@ -3,7 +3,7 @@ import { useAttendanceRecordDetail } from "../hooks/useAttendanceRecords";
 import { LoadingScreen, Badge, Button, Table } from "@/components/ui";
 import { ErrorMessage } from "@/components/feedback";
 import { formatAttendanceStatus, formatDate } from "@/utils/formatters";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function AttendanceRecordDetail() {
     const { id } = useParams<{ id: string }>();

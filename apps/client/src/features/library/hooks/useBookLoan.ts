@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { bookLoanService } from "@/services/book-loan.service";
+import { bookLoanService } from "@/services/bookLoan.service";
 import type { QueryParams } from "@/types/api";
 
 export function useBookLoans(params?: QueryParams) {

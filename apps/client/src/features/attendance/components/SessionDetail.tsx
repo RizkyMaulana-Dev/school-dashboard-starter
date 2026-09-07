@@ -5,7 +5,7 @@ import { attendanceService } from "@/services/attendance.service";
 import { LoadingScreen, Badge, Button, Table } from "@/components/ui";
 import { ErrorMessage } from "@/components/feedback";
 import { formatAttendanceStatus } from "@/utils/formatters";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function SessionDetail() {
     const { id } = useParams<{ id: string }>();

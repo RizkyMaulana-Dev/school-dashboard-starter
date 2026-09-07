@@ -1,4 +1,4 @@
-import apiClient from "./api-client";
+import apiClient from "./apiClient";
 import type { LoginCredentials, AuthResponse } from "@/types/entities";
 
 const AUTH_ENDPOINT = "/auth";

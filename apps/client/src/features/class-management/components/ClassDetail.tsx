@@ -4,7 +4,7 @@ import { useClassDetail } from "../hooks/useClasses";
 import { LoadingScreen, Button, Table } from "@/components/ui";
 import { ErrorMessage } from "@/components/feedback";
 
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { useQuery } from "@tanstack/react-query";
 import { studentService } from "@/services/student.service";
 

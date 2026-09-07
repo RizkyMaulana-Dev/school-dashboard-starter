@@ -8,7 +8,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useSessions } from "../hooks/useSessions";
 import { useDeleteSession } from "../hooks/useAttendanceMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { AttendanceSession } from "@/types/entities";
 
 export default function SessionList() {

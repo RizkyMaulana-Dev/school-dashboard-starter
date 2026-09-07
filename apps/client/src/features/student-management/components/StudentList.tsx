@@ -8,7 +8,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useStudents } from "../hooks/useStudents";
 import { useDeleteStudent } from "../hooks/useStudentMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { formatGender } from "@/utils/formatters";
 import type { Student } from "@/types/entities";
 

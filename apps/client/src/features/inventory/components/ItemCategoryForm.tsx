@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Input, Button, LoadingScreen } from "@/components/ui";
 import { useItemCategoryDetail } from "../hooks/useItemCategories";
 import { useCreateItemCategory, useUpdateItemCategory } from "../hooks/useItemCategoryMutations";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 const schema = z.object({
     name: z.string().min(1, "Nama wajib diisi"),

@@ -1,7 +1,7 @@
 // src/features/public-activity/components/LoanHistory.tsx
 import { useQuery } from "@tanstack/react-query";
-import { bookLoanService } from "@/services/book-loan.service";
-import { itemLoanService } from "@/services/item-loan.service";
+import { bookLoanService } from "@/services/bookLoan.service";
+import { itemLoanService } from "@/services/itemLoan.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { LoadingScreen, Badge } from "@/components/ui";
 import { ErrorMessage, EmptyState } from "@/components/feedback";

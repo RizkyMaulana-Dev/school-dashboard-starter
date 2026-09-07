@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { dashboardRoutes } from "./dashboard-routes";
-import { publicRoutes } from "./public-routes";
-import { authRoutes } from "./auth-routes";
-import { ROUTE_PATHS } from "./route-paths";
+import { dashboardRoutes } from "./dashboard.routes";
+import { publicRoutes } from "./public.routes";
+import { authRoutes } from "./auth.routes";
+import { ROUTE_PATHS } from "./route.paths";
 
 /**
  * Root router configuration

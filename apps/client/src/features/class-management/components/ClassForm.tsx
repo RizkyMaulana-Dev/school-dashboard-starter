@@ -8,7 +8,7 @@ import { useClassDetail } from "../hooks/useClasses";
 import { useCreateClass, useUpdateClass } from "../hooks/useClassMutations";
 import { useTeachers } from "@/features/teacher-management/hooks/useTeachers";
 import { classSchema, type ClassFormData } from "@/lib/validations/class.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { CreateSchoolClassDTO } from "@/types/entities";
 
 export default function ClassForm() {

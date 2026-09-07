@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router-dom";
-import { ROUTE_PATHS } from "./route-paths";
-import { ProtectedRoute } from "./protected-route";
+import { ROUTE_PATHS } from "./route.paths";
+import { ProtectedRoute } from "./protected.route";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 
 // Lazy imports for code splitting

@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useBookLoans } from "../hooks/useBookLoan";
 import { useReturnBook } from "../hooks/useBookLoanMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import { formatDate, formatLoanStatus } from "@/utils/formatters";
 import type { BookLoan } from "@/types/entities";
 

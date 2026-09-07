@@ -8,7 +8,7 @@ import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { useBookDetail, useBookCategories } from "../hooks/useBooks";
 import { useCreateBook, useUpdateBook } from "../hooks/useBookMutations";
 import { bookSchema, type BookFormData } from "@/lib/validations/book.schema";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 
 export default function BookForm() {
     const { id } = useParams();

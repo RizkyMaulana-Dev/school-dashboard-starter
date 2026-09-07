@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { attendanceSessionService } from "@/services/attendance-session.service";
+import { attendanceSessionService } from "@/services/attendanceSession.service";
 import type { QueryParams } from "@/types/api";
 
 export function useSessions(params?: QueryParams) {

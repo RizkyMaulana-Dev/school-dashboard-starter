@@ -9,7 +9,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { useBooks } from "../hooks/useBooks";
 import { useDeleteBook } from "../hooks/useBookMutations";
 import { usePagination, useDebounce } from "@/hooks";
-import { ROUTE_PATHS } from "@/routes/route-paths";
+import { ROUTE_PATHS } from "@/routes/route.paths";
 import type { Book } from "@/types/entities";
 
 export default function BookList() {
