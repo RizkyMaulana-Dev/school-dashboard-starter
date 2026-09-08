@@ -17,10 +17,6 @@ export function Navbar() {
         { path: ROUTE_PATHS.PUBLIC_PROFILE, label: "Profil" },
     ];
 
-    console.log(isAuthenticated);
-    console.log(user);
-    console.log(logout);
-
     const isActive = (path: string) => location.pathname === path;
 
     return (
