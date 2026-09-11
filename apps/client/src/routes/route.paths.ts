@@ -73,8 +73,10 @@ export const ROUTE_PATHS = {
   PUBLIC: "/activity",
   PUBLIC_HOME: "/activity/home",
   PUBLIC_ATTENDANCE: "/activity/attendance",
-  PUBLIC_LOANS: "/activity/loans",
+  PUBLIC_LOAN_HISTORY: "/activity/loans",
   PUBLIC_PROFILE: "/activity/profile",
+  PUBLIC_BOOK_CATALOG: "/activity/bookCatalog",
+  PUBLIC_ITEM_CATALOG: "/activity/itemCatalog",
 
   ITEM_CATEGORIES: "/app/inventory/categories",
   ITEM_CATEGORY_CREATE: "/app/inventory/categories/create",

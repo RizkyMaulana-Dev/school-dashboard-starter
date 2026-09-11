@@ -6,7 +6,6 @@ import {
     CalendarDays,
     BarChart2,
     User,
-    Filter,
     FileSpreadsheet,
     FileText,
     Loader2
@@ -25,7 +24,7 @@ export default function RekapKehadiran() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
-        <div className="max-w-4xl mx-auto bg-gray-50/50 min-h-screen flex flex-col md:py-6 lg:py-8">
+        <div className="max-w-4xl mx-auto bg-gray-50/50 h-screen flex flex-col overflow-hidden md:py-6 lg:py-8">
             {/* --- HEADER --- */}
             <div className="bg-white pt-4 pb-0 px-4 md:px-6 shadow-sm md:rounded-t-2xl border-b border-gray-100 z-10">
                 <div className="flex items-center gap-3 mb-4 md:mb-6 md:pt-2">

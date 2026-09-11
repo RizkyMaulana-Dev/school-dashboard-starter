@@ -9,6 +9,8 @@ const PublicAttendance = lazy(
 const PublicLoans = lazy(() => import("@/features/public-activity/components/LoanHistory"));
 const PublicProfile = lazy(() => import("@/features/public-activity/components/PublicProfile"));
 const PublicHome = lazy(() => import("@/features/public-activity/components/PublicHome"));
+const PublicBookCatalog = lazy(() => import("@/features/public-activity/components/BookCatalog"));
+const PublicItemCatalog = lazy(() => import("@/features/public-activity/components/ItemCatalog"));
 
 export const publicRoutes: RouteObject[] = [
     {
@@ -31,6 +33,14 @@ export const publicRoutes: RouteObject[] = [
                 path: "profile",
                 element: <PublicProfile />,
             },
+            {
+                path: "bookCatalog",
+                element: <PublicBookCatalog />
+            },
+            {
+                path: "itemCatalog",
+                element: <PublicItemCatalog />
+            }
         ],
     },
 ];
