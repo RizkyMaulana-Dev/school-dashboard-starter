@@ -33,8 +33,8 @@ const BookLoanList = lazy(() => import("@/features/library/components/BookLoanLi
 const BookLoanForm = lazy(() => import("@/features/library/components/BookLoanForm"));
 const ItemList = lazy(() => import("@/features/inventory/components/ItemList"));
 const ItemForm = lazy(() => import("@/features/inventory/components/ItemForm"));
-const ItemLoanList = lazy(() => import("@/features/inventory/components/itemLoanList"));
-const ItemLoanForm = lazy(() => import("@/features/inventory/components/itemLoanForm"));
+const ItemLoanList = lazy(() => import("@/features/inventory/components/ItemLoanList"));
+const ItemLoanForm = lazy(() => import("@/features/inventory/components/ItemLoanForm"));
 const UserDetail = lazy(() => import("@/features/user-management/components/UserDetail"));
 const ClassDetail = lazy(() => import("@/features/class-management/components/ClassDetail"));
 const StudentDetail = lazy(() => import("@/features/student-management/components/StudentDetail"));

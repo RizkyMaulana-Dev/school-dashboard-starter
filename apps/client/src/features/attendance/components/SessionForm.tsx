@@ -1,10 +1,10 @@
 // src/features/attendance/components/SessionForm.tsx
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Input, Button, LoadingScreen } from "@/components/ui";
+import { Input, Button } from "@/components/ui";
 import { useClasses } from "@/features/class-management/hooks/useClasses";
 import { useCreateSession } from "../hooks/useAttendanceMutations";
 import { ROUTE_PATHS } from "@/routes/route.paths";

@@ -232,6 +232,7 @@ export interface AuthData {
   refreshToken?: string; // Diisi optional (?) karena dari respon backend tidak selalu ada
   user: User;
   student?: Student | null;
+  tokens?: string;
 }
 
 export interface AuthResponse {

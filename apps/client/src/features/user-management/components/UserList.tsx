@@ -20,7 +20,7 @@ export default function UserList() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
-    const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+    const [filterValues, _setFilterValues] = useState<Record<string, string>>({});
     const [groupBy, setGroupBy] = useState<string>("");
 
     const debouncedSearch = useDebounce(search, 500);

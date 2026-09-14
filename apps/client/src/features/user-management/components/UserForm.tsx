@@ -10,7 +10,6 @@ import { useCreateUser, useUpdateUser } from "../hooks/useUserMutations";
 import { useRoles } from "../hooks/useRoles";
 import { userCreateSchema, userUpdateSchema } from "@/lib/validations/user.schema";
 import { ROUTE_PATHS } from "@/routes/route.paths";
-import type { UserCreateFormData, UserUpdateFormData } from "@/lib/validations/user.schema";
 
 export default function UserForm() {
     const { id } = useParams<{ id: string }>();

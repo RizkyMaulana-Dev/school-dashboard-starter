@@ -5,28 +5,28 @@ import { AuthProvider } from "./AuthProvider";
 import { ThemeProvider } from "./ThemeProvider";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      retry: 1,
-      refetchOnWindowFocus: false,
+    defaultOptions: {
+        queries: {
+            staleTime: 5 * 60 * 1000,
+            retry: 1,
+            refetchOnWindowFocus: false,
+        },
+        mutations: {
+            retry: 0,
+        },
     },
-    mutations: {
-      retry: 0,
-    },
-  },
 });
 
 interface AppProvidersProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export function AppProviders({ children }: AppProvidersProps) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <AuthProvider>{children}</AuthProvider>
+            </ThemeProvider>
+        </QueryClientProvider>
+    );
 }
