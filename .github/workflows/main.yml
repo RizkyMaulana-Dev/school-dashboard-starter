@@ -1,45 +1,63 @@
 name: Deploy Monorepo (Client & Server)
+
 on:
-    push:
-        branches:
-            - main
-        
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-    deploy-client:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+  deploy-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-            - name: Install & Build Client
-              run: |
-                cd apps/client
-                npm ci
-                npm run build
+      # Install semua dependencies dari root monorepo
+      - name: Install Monorepo Dependencies
+        run: npm ci
 
-            - name: Deploy ke github pages
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                github_token: ${{secrets.GITHUB_TOKEN}}
-                publish_dir: ./apps/client/dist
+      - name: Build Client
+        run: npm run build --workspace=apps/client # Menjalankan build spesifik client via workspace
 
-    deploy-server:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
-            
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 20
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-            - name: Install & Deploy ke Cloudflare Pages
-              uses: cloudflare/wrangler-action@v3
-              with:
-                apiToken: ${{secrets.CLOUDFLARE_API_TOKEN}}
-                workingDirectory: 'apps/server'
-                command: deploy
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './apps/client/dist' # Ganti dist ke 'out' atau 'build' jika nama folder output build kamu berbeda
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Monorepo Dependencies
+        run: npm ci
+
+      - name: Deploy Server to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: 'apps/server'
+          command: deploy
