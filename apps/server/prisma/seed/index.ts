@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/edge";
 import bcrypt from "bcryptjs";
 import { logger } from "../../src/lib/logger";
 

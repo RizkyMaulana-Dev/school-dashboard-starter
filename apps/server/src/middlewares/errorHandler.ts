@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client/edge";
 import { ApiError } from "../errors/index.js";
 import { logger } from "../lib/logger.js";
 
@@ -25,7 +25,7 @@ export function globalErrorHandler(
     });
   }
 
-if (error instanceof PrismaClientKnownRequestError) {    // P2014: Relation Violation (Kasus nyambungin akun 2x ke relasi 1-to-1)
+if (error instanceof Prisma.PrismaClientKnownRequestError) {    // P2014: Relation Violation (Kasus nyambungin akun 2x ke relasi 1-to-1)
     if (error.code === "P2014") {
       return res.status(400).json({
         success: false,
