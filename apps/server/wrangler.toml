@@ -1,3 +1,3 @@
 name = "school-dashboard-server"
-main = "src/index.ts" # Sesuaikan dengan file entry point server kamu (misal: index.js / server.js)
+main = "src/server.ts" # Sesuaikan dengan file entry point server kamu (misal: index.js / server.js)
 compatibility_date = "2026-01-01"
