@@ -61,3 +61,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: 'apps/server'
           command: deploy
+          wranglerVersion: '4.131.2' # Tambahkan baris ini

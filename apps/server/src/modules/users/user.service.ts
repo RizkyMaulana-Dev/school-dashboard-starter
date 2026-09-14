@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 import { UserRepository } from "./user.repository.js";
 import { CreateUserDto, UpdateUserDto } from "./user.types.js";
