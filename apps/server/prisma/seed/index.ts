@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client/edge";
+import 'dotenv/config'; // Letakkan dotenv di baris paling atas
+import { PrismaClient } from "@prisma/client"; // ✅ Ubah /edge menjadi standard PrismaClient
 import bcrypt from "bcryptjs";
 import { logger } from "../../src/lib/logger";
 
 const prisma = new PrismaClient();
-
 // =========================
 // Permissions
 // =========================
