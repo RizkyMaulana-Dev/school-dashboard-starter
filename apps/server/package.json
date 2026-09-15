@@ -19,6 +19,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@prisma/extension-accelerate": "^3.0.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
