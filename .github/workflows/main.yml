@@ -13,33 +13,49 @@ permissions:
 jobs:
   deploy-client:
     runs-on: ubuntu-latest
+
+    environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+        - name: Checkout Repository
+          uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 22
+            cache: npm
 
-      # Install semua dependencies dari root monorepo
-      - name: Install Monorepo Dependencies
-        run: npm ci
+        - name: Install Monorepo Dependencies
+          run: npm ci
 
-      - name: Build Client
-        run: npm run build --workspace=apps/client # Menjalankan build spesifik client via workspace
+        - name: Build Client
+          run: npm run build --workspace=apps/client
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+        - name: Verify Client Build
+          run: |
+            echo "=== Client dist ==="
+            ls -la apps/client/dist
 
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './apps/client/dist' # Ganti dist ke 'out' atau 'build' jika nama folder output build kamu berbeda
+            echo "=== index.html ==="
+            test -f apps/client/dist/index.html
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+            echo "=== Assets ==="
+            ls -la apps/client/dist/assets
+
+        - name: Setup Pages
+          uses: actions/configure-pages@v5
+
+        - name: Upload Pages Artifact
+          uses: actions/upload-pages-artifact@v4
+          with:
+            path: ./apps/client/dist
+
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
 
   deploy-server:
     runs-on: ubuntu-latest
