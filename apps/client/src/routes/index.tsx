@@ -3,35 +3,32 @@ import { dashboardRoutes } from "./dashboard.routes";
 import { publicRoutes } from "./public.routes";
 import { authRoutes } from "./auth.routes";
 import { ROUTE_PATHS } from "./route.paths";
+import { lazy } from "react";
 
-/**
- * Root router configuration
- * Menggabungkan semua route modules
- */
+const PageNotFound = lazy(() => import("@/components/feedback/404"));
+
 export const router = createBrowserRouter(
     [
-        // Auth routes (login, etc.)
         ...authRoutes,
-
-        // Dashboard routes (protected)
         ...dashboardRoutes,
-
-        // Public routes (activity viewer)
         ...publicRoutes,
 
-        // Root redirect
         {
             path: "/",
             element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
         },
 
-        // 404 Not Found
+        {
+            path: ROUTE_PATHS.NOT_FOUND,
+            element: <PageNotFound />,
+        },
+
         {
             path: "*",
             element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
         },
     ],
     {
-        basename: import.meta.env.BASE_URL,
-    }
+        basename: import.meta.env.BASE_URL.replace(/\/$/, ""),
+    },
 );

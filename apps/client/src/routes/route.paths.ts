@@ -1,3 +1,4 @@
+// ./apps/client/src/routes/route.paths.ts
 /**
  * Route path constants untuk menghindari hardcode string paths
  */

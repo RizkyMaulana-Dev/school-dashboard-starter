@@ -1,3 +1,4 @@
+// ./apps/client/src/routes/auth.routes.tsx
 import type { RouteObject } from "react-router-dom";
 import { ROUTE_PATHS } from "./route.paths";
 import { AuthLayout } from "@/layouts/AuthLayout";

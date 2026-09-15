@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function NotFoundPage() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
@@ -17,16 +19,18 @@ export default function NotFoundPage() {
                 </h1>
 
                 <p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">
-                    Maaf, halaman yang Anda cari mungkin sudah dipindahkan, dihapus, atau tidak pernah ada.
+                    Maaf, halaman yang Anda cari mungkin sudah dipindahkan, dihapus,
+                    atau tidak pernah ada.
                 </p>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                    <a
-                        href="/"
+                    <Link
+                        to="/"
                         className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 sm:w-auto"
                     >
                         Kembali ke beranda
-                    </a>
+                    </Link>
+
                     <button
                         type="button"
                         onClick={() => window.history.back()}

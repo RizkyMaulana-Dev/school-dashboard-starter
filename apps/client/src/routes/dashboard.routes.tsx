@@ -1,3 +1,4 @@
+// ./apps/client/src/routes/dashboard.routes.tsx
 import type { RouteObject } from "react-router-dom";
 import { ROUTE_PATHS } from "./route.paths";
 import { ProtectedRoute } from "./protected.route";
@@ -47,7 +48,6 @@ const ItemLoanDetail = lazy(() => import("@/features/inventory/components/ItemLo
 const ItemCategoryList = lazy(() => import("@/features/inventory/components/ItemCategoryList"));
 const ItemCategoryForm = lazy(() => import("@/features/inventory/components/ItemCategoryForm"));
 const ItemCategoryDetail = lazy(() => import("@/features/inventory/components/ItemCategoryDetail"));
-const PageNotFound = lazy(() => import("@/components/feedback/404"));
 
 export const dashboardRoutes: RouteObject[] = [
     {
@@ -370,7 +370,6 @@ export const dashboardRoutes: RouteObject[] = [
             { path: "library/loans/:id", element: <BookLoanDetail /> },
             { path: "inventory/items/:id", element: <ItemDetail /> },
             { path: "inventory/loans/:id", element: <ItemLoanDetail /> },
-            { path: "404", element: <PageNotFound /> },
         ],
     },
 ];
