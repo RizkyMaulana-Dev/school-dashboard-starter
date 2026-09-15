@@ -8,25 +8,30 @@ import { ROUTE_PATHS } from "./route.paths";
  * Root router configuration
  * Menggabungkan semua route modules
  */
-export const router = createBrowserRouter([
-    // Auth routes (login, etc.)
-    ...authRoutes,
+export const router = createBrowserRouter(
+    [
+        // Auth routes (login, etc.)
+        ...authRoutes,
 
-    // Dashboard routes (protected)
-    ...dashboardRoutes,
+        // Dashboard routes (protected)
+        ...dashboardRoutes,
 
-    // Public routes (activity viewer)
-    ...publicRoutes,
+        // Public routes (activity viewer)
+        ...publicRoutes,
 
-    // Root redirect
+        // Root redirect
+        {
+            path: "/",
+            element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
+        },
+
+        // 404 Not Found
+        {
+            path: "*",
+            element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
+        },
+    ],
     {
-        path: "/",
-        element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
-    },
-
-    // 404 Not Found
-    {
-        path: "*",
-        element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
-    },
-]);
+        basename: import.meta.env.BASE_URL,
+    }
+);
