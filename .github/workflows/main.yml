@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Client
         env:
-            VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: npm run build --workspace=apps/client
 
       - name: Verify Client Build
@@ -84,25 +84,27 @@ jobs:
         with:
           version: latest
 
-      - name: Apply Migrations & Run Seed
+      - name: Apply Migrations
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           # Link ke project Supabase
           supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
-          
+
           # Push migrasi (jika ada file migrasi baru)
           supabase db push --password ${{ secrets.SUPABASE_DB_PASSWORD }}
-          
-          # Jalankan file seed (apps/server/supabase/seed.sql)
-          supabase db seed --password ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Run Database Seeder
+        env:
+          DATABASE_URL: postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co:5432/postgres
+        run: npm run seed
 
       # --- DEPLOY CLOUDFLARE ---
       - name: Deploy Server to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'apps/server'
+          workingDirectory: "apps/server"
           command: deploy
-          wranglerVersion: '4.131.2'
+          wranglerVersion: "4.131.2"
