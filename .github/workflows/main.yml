@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Client
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
+            VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: npm run build --workspace=apps/client
 
       - name: Verify Client Build
@@ -78,46 +78,11 @@ jobs:
         run: npm ci
         working-directory: ./
 
-      # --- TAMBAHAN SUPABASE MIGRATION & SEED ---
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Apply Migrations
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: |
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
-          supabase db push --password ${{ secrets.SUPABASE_DB_PASSWORD }}
-
-      - name: Create temporary .env file
-        run: |
-          touch .env
-          echo "DATABASE_URL=postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co:5432/postgres" > .env
-
-      - name: Push Prisma Schema
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx prisma db push
-
-      - name: Run Database Seeder
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npm run seed
-
-      - name: Run Database Seeder
-        env:
-          DATABASE_URL: postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co:5432/postgres
-        run: npm run seed
-
-      # --- DEPLOY CLOUDFLARE ---
+      # --- LANGSUNG DEPLOY CLOUDFLARE ---
       - name: Deploy Server to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: "apps/server"
+          workingDirectory: 'apps/server'
           command: deploy
-          wranglerVersion: "4.131.2"
+          wranglerVersion: '4.131.2'
