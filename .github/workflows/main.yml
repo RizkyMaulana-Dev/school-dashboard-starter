@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Client
         env:
-            VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: npm run build --workspace=apps/client
 
       - name: Verify Client Build
@@ -81,8 +81,16 @@ jobs:
       # --- LANGSUNG DEPLOY CLOUDFLARE ---
       - name: Deploy Server to Cloudflare
         uses: cloudflare/wrangler-action@v3
+        env:
+          # Pastikan variabel ini tersedia untuk dibaca oleh wrangler-action
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'apps/server'
+          workingDirectory: "apps/server"
           command: deploy
-          wranglerVersion: '4.131.2'
+          wranglerVersion: "4.131.2"
+          # Beritahu Wrangler untuk menyuntikkan secrets ini ke Cloudflare Workers
+          secrets: |
+            DATABASE_URL
+            JWT_SECRET
