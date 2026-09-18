@@ -15,7 +15,7 @@ const randomBirthDate = (minYear = 2006, maxYear = 2008) => {
   return new Date(year, month, day);
 };
 
-export async function seedBulkStudents(studentRoleId: string, count = 50) {
+export async function seedBulkStudents(studentRoleId: string, count = 2) {
   logger.info(`⏳ Memulai seeding ${count} data siswa...`);
 
   const schoolClasses = await prisma.schoolClass.findMany();
