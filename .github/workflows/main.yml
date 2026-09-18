@@ -99,7 +99,8 @@ jobs:
 
       - name: Run Database Seeder
         env:
-          DATABASE_URL: postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co:5432/postgres
+         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: npm run seed
 
       - name: Run Database Seeder
