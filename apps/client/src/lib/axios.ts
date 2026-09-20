@@ -50,11 +50,9 @@ export function clearTokens(): void {
 // Axios Instance
 // ============================================================
 
-/**
- * Axios instance dengan base URL dari environment variable
- */
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
+  // Gunakan env var JIKA ada, kalau tidak ada langsung tembak ke Cloudflare
+  baseURL: import.meta.env.VITE_API_URL || "https://school-dashboard-server.rzkymln-dev.workers.dev/api/v1",
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
