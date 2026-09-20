@@ -54,13 +54,12 @@ export function clearTokens(): void {
  * Axios instance dengan base URL dari environment variable
  */
 const axiosInstance = axios.create({
-  baseURL: "/api/v1", // ✅ relatif, akan diproxy oleh Vite
+  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
 });
-
 // ============================================================
 // Request Interceptor
 // ============================================================
