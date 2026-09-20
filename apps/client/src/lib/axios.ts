@@ -5,6 +5,8 @@ import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 // Konstanta
 // ============================================================
 
+const baseURL = "http://localhost:5173/school-dashboard-starter";
+
 const STORAGE_KEYS = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
@@ -155,7 +157,7 @@ axiosInstance.interceptors.response.use(
 
     if (!refreshToken) {
       clearTokens();
-      window.location.href = "/login";
+      window.location.href = baseURL + "/login";
       return Promise.reject(error);
     }
 
@@ -179,7 +181,7 @@ axiosInstance.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError as AxiosError, null);
       clearTokens();
-      window.location.href = "/login";
+      window.location.href = baseURL + "/login";
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

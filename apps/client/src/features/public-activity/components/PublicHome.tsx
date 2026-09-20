@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query"; // 👈 Import queryClient
 
-// Import komponen UI dan Hooks untuk tabel dari backend
 import { DataView } from "@/components/ui/DataView";
 import type { FilterOption } from "@/components/ui/DataView";
 import { Badge, LoadingScreen } from "@/components/ui";
@@ -18,7 +17,6 @@ import { Pagination } from "@/components/ui/Pagination";
 import { usePagination, useDebounce } from "@/hooks";
 import { useAttendanceRecords } from "@/features/attendance/hooks/useAttendanceRecords";
 import { useSessions } from "@/features/attendance/hooks/useSessions";
-// 👈 Pastikan hook mutasi create ini ada di folder mutations kamu
 import { useCreateAttendanceRecord } from "@/features/attendance/hooks/useAttendanceMutations";
 import { formatAttendanceStatus, formatDate, formatTime } from "@/utils/formatters";
 import { useAuthStore } from "@/stores/auth.store";
@@ -26,9 +24,6 @@ import { useAuthStore } from "@/stores/auth.store";
 export default function PresensiDashboard() {
     const queryClient = useQueryClient();
     const { user } = useAuthStore();
-    // =========================================
-    // 1. STATE & HOOKS UNTUK TABEL BACKEND
-    // =========================================
     const [search, setSearch] = useState("");
     const [filterValues, setFilterValues] = useState<Record<string, string>>({});
     const [groupBy, setGroupBy] = useState<string>("");
@@ -36,28 +31,23 @@ export default function PresensiDashboard() {
     const debouncedSearch = useDebounce(search, 500);
     const { page, limit, sortBy, sortOrder, queryParams, setSortBy, setPage, setTotalItems } = usePagination();
 
-    // Fetch Riwayat Kehadiran
     const { data: recordsData, isLoading: isLoadingRecords, isError, error, refetch } = useAttendanceRecords({
         ...queryParams,
         search: debouncedSearch || undefined,
         ...filterValues,
     });
 
-    // Fetch Semua Sesi
     const { data: sessionsData, isLoading: isLoadingSessions } = useSessions({ limit: 100 });
 
-    // Hook Mutasi untuk Tambah Absen
     const createRecordMutation = useCreateAttendanceRecord();
 
     const [currentTime, setCurrentTime] = useState(new Date());
 
-    // Update waktu setiap menit
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 60000);
         return () => clearInterval(timer);
     }, []);
 
-    // Pagination sync
     useEffect(() => {
         setPage(1);
     }, [debouncedSearch, filterValues, setPage]);
@@ -68,9 +58,6 @@ export default function PresensiDashboard() {
         }
     }, [recordsData?.meta?.total, setTotalItems]);
 
-    // =========================================
-    // 2. LOGIKA SESI & JADWAL (UPDATE TOTAL MENIT)
-    // =========================================
     const { currentActiveSession, upcomingSessions, isAllDone } = useMemo(() => {
         if (!sessionsData?.data) return { currentActiveSession: null, upcomingSessions: [], isAllDone: false };
 
@@ -80,10 +67,8 @@ export default function PresensiDashboard() {
         const day = String(now.getDate()).padStart(2, '0');
         const todayString = `${year}-${month}-${day}`;
 
-        // TOTAL MENIT SAAT INI
         const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
 
-        // HELPER: Konversi string jam (cth: "15:07" / "15.07") ke total menit
         const getMinutesFromFormat = (rawTime: string) => {
             if (!rawTime) return 0;
             const formatted = formatTime(rawTime);
@@ -115,18 +100,11 @@ export default function PresensiDashboard() {
         return { currentActiveSession: active, upcomingSessions: upcoming, isAllDone: done };
     }, [sessionsData?.data, currentTime]);
 
-    // =========================================
-    // 3. CEK APAKAH SUDAH ABSEN DI SESI INI
-    // =========================================
     const hasAttendedCurrentSession = useMemo(() => {
         if (!currentActiveSession || !recordsData?.data) return false;
-        // Cek apakah di riwayat sudah ada ID sesi yang sama dengan sesi aktif
         return recordsData.data.some((r: any) => r.session?.id === currentActiveSession.id);
     }, [currentActiveSession, recordsData?.data]);
 
-    // =========================================
-    // 4. STATISTIK BULAN INI
-    // =========================================
     const stats = useMemo(() => {
         if (!recordsData?.data) return { present: 0, late: 0, absent: 0 };
         return {
@@ -136,9 +114,6 @@ export default function PresensiDashboard() {
         };
     }, [recordsData?.data]);
 
-    // =========================================
-    // 5. KONFIGURASI FILTER & GROUP BY TABEL
-    // =========================================
     const filterOptions: FilterOption[] = useMemo(() => {
         if (!recordsData?.data) return [];
         const sessions = Array.from(new Set(recordsData.data.map((r) => r.session?.title).filter(Boolean))).sort() as string[];
@@ -216,13 +191,9 @@ export default function PresensiDashboard() {
         </div>
     );
 
-    // =========================================
-    // 6. HANDLER ABSENSI (OFFLINE FIRST / OPTIMISTIC UI)
-    // =========================================
     const handleAbsenClick = () => {
         if (!currentActiveSession || hasAttendedCurrentSession) return;
 
-        // Ambil ID student yang terhubung dengan user login
         const studentId = user?.student?.id;
         if (!studentId) {
             alert("Akun Anda belum terhubung dengan data siswa. Hubungi administrator.");
@@ -231,7 +202,6 @@ export default function PresensiDashboard() {
 
         const previousRecords = queryClient.getQueryData(["attendance-records"]);
 
-        // Optimistic update (sama seperti sebelumnya) ...
         queryClient.setQueryData(["attendance-records"], (old: any) => {
             if (!old || !old.data) return old;
             const newTempRecord = {
@@ -436,7 +406,6 @@ export default function PresensiDashboard() {
                 </div>
             </div>
 
-            {/* RIWAYAT ABSENSI (DATAVIEW API) */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="px-5 md:px-6 py-4 md:py-5 border-b border-gray-100">
                     <h2 className="text-base font-bold text-gray-900 mb-4">Riwayat Kehadiran Anda</h2>
