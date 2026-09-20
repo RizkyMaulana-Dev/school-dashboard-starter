@@ -34,6 +34,7 @@ jobs:
       - name: Build Client
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
         run: npm run build --workspace=apps/client
 
       - name: Verify Client Build
