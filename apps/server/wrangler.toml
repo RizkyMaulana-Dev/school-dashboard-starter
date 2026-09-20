@@ -1,4 +1,7 @@
 name = "school-dashboard-server"
 main = "src/worker.ts"
 compatibility_date = "2026-09-14"
-compatibility_flags = [ "nodejs_compat" ]
+compatibility_flags = [ 
+  "nodejs_compat",
+  "no_handle_cross_request_promise_resolution"
+]

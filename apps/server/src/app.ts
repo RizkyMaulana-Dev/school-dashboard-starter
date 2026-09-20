@@ -10,6 +10,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://rizkymaulana-dev.github.io"
 ];
+
 const app = express();
 
 app.use(
@@ -27,6 +28,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );app.use(express.json());
+app.options("*", cors());
 
 app.use("/api/v1", routes);
 app.use(globalErrorHandler);
