@@ -28,7 +28,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );app.use(express.json());
-app.options("*", cors());
+app.options("(.*)", cors());
 
 app.use("/api/v1", routes);
 app.use(globalErrorHandler);
