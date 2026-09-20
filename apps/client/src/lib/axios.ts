@@ -5,8 +5,6 @@ import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 // Konstanta
 // ============================================================
 
-const baseURL = "http://localhost:5173/school-dashboard-starter";
-
 const STORAGE_KEYS = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
@@ -54,7 +52,9 @@ export function clearTokens(): void {
 
 const axiosInstance = axios.create({
   // Gunakan env var JIKA ada, kalau tidak ada langsung tembak ke Cloudflare
-  baseURL: import.meta.env.VITE_API_URL || "https://school-dashboard-server.rzkymln-dev.workers.dev/api/v1",
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "https://school-dashboard-server.rzkymln-dev.workers.dev/api/v1",
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
@@ -157,13 +157,13 @@ axiosInstance.interceptors.response.use(
 
     if (!refreshToken) {
       clearTokens();
-      window.location.href = baseURL + "/login";
+      window.location.href = import.meta.env.BASE_URL + "login";
       return Promise.reject(error);
     }
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1"}/auth/refresh-token`,
+        `${import.meta.env.VITE_API_URL || "https://school-dashboard-server.rzkymln-dev.workers.dev/api/v1"}/auth/refresh-token`,
         { refreshToken },
       );
 
@@ -181,7 +181,7 @@ axiosInstance.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError as AxiosError, null);
       clearTokens();
-      window.location.href = baseURL + "/login";
+      window.location.href = import.meta.env.BASE_URL + "login";
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

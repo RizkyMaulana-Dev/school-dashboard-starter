@@ -8,6 +8,7 @@ import { useLogin } from "../hooks/useLogin";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth.schema";
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useAuthStore } from "@/stores/auth.store"; // 1. Import useAuthStore
+import axiosInstance from "@/lib/axios";
 
 export default function LoginForm() {
     const navigate = useNavigate();
@@ -46,33 +47,26 @@ export default function LoginForm() {
         }
 
         try {
-            // 1. Kirim ID token ke backend
-            const response = await fetch("http://localhost:3000/api/v1/auth/google", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ token: idToken }),
-            });
+            // 2. Ganti fetch manual dengan axiosInstance
+            const response = await axiosInstance.post("/auth/google", { token: idToken });
 
-            const resData = await response.json();
+            // Axios otomatis melakukan parsing JSON, datanya ada di response.data
+            const resData = response.data;
 
-            if (response.ok) {
-                // Sesuai struktur response backend: resData.data berisi { accessToken, user }
-                const { accessToken, refreshToken, user } = resData.data || resData;
+            // Sesuai struktur response backend: resData.data berisi { accessToken, user }
+            const { accessToken, refreshToken, user } = resData.data || resData;
 
-                // 3. PANGGIL setAuth DARI ZUSTAND STORE
-                // Signature: setAuth(user, accessToken, refreshToken)
-                setAuth(user, accessToken, refreshToken || "");
+            // PANGGIL setAuth DARI ZUSTAND STORE
+            setAuth(user, accessToken, refreshToken || "");
 
-                // 4. Redirect ke halaman target
-                navigate("/activity/home");
-            } else {
-                setGoogleError(resData.message || "Gagal melakukan autentikasi dengan server.");
-            }
-        } catch (error) {
+            // Redirect ke halaman target
+            navigate("/activity/home");
+
+        } catch (error: any) {
             console.error("Error menghubungi backend:", error);
-            setGoogleError("Gagal terhubung ke server backend.");
+            // Tangkap pesan error dari Axios jika backend menolak token
+            const errorMessage = error.response?.data?.message || "Gagal terhubung ke server backend.";
+            setGoogleError(errorMessage);
         } finally {
             setIsGooglePending(false);
         }
