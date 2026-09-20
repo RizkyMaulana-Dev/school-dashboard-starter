@@ -8,7 +8,7 @@
     "build": "prisma generate",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file=.env src/server.ts",
     "seed": "node --env-file-if-exists=.env --import tsx prisma/seed/index.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
