@@ -3,7 +3,7 @@ name: Deploy Monorepo (Client & Server)
 on:
   push:
     branches:
-      - main
+      - ai-agent/cek-library-kompatibel
 
 permissions:
   contents: read
