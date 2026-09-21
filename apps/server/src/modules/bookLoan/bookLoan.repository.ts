@@ -75,7 +75,7 @@ export class BookLoanRepository {
   }
 
   async create(data: CreateBookLoanDto) {
-    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    return prisma.$transaction(async (tx: any) => {
       // Validasi buku dan stok
       const book = await tx.book.findUnique({
         where: { id: data.bookId },
@@ -112,7 +112,7 @@ export class BookLoanRepository {
   }
 
   async update(id: string, data: UpdateBookLoanDto) {
-    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    return prisma.$transaction(async (tx: any) => {
       const existingLoan = await tx.bookLoan.findUnique({
         where: { id },
         include: { book: { select: { id: true } } },
@@ -155,7 +155,7 @@ export class BookLoanRepository {
   }
 
   async delete(id: string) {
-    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    return prisma.$transaction(async (tx: any) => {
       const loan = await tx.bookLoan.findUnique({
         where: { id },
         include: { book: { select: { id: true } } },

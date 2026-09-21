@@ -4,6 +4,7 @@ import cors from "cors";
 import { requestLogger } from "./middlewares/requestLogger.js";
 import routes from "./routes/index.js";
 import { globalErrorHandler } from "./middlewares/errorHandler.js";
+import { asyncLocalStorage, createPrismaClient } from "./lib/prisma.js";
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -32,6 +33,14 @@ app.use(
 
 app.use(express.json());
 app.use(requestLogger);
+
+// Prisma per-request context untuk Cloudflare Workers I/O isolation
+app.use((_req, _res, next) => {
+  const client = createPrismaClient();
+  asyncLocalStorage.run(client, () => {
+    next();
+  });
+});
 
 app.use("/api/v1", routes);
 

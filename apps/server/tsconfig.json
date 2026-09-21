@@ -16,5 +16,5 @@
 
     "types": ["node"]
   },
-  "include": ["src", "../client/src/utils/qrcode.ts"]
+  "include": ["src"]
 }
