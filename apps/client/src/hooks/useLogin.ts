@@ -28,7 +28,7 @@ export function useLogin() {
       }
 
       // Redirect based on role
-      if (user.roles?.some((role) => role.name === "Student")) {
+      if (user.roles?.some((role) => role.name === "Student" || role.name === "Teacher")) {
         navigate(ROUTE_PATHS.PUBLIC, { replace: true });
       } else {
         navigate(ROUTE_PATHS.DASHBOARD_HOME, { replace: true });

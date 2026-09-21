@@ -1,6 +1,8 @@
+// apps/server/src/middlewares/errorHandler.ts
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import { Prisma } from "@prisma/client/edge";
+import jwt from "jsonwebtoken";
 import { ApiError } from "../errors/index.js";
 import { logger } from "../lib/logger.js";
 
@@ -10,6 +12,22 @@ export function globalErrorHandler(
   res: Response,
   _next: NextFunction,
 ) {
+  // 1. Tangani error JWT (Token expired / token malformed) -> 401
+  if (error instanceof jwt.TokenExpiredError) {
+    return res.status(401).json({
+      success: false,
+      message: "Sesi login Anda telah berakhir. Silakan login kembali.",
+    });
+  }
+
+  if (error instanceof jwt.JsonWebTokenError) {
+    return res.status(401).json({
+      success: false,
+      message: "Token autentikasi tidak valid.",
+    });
+  }
+
+  // 2. Tangani ApiError custom (Unauthorized, Forbidden, NotFound, dll)
   if (error instanceof ApiError) {
     return res.status(error.statusCode).json({
       success: false,
@@ -17,6 +35,7 @@ export function globalErrorHandler(
     });
   }
 
+  // 3. Tangani Zod validation
   if (error instanceof ZodError) {
     return res.status(400).json({
       success: false,
@@ -25,43 +44,30 @@ export function globalErrorHandler(
     });
   }
 
-if (error instanceof Prisma.PrismaClientKnownRequestError) {    // P2014: Relation Violation (Kasus nyambungin akun 2x ke relasi 1-to-1)
-    if (error.code === "P2014") {
-      return res.status(400).json({
-        success: false,
-        message: "Akun ini sudah terhubung dengan data lain. Satu akun hanya bisa digunakan satu kali.",
-      });
-    }
-
-    // P2003: Foreign Key Constraint Violation
-    if (error.code === "P2003") {
-      return res.status(400).json({
-        success: false,
-        message: "Data referensi tidak ditemukan. Pastikan pilihanmu valid (misalnya, data kelas atau akun sudah benar).",
-      });
-    }
-
-    // P2002: Unique Constraint Violation (Data duplikat, misal email/NISN sama)
+  // 4. Tangani Prisma Known Errors
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
       return res.status(409).json({
         success: false,
-        message: "Data ini sudah digunakan oleh orang lain. Silakan gunakan data yang berbeda.",
+        message: "Data ini sudah digunakan. Silakan gunakan data yang berbeda.",
       });
     }
-
-    // P2025: Record Not Found
     if (error.code === "P2025") {
       return res.status(404).json({
         success: false,
-        message: "Data yang ingin kamu ubah atau hapus tidak ditemukan.",
+        message: "Data yang ingin diakses tidak ditemukan.",
       });
     }
   }
 
-  // Log error aslinya untuk developer melihat detailnya di console/server
-  logger.error(error);
+  // Log error aslinya
+  try {
+    logger.error(error);
+  } catch {
+    console.error(error);
+  }
 
-  // Pesan default untuk error yang tidak terduga
+  // Fallback 500
   return res.status(500).json({
     success: false,
     message: "Terjadi kesalahan pada sistem kami. Silakan coba beberapa saat lagi.",

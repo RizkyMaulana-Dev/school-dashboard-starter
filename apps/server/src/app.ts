@@ -1,4 +1,4 @@
-// ./apps/server/src/app.ts
+// apps/server/src/app.ts
 import express from "express";
 import cors from "cors";
 import { requestLogger } from "./middlewares/requestLogger.js";
@@ -13,30 +13,28 @@ const allowedOrigins = [
 
 const app = express();
 
-// 1. CORS Middleware (Otomatis menangani request OPTIONS / Preflight)
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Izinkan jika tanpa origin (curl/mobile) atau jika origin terdaftar
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".github.io")) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // Jangan melempar Error("Not allowed by CORS") karena akan menghasilkan 500
+        callback(null, false);
       }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
   })
 );
 
-// 2. Parser & Logger Middleware
 app.use(express.json());
 app.use(requestLogger);
 
-// 3. Application Routes
 app.use("/api/v1", routes);
 
-// 4. Catch-all 404 Handler (Aman dari path-to-regexp v8)
 app.use((_req, res) => {
   res.status(404).json({
     success: false,
@@ -44,7 +42,6 @@ app.use((_req, res) => {
   });
 });
 
-// 5. Global Error Handler (Wajib paling bawah)
 app.use(globalErrorHandler);
 
 export default app;
