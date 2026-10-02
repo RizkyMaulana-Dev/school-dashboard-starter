@@ -97,15 +97,17 @@ export interface AttendanceRecord {
   id: string;
   status: AttendanceStatus;
   attendanceSessionId: string;
-  attendanceSession?: Pick<AttendanceSession, 'id' | 'title' | 'date'> & {
-    class?: Pick<SchoolClass, 'id' | 'name'>;
+  attendanceSession?: Pick<AttendanceSession, "id" | "title" | "date"> & {
+    class?: Pick<SchoolClass, "id" | "name">;
   };
   // Tambahkan properti `session` untuk respons backend terbaru (sebagai alias opsional)
-  session?: Pick<AttendanceSession, 'id' | 'title' | 'date'> & {
-    class?: Pick<SchoolClass, 'id' | 'name'>;
+  session?: Pick<AttendanceSession, "id" | "title" | "date"> & {
+    startTime?: string | null;
+    endTime?: string | null;
+    class?: Pick<SchoolClass, "id" | "name">;
   };
   studentId: string;
-  student?: Pick<Student, 'id' | 'name'>;
+  student?: Pick<Student, "id" | "name">;
   recordedAt: string;
   notes: string | null;
   verificationData: Record<string, unknown> | null;
@@ -286,9 +288,8 @@ export interface UpdateTeacherDTO {
   name?: string;
   gender?: Gender;
   birthDate?: string;
-  userId?: string | null;   // ✅ opsional & nullable
+  userId?: string | null; // ✅ opsional & nullable
 }
-
 
 export interface CreateSchoolClassDTO {
   name: string;

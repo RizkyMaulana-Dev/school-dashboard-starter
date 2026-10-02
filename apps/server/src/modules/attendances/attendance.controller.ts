@@ -11,7 +11,7 @@ export class AttendanceController {
 
   getAll = async (req: Request, res: Response) => {
     const pagination = getPagination(req);
-    const { sessionId, studentId, status, classId, date } = req.query as any;
+    const { sessionId, studentId, status, classId, date, startDate, endDate } = req.query as any;
     const result = await this.service.findAll({
       ...pagination,
       sessionId,
@@ -19,6 +19,8 @@ export class AttendanceController {
       status,
       classId,
       date,
+      startDate,
+      endDate,
     });
     return successResponseWithMeta(res, result.data, result.meta, ATTENDANCE_MESSAGES.FETCHED);
   };

@@ -5,6 +5,8 @@ export function toAttendanceResponse(record: any) {
       id: record.session.id,
       title: record.session.title,
       date: record.session.date,
+      startTime: record.session.startTime,
+      endTime: record.session.endTime,
       class: record.session.schoolClass,
     },
     student: record.student,

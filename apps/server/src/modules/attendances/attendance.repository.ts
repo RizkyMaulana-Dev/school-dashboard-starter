@@ -12,6 +12,8 @@ export class AttendanceRepository {
       status?: string;
       classId?: string;
       date?: string;
+      startDate?: string;
+      endDate?: string;
     },
   ) {
     const where: any = {};
@@ -63,6 +65,18 @@ export class AttendanceRepository {
       };
     }
 
+    // 3b. Date range filter. The public rekap page sends startDate/endDate;
+    // without this they were silently dropped and every month looked the same.
+    if (query.startDate || query.endDate) {
+      where.session = {
+        ...where.session,
+        date: {
+          ...(query.startDate ? { gte: new Date(query.startDate) } : {}),
+          ...(query.endDate ? { lte: new Date(query.endDate) } : {}),
+        },
+      };
+    }
+
     // 4. Fetch data and count in parallel
     const [data, total] = await prisma.$transaction([
       prisma.attendance.findMany({
@@ -76,6 +90,8 @@ export class AttendanceRepository {
               id: true,
               title: true,
               date: true,
+              startTime: true,
+              endTime: true,
               schoolClass: { select: { id: true, name: true } },
             },
           },
