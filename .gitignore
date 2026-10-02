@@ -21,3 +21,8 @@ packages/**/node_modules
 apps/server/generated
 
 *.log
+
+# graphify knowledge graph — regenerate with `graphify .` (see AGENTS.md).
+# graph.html is ~2MB and derived; graph.json + GRAPH_REPORT.md are committed on purpose.
+graphify-out/graph.html
+graphify-out/cache/
