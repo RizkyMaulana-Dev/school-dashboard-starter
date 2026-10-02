@@ -6,7 +6,7 @@ export function useUsers(params?: QueryParams) {
   return useQuery({
     queryKey: ["users", params],
     queryFn: () => userService.getAll(params),
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
   });
 }
 

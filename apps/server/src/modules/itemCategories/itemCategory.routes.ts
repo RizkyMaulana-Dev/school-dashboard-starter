@@ -15,14 +15,14 @@ router.post(
   authenticate,
   authorize("item-category.create"),
   validate(createItemCategorySchema),
-  controller.create
+  controller.create,
 );
 router.patch(
   "/:id",
   authenticate,
   authorize("item-category.update"),
   validate(updateItemCategorySchema),
-  controller.update
+  controller.update,
 );
 router.delete("/:id", authenticate, authorize("item-category.delete"), controller.delete);
 

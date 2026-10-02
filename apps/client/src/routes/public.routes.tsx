@@ -5,7 +5,7 @@ import { PublicLayout } from "@/layouts/PublicLayout";
 import { lazy } from "react";
 
 const PublicAttendance = lazy(
-    () => import("@/features/public-activity/components/AttendanceViewer"),
+  () => import("@/features/public-activity/components/AttendanceViewer"),
 );
 const PublicLoans = lazy(() => import("@/features/public-activity/components/LoanHistory"));
 const PublicProfile = lazy(() => import("@/features/public-activity/components/PublicProfile"));
@@ -14,34 +14,34 @@ const PublicBookCatalog = lazy(() => import("@/features/public-activity/componen
 const PublicItemCatalog = lazy(() => import("@/features/public-activity/components/ItemCatalog"));
 
 export const publicRoutes: RouteObject[] = [
-    {
-        path: ROUTE_PATHS.PUBLIC,
-        element: <PublicLayout />,
-        children: [
-            {
-                path: "home",
-                element: <PublicHome />
-            },
-            {
-                path: "attendance",
-                element: <PublicAttendance />,
-            },
-            {
-                path: "loans",
-                element: <PublicLoans />,
-            },
-            {
-                path: "profile",
-                element: <PublicProfile />,
-            },
-            {
-                path: "bookCatalog",
-                element: <PublicBookCatalog />
-            },
-            {
-                path: "itemCatalog",
-                element: <PublicItemCatalog />
-            }
-        ],
-    },
+  {
+    path: ROUTE_PATHS.PUBLIC,
+    element: <PublicLayout />,
+    children: [
+      {
+        path: "home",
+        element: <PublicHome />,
+      },
+      {
+        path: "attendance",
+        element: <PublicAttendance />,
+      },
+      {
+        path: "loans",
+        element: <PublicLoans />,
+      },
+      {
+        path: "profile",
+        element: <PublicProfile />,
+      },
+      {
+        path: "bookCatalog",
+        element: <PublicBookCatalog />,
+      },
+      {
+        path: "itemCatalog",
+        element: <PublicItemCatalog />,
+      },
+    ],
+  },
 ];

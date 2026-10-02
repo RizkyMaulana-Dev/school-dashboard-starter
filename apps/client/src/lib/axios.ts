@@ -52,14 +52,13 @@ export function clearTokens(): void {
 
 const axiosInstance = axios.create({
   // Gunakan env var JIKA ada, kalau tidak ada langsung tembak ke Cloudflare
-  baseURL:
-    import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
 });
-console.log(import.meta.env.VITE_API_URL)
+console.log(import.meta.env.VITE_API_URL);
 // ============================================================
 // Request Interceptor
 // ============================================================
@@ -162,10 +161,9 @@ axiosInstance.interceptors.response.use(
     }
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
-        { refreshToken },
-      );
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh-token`, {
+        refreshToken,
+      });
 
       const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
 

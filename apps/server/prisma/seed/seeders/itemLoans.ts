@@ -21,15 +21,26 @@ export async function seedItemLoans() {
 
   const loans = [
     {
-      id: "item-loan-seed-1", itemId: proyektor.id, userId: student.id,
-      quantity: 1, borrowDate: daysFromNow(-5), dueDate: daysFromNow(5),
-      status: "DIPINJAM", notes: "Untuk presentasi tugas",
+      id: "item-loan-seed-1",
+      itemId: proyektor.id,
+      userId: student.id,
+      quantity: 1,
+      borrowDate: daysFromNow(-5),
+      dueDate: daysFromNow(5),
+      status: "DIPINJAM",
+      notes: "Untuk presentasi tugas",
       decrementStock: true,
     },
     {
-      id: "item-loan-seed-2", itemId: laptop.id, userId: teacher.id,
-      quantity: 2, borrowDate: daysFromNow(-5), dueDate: daysFromNow(-5),
-      returnDate: daysFromNow(-5), status: "DIKEMBALIKAN", notes: "Untuk workshop",
+      id: "item-loan-seed-2",
+      itemId: laptop.id,
+      userId: teacher.id,
+      quantity: 2,
+      borrowDate: daysFromNow(-5),
+      dueDate: daysFromNow(-5),
+      returnDate: daysFromNow(-5),
+      status: "DIKEMBALIKAN",
+      notes: "Untuk workshop",
       decrementStock: false,
     },
   ];

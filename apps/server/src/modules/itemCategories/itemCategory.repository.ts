@@ -11,10 +11,7 @@ export class ItemCategoryRepository {
       take: query.limit,
       where: query.search
         ? {
-            OR: [
-              { name: { contains: query.search} },
-              { description: { contains: query.search} },
-            ],
+            OR: [{ name: { contains: query.search } }, { description: { contains: query.search } }],
           }
         : undefined,
       orderBy: { [query.sort || "name"]: query.order || "asc" },
@@ -25,10 +22,7 @@ export class ItemCategoryRepository {
     return prisma.itemCategory.count({
       where: search
         ? {
-            OR: [
-              { name: { contains: search} },
-              { description: { contains: search} },
-            ],
+            OR: [{ name: { contains: search } }, { description: { contains: search } }],
           }
         : undefined,
     });

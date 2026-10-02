@@ -21,7 +21,7 @@ export type AttendanceRecordFormData = z.infer<typeof attendanceRecordSchema>;
 
 // src/lib/validations/attendance.schema.ts
 export const attendanceRecordEditSchema = z.object({
-  status: z.enum(['PRESENT', 'ABSENT', 'LATE', 'EXCUSED']),
+  status: z.enum(["PRESENT", "ABSENT", "LATE", "EXCUSED"]),
   notes: z.string().optional().nullable(),
 });
 

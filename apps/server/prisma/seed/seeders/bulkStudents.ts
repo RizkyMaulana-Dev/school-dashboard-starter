@@ -2,9 +2,55 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../prisma";
 import { logger } from "../../../src/lib/logger";
 
-const MALE_FIRST = ["Rizky","Budi","Ahmad","Muhammad","Dimas","Bayu","Hendra","Fajar","Aditya","Farhan","Andi","Gilang","Rian","Daffa","Eka"];
-const FEMALE_FIRST = ["Siti","Nur","Anisa","Putri","Dewi","Rina","Indah","Maya","Aulia","Sarah","Nabila","Tia","Salsa","Fitri","Lestari"];
-const LAST_NAMES = ["Pratama","Saputra","Hidayat","Maulana","Kurniawan","Santoso","Wijaya","Ramadhan","Nugroho","Utomo","Kusuma","Setiawan","Syahputra"];
+const MALE_FIRST = [
+  "Rizky",
+  "Budi",
+  "Ahmad",
+  "Muhammad",
+  "Dimas",
+  "Bayu",
+  "Hendra",
+  "Fajar",
+  "Aditya",
+  "Farhan",
+  "Andi",
+  "Gilang",
+  "Rian",
+  "Daffa",
+  "Eka",
+];
+const FEMALE_FIRST = [
+  "Siti",
+  "Nur",
+  "Anisa",
+  "Putri",
+  "Dewi",
+  "Rina",
+  "Indah",
+  "Maya",
+  "Aulia",
+  "Sarah",
+  "Nabila",
+  "Tia",
+  "Salsa",
+  "Fitri",
+  "Lestari",
+];
+const LAST_NAMES = [
+  "Pratama",
+  "Saputra",
+  "Hidayat",
+  "Maulana",
+  "Kurniawan",
+  "Santoso",
+  "Wijaya",
+  "Ramadhan",
+  "Nugroho",
+  "Utomo",
+  "Kusuma",
+  "Setiawan",
+  "Syahputra",
+];
 
 const pick = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 

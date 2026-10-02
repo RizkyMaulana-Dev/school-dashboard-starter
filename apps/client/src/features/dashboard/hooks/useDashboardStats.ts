@@ -1,14 +1,14 @@
 // src/features/dashboard/hooks/useDashboardStats.ts
-import { useQuery } from '@tanstack/react-query';
-import { userService } from '@/services/user.service';
-import { studentService } from '@/services/student.service';
-import { teacherService } from '@/services/teacher.service';
-import { bookService } from '@/services/book.service';
-import { attendanceSessionService } from '@/services/attendanceSession.service';
+import { useQuery } from "@tanstack/react-query";
+import { userService } from "@/services/user.service";
+import { studentService } from "@/services/student.service";
+import { teacherService } from "@/services/teacher.service";
+import { bookService } from "@/services/book.service";
+import { attendanceSessionService } from "@/services/attendanceSession.service";
 
 export function useDashboardStats() {
   return useQuery({
-    queryKey: ['dashboard', 'stats'],
+    queryKey: ["dashboard", "stats"],
     queryFn: async () => {
       const [usersRes, studentsRes, teachersRes, booksRes, sessionsRes] = await Promise.all([
         userService.getAll({ limit: 1 }),

@@ -51,7 +51,7 @@ export class AuthController {
     // (Jika di AuthService kamu sudah ada method khusus untuk google/email, panggil di sini)
     // Contoh jika menggunakan method penanganan Google login di service:
     // const result = await this.service.googleLogin(payload);
-    
+
     // Atau jika hanya mencari/login berdasarkan email payload:
     const result = await this.service.googleLogin({
       email: payload.email,

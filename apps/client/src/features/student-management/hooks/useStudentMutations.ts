@@ -19,7 +19,7 @@ const getErrorMessage = (error: unknown, defaultMessage: string): string => {
 export function useCreateStudent() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
-  
+
   return useMutation({
     mutationFn: (data: CreateStudentDTO) => studentService.create(data),
     onSuccess: (res) => {
@@ -27,18 +27,19 @@ export function useCreateStudent() {
       addToast({ type: "success", title: "Siswa dibuat", message: res.message });
     },
     // 👈 Gunakan helper di sini
-    onError: (err) => addToast({ 
-      type: "error", 
-      title: "Gagal", 
-      message: getErrorMessage(err, "Gagal membuat siswa") 
-    }),
+    onError: (err) =>
+      addToast({
+        type: "error",
+        title: "Gagal",
+        message: getErrorMessage(err, "Gagal membuat siswa"),
+      }),
   });
 }
 
 export function useUpdateStudent() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
-  
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateStudentDTO }) =>
       studentService.update(id, data),
@@ -47,18 +48,19 @@ export function useUpdateStudent() {
       addToast({ type: "success", title: "Siswa diupdate", message: res.message });
     },
     // 👈 Gunakan helper di sini
-    onError: (err) => addToast({ 
-      type: "error", 
-      title: "Gagal", 
-      message: getErrorMessage(err, "Gagal mengupdate siswa") 
-    }),
+    onError: (err) =>
+      addToast({
+        type: "error",
+        title: "Gagal",
+        message: getErrorMessage(err, "Gagal mengupdate siswa"),
+      }),
   });
 }
 
 export function useDeleteStudent() {
   const qc = useQueryClient();
   const addToast = useUIStore((s) => s.addToast);
-  
+
   return useMutation({
     mutationFn: (id: string) => studentService.delete(id),
     onSuccess: () => {
@@ -66,10 +68,11 @@ export function useDeleteStudent() {
       addToast({ type: "success", title: "Siswa dihapus" });
     },
     // 👈 Gunakan helper di sini
-    onError: (err) => addToast({ 
-      type: "error", 
-      title: "Gagal", 
-      message: getErrorMessage(err, "Gagal menghapus siswa") 
-    }),
+    onError: (err) =>
+      addToast({
+        type: "error",
+        title: "Gagal",
+        message: getErrorMessage(err, "Gagal menghapus siswa"),
+      }),
   });
 }

@@ -17,8 +17,7 @@ export function useCreateTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru dibuat", message: res.message });
     },
-    onError: (err) =>
-      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -32,8 +31,7 @@ export function useUpdateTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru diupdate", message: res.message });
     },
-    onError: (err) =>
-      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }
 
@@ -46,7 +44,6 @@ export function useDeleteTeacher() {
       qc.invalidateQueries({ queryKey: ["teachers"] });
       addToast({ type: "success", title: "Guru dihapus" });
     },
-    onError: (err) =>
-      addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
+    onError: (err) => addToast({ type: "error", title: "Gagal", message: getErrorMessage(err) }),
   });
 }

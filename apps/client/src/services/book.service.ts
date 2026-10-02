@@ -56,5 +56,4 @@ export const bookService = {
   async getAllCategories(): Promise<ApiResponse<BookCategory[]>> {
     return apiClient.get(BOOK_CATEGORY_ENDPOINT);
   },
-  
 };

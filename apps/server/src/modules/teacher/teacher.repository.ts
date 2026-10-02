@@ -23,7 +23,6 @@ export class TeacherRepository {
                 user: {
                   email: {
                     contains: query.search,
-
                   },
                 },
               },
@@ -63,7 +62,6 @@ export class TeacherRepository {
                 user: {
                   email: {
                     contains: search,
-
                   },
                 },
               },

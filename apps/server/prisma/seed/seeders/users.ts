@@ -2,12 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../prisma";
 import { logger } from "../../../src/lib/logger";
 
-async function upsertUser(
-  email: string,
-  name: string,
-  plainPassword: string,
-  roleId: string,
-) {
+async function upsertUser(email: string, name: string, plainPassword: string, roleId: string) {
   const password = await bcrypt.hash(plainPassword, 10);
   return prisma.user.upsert({
     where: { email },

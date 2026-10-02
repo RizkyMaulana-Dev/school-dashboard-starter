@@ -1,8 +1,8 @@
-import apiClient from './apiClient';
-import type { ItemCategory } from '@/types/entities';
-import type { ApiResponse, PaginatedResponse, QueryParams } from '@/types/api';
+import apiClient from "./apiClient";
+import type { ItemCategory } from "@/types/entities";
+import type { ApiResponse, PaginatedResponse, QueryParams } from "@/types/api";
 
-const ENDPOINT = '/item-category';
+const ENDPOINT = "/item-category";
 
 export const itemCategoryService = {
   async getAll(params?: QueryParams): Promise<PaginatedResponse<ItemCategory>> {
@@ -14,7 +14,10 @@ export const itemCategoryService = {
   async create(data: { name: string; description?: string }): Promise<ApiResponse<ItemCategory>> {
     return apiClient.post(ENDPOINT, data);
   },
-  async update(id: string, data: { name?: string; description?: string }): Promise<ApiResponse<ItemCategory>> {
+  async update(
+    id: string,
+    data: { name?: string; description?: string },
+  ): Promise<ApiResponse<ItemCategory>> {
     return apiClient.patch(`${ENDPOINT}/${id}`, data);
   },
   async delete(id: string): Promise<ApiResponse<null>> {

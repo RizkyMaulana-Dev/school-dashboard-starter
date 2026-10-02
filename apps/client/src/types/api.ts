@@ -27,10 +27,10 @@ export interface PaginatedResponse<T> {
 export interface PaginationMeta {
   page: number;
   limit: number;
-  total: number;          // ganti dari totalItems
+  total: number; // ganti dari totalItems
   totalPages: number;
-  hasNext: boolean;       // ganti dari hasNextPage
-  hasPrevious: boolean;   // ganti dari hasPreviousPage
+  hasNext: boolean; // ganti dari hasNextPage
+  hasPrevious: boolean; // ganti dari hasPreviousPage
 }
 
 /**

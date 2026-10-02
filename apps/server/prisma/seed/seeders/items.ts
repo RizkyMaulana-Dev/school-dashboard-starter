@@ -8,13 +8,34 @@ const CATEGORIES = [
 ];
 
 const ITEMS = [
-  { itemCode: "ELEC-001", name: "Proyektor Epson X400", categoryName: "Elektronik",
-    stockTotal: 5, stockAvailable: 5, condition: "BAIK" as const,
-    location: "Lab Komputer A", purchaseDate: new Date("2025-01-15") },
-  { itemCode: "ELEC-002", name: "Laptop Dell Latitude", categoryName: "Elektronik",
-    stockTotal: 10, stockAvailable: 10, condition: "BAIK" as const, location: "Ruang Guru" },
-  { itemCode: "MEB-001", name: "Meja Lipat Serbaguna", categoryName: "Mebel",
-    stockTotal: 20, stockAvailable: 20, condition: "BAIK" as const, location: "Gudang Utama" },
+  {
+    itemCode: "ELEC-001",
+    name: "Proyektor Epson X400",
+    categoryName: "Elektronik",
+    stockTotal: 5,
+    stockAvailable: 5,
+    condition: "BAIK" as const,
+    location: "Lab Komputer A",
+    purchaseDate: new Date("2025-01-15"),
+  },
+  {
+    itemCode: "ELEC-002",
+    name: "Laptop Dell Latitude",
+    categoryName: "Elektronik",
+    stockTotal: 10,
+    stockAvailable: 10,
+    condition: "BAIK" as const,
+    location: "Ruang Guru",
+  },
+  {
+    itemCode: "MEB-001",
+    name: "Meja Lipat Serbaguna",
+    categoryName: "Mebel",
+    stockTotal: 20,
+    stockAvailable: 20,
+    condition: "BAIK" as const,
+    location: "Gudang Utama",
+  },
 ];
 
 export async function seedItems() {

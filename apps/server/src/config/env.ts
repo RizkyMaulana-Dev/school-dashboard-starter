@@ -12,7 +12,10 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.warn("⚠️ Warning: Environment variables tidak lengkap:", parsed.error.flatten().fieldErrors);
+  console.warn(
+    "⚠️ Warning: Environment variables tidak lengkap:",
+    parsed.error.flatten().fieldErrors,
+  );
 }
 
 // Menggunakan tipe data standar TypeScript record untuk menghindari error Zod utility type

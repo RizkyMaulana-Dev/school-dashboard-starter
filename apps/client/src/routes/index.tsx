@@ -8,27 +8,27 @@ import { lazy } from "react";
 const PageNotFound = lazy(() => import("@/components/feedback/404"));
 
 export const router = createBrowserRouter(
-    [
-        ...authRoutes,
-        ...dashboardRoutes,
-        ...publicRoutes,
+  [
+    ...authRoutes,
+    ...dashboardRoutes,
+    ...publicRoutes,
 
-        {
-            path: "/",
-            element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
-        },
-
-        {
-            path: ROUTE_PATHS.NOT_FOUND,
-            element: <PageNotFound />,
-        },
-
-        {
-            path: "*",
-            element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
-        },
-    ],
     {
-        basename: import.meta.env.BASE_URL.replace(/\/$/, ""),
+      path: "/",
+      element: <Navigate to={ROUTE_PATHS.PUBLIC_HOME} replace />,
     },
+
+    {
+      path: ROUTE_PATHS.NOT_FOUND,
+      element: <PageNotFound />,
+    },
+
+    {
+      path: "*",
+      element: <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />,
+    },
+  ],
+  {
+    basename: import.meta.env.BASE_URL.replace(/\/$/, ""),
+  },
 );

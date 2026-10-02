@@ -42,8 +42,8 @@ export function useUpdateBookLoan() {
         title: "Berhasil",
         message: response.message,
       });
-      console.log("response data")
-      console.log(response.data)
+      console.log("response data");
+      console.log(response.data);
     },
     onError: (error) => {
       addToast({
