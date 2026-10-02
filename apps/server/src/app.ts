@@ -6,22 +6,29 @@ import routes from "./routes/index.js";
 import { globalErrorHandler } from "./middlewares/errorHandler.js";
 import { asyncLocalStorage, createPrismaClient } from "./lib/prisma.js";
 
+// Origin yang diizinkan di production (Cloudflare Workers)
+// Saat development, request datang dari Vite proxy sehingga CORS tidak diperlukan
 const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
   "https://rizkymaulana-dev.github.io",
+  "https://school-dashboard-server.rzkymln-dev.workers.dev",
 ];
 
 const app = express();
 
+const isDev = process.env.NODE_ENV !== "production";
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Izinkan jika tanpa origin (curl/mobile) atau jika origin terdaftar
+      // Di development: izinkan semua origin (sudah dilindungi oleh Vite proxy)
+      if (isDev) {
+        return callback(null, true);
+      }
+
+      // Di production: izinkan jika tanpa origin (curl/Postman) atau origin terdaftar
       if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".github.io")) {
         callback(null, true);
       } else {
-        // Jangan melempar Error("Not allowed by CORS") karena akan menghasilkan 500
         callback(null, false);
       }
     },

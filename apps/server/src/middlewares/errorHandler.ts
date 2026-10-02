@@ -1,7 +1,7 @@
 // apps/server/src/middlewares/errorHandler.ts
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client/edge";
+import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../errors/index.js";
 import { logger } from "../lib/logger.js";
